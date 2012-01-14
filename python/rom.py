@@ -1,0 +1,9 @@
+class ROM(object):
+	def __init__(self):
+		f = open('../rom/tc2048.rom','rb')
+		self.rom = f.read()
+		if len(self.rom) != 16384:
+			raise Exception('Wrong rom size. Should be 16384 bytes long.') ;
+	
+	def readMemory(self, index):
+		return self.rom[index];
