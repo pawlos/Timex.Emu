@@ -1,8 +1,1 @@
-import io
-from cpu import CPU
-
-print("ROM loaded...");
-print("Sterting execution...");
-timex = CPU();
-timex.run();
-print("Ending...")
+import iofrom cpu import CPUfrom rom import ROMprint("Sterting execution...");timex = CPU(ROM());timex.run();print("Ending...")
