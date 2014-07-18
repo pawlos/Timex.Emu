@@ -44,13 +44,21 @@ class TestCPUFunctions(unittest.TestCase):
 		self.assertNotEqual(0, cpu.A)
 		self.assertFalse(cpu.ZFlag)
 
-	def test_Xor_A_resets_C_flag(self):
+	def test_xor_A_resets_C_flag(self):
 		cpu = CPU(None)
 		cpu.A = 0x12
 		cpu.C = 0x12
 		cpu.CFlag = True
 		cpu.xorA(1)
 		self.assertFalse(cpu.CFlag)
+
+	def test_xor_A_resets_N_flag(self):
+		cpu = CPU(None)
+		cpu.A = 0x12
+		cpu.C = 0x13
+		cpu.NFlag = True
+		cpu.xorA(1)
+		self.assertFalse(cpu.NFlag)
 
 
 if __name__ == '__main__':
