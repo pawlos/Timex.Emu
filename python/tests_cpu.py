@@ -8,10 +8,10 @@ class TestCPUFunctions(unittest.TestCase):
 		self.assertEqual(0, cpu.A)
 		self.assertEqual(0, cpu.B)
 		self.assertEqual(0, cpu.C)
-		self.assertEqual(0, cpu.registerD())
-		self.assertEqual(0, cpu.registerE())
-		self.assertEqual(0, cpu.registerH())
-		self.assertEqual(0, cpu.registerL())
+		self.assertEqual(0, cpu.D)
+		self.assertEqual(0, cpu.E)
+		self.assertEqual(0, cpu.H)
+		self.assertEqual(0, cpu.L)
 
 	def test_xor_A_works_correctly(self):
 		cpu = CPU(None)
