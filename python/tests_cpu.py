@@ -27,13 +27,21 @@ class TestCPUFunctions(unittest.TestCase):
 		cpu.xorA(0)
 		self.assertEqual(0xCB, cpu.A)
 
-	def test_is_A_xors_to_zero_Z_is_set(self):
+	def test_if_A_xors_to_zero_Z_is_set(self):
 		cpu = CPU(None)
 		cpu.A = 0x12
 		cpu.C = 0x12
 		cpu.xorA(1)
 		self.assertEqual(0, cpu.A)
 		self.assertEqual(True, cpu.ZFlag)
+
+	def test_if_A_xors_to_non_zero_Z_is_reset(self):
+		cpu = CPU(None)
+		cpu.A = 0x12
+		cpu.C = 0x13
+		cpu.xorA(1)
+		self.assertNotEqual(0, cpu.A)
+		self.assertFalse(cpu.ZFlag)
 
 
 if __name__ == '__main__':
