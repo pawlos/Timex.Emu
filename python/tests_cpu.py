@@ -60,6 +60,30 @@ class TestCPUFunctions(unittest.TestCase):
 		cpu.xorA(1)
 		self.assertFalse(cpu.NFlag)
 
+	def test_xor_A_resets_H_flag(self):
+		cpu = CPU(None)
+		cpu.A = 0x12
+		cpu.C = 0x13
+		cpu.HFlag = True
+		cpu.xorA(1)
+		self.assertFalse(cpu.HFlag)
+
+	def test_xor_A_sets_S_if_result_is_negative(self):
+		cpu = CPU(None)
+		cpu.A = 0x96
+		cpu.C = 0x5D
+		cpu.SFlag = False
+		cpu.xorA(1)
+		self.assertTrue(cpu.SFlag)
+
+	def test_xor_A_resets_S_if_result_is_positive(self):
+		cpu = CPU(None)
+		cpu.A = 0x12
+		cpu.C = 0x55
+		cpu.SFlag = True
+		cpu.xorA(1)
+		self.assertFalse(cpu.SFlag)
+
 
 if __name__ == '__main__':
 	unittest.main()
