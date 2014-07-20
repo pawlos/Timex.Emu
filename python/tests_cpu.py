@@ -84,6 +84,21 @@ class TestCPUFunctions(unittest.TestCase):
 		cpu.xorA(1)
 		self.assertFalse(cpu.SFlag)
 
+	def test_xor_A_sets_PV_if_parity_even(self):
+		cpu = CPU(None)
+		cpu.A = 0x44
+		cpu.C = 0x11
+		cpu.PVFlag = False
+		cpu.xorA(1)
+		self.assertTrue(cpu.PVFlag)
+
+	def test_xor_A_resets_PV_if_parity_odd(self):
+		cpu = CPU(None)
+		cpu.A = 0x45
+		cpu.C = 0x11
+		cpu.PVFlag = True
+		cpu.xorA(1)
+		self.assertFalse(cpu.PVFlag)
 
 if __name__ == '__main__':
 	unittest.main()
