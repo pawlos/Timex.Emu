@@ -100,5 +100,17 @@ class TestCPUFunctions(unittest.TestCase):
 		cpu.xorA(1)
 		self.assertFalse(cpu.PVFlag)
 
+	def test_HL_property_assign_correct_values_to_H_and_L(self):
+		cpu = CPU(None)
+		cpu.HL = 0x1123
+		self.assertEqual(0x11, cpu.H)
+		self.assertEqual(0x23, cpu.L)
+
+	def test_HL_property_has_correct_value_when_H_and_L_are_set(self):
+		cpu = CPU(None)
+		cpu.H = 0x66
+		cpu.L = 0x01
+		self.assertEqual(0x6601, cpu.HL)
+
 if __name__ == '__main__':
 	unittest.main()
