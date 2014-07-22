@@ -1,5 +1,6 @@
 import unittest
 from cpu import CPU
+from fake_rom import FakeRom
 
 
 class TestCPUFunctions(unittest.TestCase):
@@ -111,6 +112,12 @@ class TestCPUFunctions(unittest.TestCase):
 		cpu.H = 0x66
 		cpu.L = 0x01
 		self.assertEqual(0x6601, cpu.HL)
+
+	def test_JP_XX_sets_PC_correctly(self):
+		cpu = CPU(FakeRom('\xc3\xcb\x11'))
+		cpu.pc = 0
+		cpu.jp(00)
+		self.assertEqual(0x11cb, cpu.pc)
 
 if __name__ == '__main__':
 	unittest.main()
