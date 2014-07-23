@@ -24,7 +24,7 @@ class Opcodes(object):
 		cpu.debug("XOR A")
 
 	@staticmethod
-	def ld(cpu, opcode):
+	def ld16(cpu, opcode):
 		regInd = (opcode & 0x30) >> 4
 		cpu.pc += 1
 		loValue = cpu.rom.readMemory(cpu.pc)
@@ -32,6 +32,12 @@ class Opcodes(object):
 		hiValue = cpu.rom.readMemory(cpu.pc)
 		cpu._16bitRegs[regInd] = (hiValue << 8) + loValue
 		cpu.debug("LD");
+
+	@staticmethod
+	def ld8(cpu, opcode):
+		regIndPrim = (opcode & 7)
+		regInd     = (opcode >> 3) & 7
+		cpu.regs[regInd] = cpu.regs[regIndPrim]
 
 	@staticmethod
 	def jp(cpu, opcode):
