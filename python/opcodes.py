@@ -38,6 +38,7 @@ class Opcodes(object):
 		regIndPrim = (opcode & 7)
 		regInd     = (opcode >> 3) & 7
 		cpu.regs[regInd] = cpu.regs[regIndPrim]
+		cpu.debug("LD")
 
 	@staticmethod
 	def ld8n(cpu, opcode):
@@ -45,15 +46,21 @@ class Opcodes(object):
 		cpu.pc += 1
 		value = cpu.rom.readMemory(cpu.pc)
 		cpu.regs[regInd] = value
+		cpu.debug("LD")
 
 	@staticmethod
 	def jp(cpu, opcode):
 		cpu.pc += 1
 		loValue = cpu.rom.readMemory(cpu.pc)
-		cpu.debug(loValue)
 		cpu.pc += 1
 		hiValue = cpu.rom.readMemory(cpu.pc)
-		cpu.debug(hiValue)
 		cpu.pc = (hiValue << 8) + loValue
 		cpu.debug("JP {0:x}".format(cpu.pc))
 		return True
+
+	@staticmethod
+	def out(cpu, opcode):
+		cpu.pc += 1
+		value = cpu.rom.readMemory(cpu.pc)
+		cpu.debug("OUT")
+		cpu.ports[value] = cpu.A

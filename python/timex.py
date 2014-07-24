@@ -1,1 +1,1 @@
-import iofrom cpu import CPUfrom rom import ROMif __name__ == '__main__':	print("Starting execution...");	timex = CPU(ROM());	timex.run();	print("Ending...")
+import iofrom cpu import CPUfrom rom import ROMif __name__ == '__main__':	print("Starting execution...");	timex = CPU(ROM(), isDebugged = True);	timex.run();	print("Ending...")
