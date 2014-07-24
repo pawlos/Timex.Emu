@@ -40,6 +40,13 @@ class Opcodes(object):
 		cpu.regs[regInd] = cpu.regs[regIndPrim]
 
 	@staticmethod
+	def ld8n(cpu, opcode):
+		regInd = (opcode >> 3) & 7
+		cpu.pc += 1
+		value = cpu.rom.readMemory(cpu.pc)
+		cpu.regs[regInd] = value
+
+	@staticmethod
 	def jp(cpu, opcode):
 		cpu.pc += 1
 		loValue = cpu.rom.readMemory(cpu.pc)
