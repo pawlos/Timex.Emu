@@ -36,7 +36,9 @@ class Opcodes(object):
 	@staticmethod
 	def ld8(cpu, opcode):
 		regIndPrim = (opcode & 7)
+		cpu.debug(regIndPrim)
 		regInd     = (opcode >> 3) & 7
+		cpu.debug(regInd)
 		cpu.regs[regInd] = cpu.regs[regIndPrim]
 		cpu.debug("LD")
 

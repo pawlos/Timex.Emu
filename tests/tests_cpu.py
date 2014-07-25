@@ -142,5 +142,16 @@ class TestCPUFunctions(unittest.TestCase):
 		cpu.readOp()
 		self.assertEqual(0x33, cpu.I)
 
+	def test_registers_are_accessible_by_index_and_name(self):
+		cpu = CPU(None)
+		cpu.regs[0] = 0x11
+		self.assertEqual(0x11, cpu.B)
+
+	def test_0x62_oppcode_correctly_maps_to_LD_H_D(self):
+		cpu = CPU(FakeRom('\x62'))
+		cpu.D = 0xaa
+		cpu.readOp()
+		self.assertEqual(0xaa, cpu.H)
+
 if __name__ == '__main__':
 	unittest.main()
