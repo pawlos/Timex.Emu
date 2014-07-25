@@ -147,7 +147,7 @@ class TestCPUFunctions(unittest.TestCase):
 		cpu.regs[0] = 0x11
 		self.assertEqual(0x11, cpu.B)
 
-	def test_0x62_oppcode_correctly_maps_to_LD_H_D(self):
+	def test_0x62_opcode_correctly_maps_to_LD_H_D(self):
 		cpu = CPU(FakeRom('\x62'))
 		cpu.D = 0xaa
 		cpu.readOp()
