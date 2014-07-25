@@ -131,10 +131,16 @@ class TestCPUFunctions(unittest.TestCase):
 		self.assertEqual(0x5d, cpu.B)
 		self.assertEqual(0x5d, cpu.A)
 
-	def test_ld_A_07_works_correctl(self):
+	def test_ld_A_07_works_correctly(self):
 		cpu = CPU(FakeRom('\x3e\x07'))
 		cpu.readOp()
 		self.assertEqual(0x07, cpu.A)
+
+	def test_double_byte_opcode_results_in_correct_assigment(self):
+		cpu = CPU(FakeRom('\xed\x47'))
+		cpu.A = 0x33
+		cpu.readOp()
+		self.assertEqual(0x33, cpu.I)
 
 if __name__ == '__main__':
 	unittest.main()

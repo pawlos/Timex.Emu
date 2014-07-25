@@ -64,3 +64,9 @@ class Opcodes(object):
 		value = cpu.rom.readMemory(cpu.pc)
 		cpu.debug("OUT")
 		cpu.ports[value] = cpu.A
+
+	@staticmethod
+	def ldExt(cpu, ocpode):
+		cpu.debug(cpu.A)
+		cpu.I = cpu.A
+		cpu.debug("LD I,A")
