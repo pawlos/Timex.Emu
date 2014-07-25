@@ -66,7 +66,11 @@ class Opcodes(object):
 		cpu.ports[value] = cpu.A
 
 	@staticmethod
-	def ldExt(cpu, ocpode):
+	def ldExt(cpu, opcode):
 		cpu.debug(cpu.A)
 		cpu.I = cpu.A
 		cpu.debug("LD I,A")
+
+	@staticmethod
+	def nop(cpu, opcode):
+		cpu.debug("DEFB")
