@@ -153,5 +153,11 @@ class TestCPUFunctions(unittest.TestCase):
 		cpu.readOp()
 		self.assertEqual(0xaa, cpu.H)
 
+	def test_0x6b_opcode_correctly_maps_to_LD_L_E(self):
+		cpu = CPU(FakeRom('\x6b'))
+		cpu.E = 0xbb
+		cpu.readOp()
+		self.assertEqual(0xbb, cpu.L)
+
 if __name__ == '__main__':
 	unittest.main()
