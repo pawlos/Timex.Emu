@@ -4,7 +4,7 @@ sys.path.append('../python')
 import unittest
 from cpu import CPU
 from opcodes import Opcodes
-from fake_rom import FakeRom
+from fakes import *
 
 
 class TestCPUFunctions(unittest.TestCase):
@@ -158,6 +158,13 @@ class TestCPUFunctions(unittest.TestCase):
 		cpu.E = 0xbb
 		cpu.readOp()
 		self.assertEqual(0xbb, cpu.L)
+
+	def test_0x36nn_opcodes_does_set_value_in_address_pointed_by_HL(self):
+		ram = FakeRam()
+		cpu = CPU(FakeRom('\x36\x22'), ram)	
+		cpu.HL = 0x2222
+		cpu.readOp()
+		self.assertEqual(0x22, ram.readAddr(0x2222))
 
 if __name__ == '__main__':
 	unittest.main()

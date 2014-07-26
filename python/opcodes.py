@@ -1,3 +1,4 @@
+# Aux class
 from regs import *
 from utility import Bits
 
@@ -76,3 +77,10 @@ class Opcodes(object):
 	@staticmethod
 	def nop(cpu, opcode):
 		cpu.debug("DEFB")
+
+	@staticmethod
+	def ld_addr(cpu, opcode):
+		cpu.debug("LD (HL), n")
+		cpu.pc += 1
+		value = cpu.rom.readMemory(cpu.pc)
+		cpu.ram.storeAddr(cpu.HL, value)
