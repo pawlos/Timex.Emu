@@ -5,13 +5,13 @@ from utility import Bits
 class Opcodes(object):
 
 	@staticmethod
-	def disableInterrupts(cpu, opcode):
+	def disableInterrupts(cpu, opcode, logger):
 		"""DI"""
 		cpu.iff = 0x00;		
-		cpu.debug("DI")
+		logger.info("DI")
 
 	@staticmethod
-	def xorA(cpu, opcode):
+	def xorA(cpu, opcode, logger):
 		"""XOR A"""
 		regInd = opcode & 7
 		cpu.regs[A] = cpu.regs[A] ^ cpu.regs[regInd]
@@ -22,10 +22,10 @@ class Opcodes(object):
 		cpu.flags[HF] = False
 		cpu.flags[SF] = True if cpu.regs[A] & 0x80 else False
 		cpu.flags[PVF] = True if Bits.count(cpu.regs[A]) % 2 == 0 else False
-		cpu.debug("XOR A")
+		logger.info("XOR A")
 
 	@staticmethod
-	def ld16(cpu, opcode):
+	def ld16(cpu, opcode, logger):
 		regInd = (opcode & 0x30) >> 4
 		cpu.pc += 1
 		loValue = cpu.rom.readMemory(cpu.pc)
@@ -42,63 +42,63 @@ class Opcodes(object):
 		elif regInd == 3:
 			cpu.SP = value
 
-		cpu.debug("LD");
+		logger.info("LD");
 
 	@staticmethod
-	def ld8(cpu, opcode):
+	def ld8(cpu, opcode, logger):
 		regIndPrim = (opcode & 7)
-		cpu.debug(regIndPrim)
+		logger.info(regIndPrim)
 		regInd     = (opcode >> 3) & 7
-		cpu.debug(regInd)
+		logger.info(regInd)
 		cpu.regs[regInd] = cpu.regs[regIndPrim]
-		cpu.debug("LD")
+		logger.info("LD")
 
 	@staticmethod
-	def ld8n(cpu, opcode):
+	def ld8n(cpu, opcode, logger):
 		regInd = (opcode >> 3) & 7
 		cpu.pc += 1
 		value = cpu.rom.readMemory(cpu.pc)
 		cpu.regs[regInd] = value
-		cpu.debug("LD")
+		logger.info("LD")
 
 	@staticmethod
-	def jp(cpu, opcode):
+	def jp(cpu, opcode, logger):
 		cpu.pc += 1
 		loValue = cpu.rom.readMemory(cpu.pc)
 		cpu.pc += 1
 		hiValue = cpu.rom.readMemory(cpu.pc)
 		cpu.pc = (hiValue << 8) + loValue
-		cpu.debug("JP {0:x}".format(cpu.pc))
+		logger.info("JP {0:x}".format(cpu.pc))
 		return True
 
 	@staticmethod
-	def out(cpu, opcode):
+	def out(cpu, opcode, logger):
 		cpu.pc += 1
 		value = cpu.rom.readMemory(cpu.pc)
-		cpu.debug("OUT")
+		logger.info("OUT")
 		cpu.ports[value] = cpu.A
 
 	@staticmethod
-	def ldExt(cpu, opcode):
-		cpu.debug(cpu.A)
+	def ldExt(cpu, opcode, logger):
+		logger.info(cpu.A)
 		cpu.I = cpu.A
-		cpu.debug("LD I,A")
+		logger.info("LD I,A")
 
 	@staticmethod
-	def nop(cpu, opcode):
-		cpu.debug("DEFB")
+	def nop(cpu, opcode, logger):
+		logger.info("DEFB")
 
 	@staticmethod
-	def ld_addr(cpu, opcode):
-		cpu.debug("LD (HL), n")
+	def ld_addr(cpu, opcode, logger):
+		logger.info("LD (HL), n")
 		cpu.pc += 1
 		value = cpu.rom.readMemory(cpu.pc)
 		cpu.ram.storeAddr(cpu.HL, value)
 
 	@staticmethod
-	def dec16b(cpu, opcode):
+	def dec16b(cpu, opcode, logger):
 		regInd = (opcode >> 4) & 2
-		cpu.debug(regInd)
+		logger.info(regInd)
 		value = 0
 		if regInd == 0:
 			cpu.BC = cpu.BC - 1
@@ -109,4 +109,4 @@ class Opcodes(object):
 		elif regInd == 3:
 			cpu.SP = cpu.SP - 1
 
-		cpu.debug("DEC (rr)")
+		logger.info("DEC (rr)")
