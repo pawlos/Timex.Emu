@@ -166,5 +166,26 @@ class TestCPUFunctions(unittest.TestCase):
 		cpu.readOp()
 		self.assertEqual(0x22, ram.readAddr(0x2222))
 
+	def test_0x2b_opcode_does_decrement_HL(self):
+		cpu = CPU(FakeRom('\x2b'))
+		cpu.HL = 0x1101
+		cpu.readOp();
+		self.assertEqual(0x1100, cpu.HL)
+
+	def test_16bit_registers_are_accessed_by_8bit_parts(self):
+		cpu = CPU(None)
+		cpu.HL = 0x1234
+
+		self.assertEqual(0x12, cpu.H)
+		self.assertEqual(0x34, cpu.L)
+
+	def test_16bit_registers(self):
+		cpu = CPU(FakeRom('\x2b'))
+		cpu.HL = 0x0100
+		cpu.readOp()
+		self.assertEqual(0x00, cpu.H)
+		self.assertEqual(0xFF, cpu.L)
+
+
 if __name__ == '__main__':
 	unittest.main()

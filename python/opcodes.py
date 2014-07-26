@@ -31,7 +31,17 @@ class Opcodes(object):
 		loValue = cpu.rom.readMemory(cpu.pc)
 		cpu.pc += 1
 		hiValue = cpu.rom.readMemory(cpu.pc)
-		cpu._16bitRegs[regInd] = (hiValue << 8) + loValue
+		value = (hiValue << 8) + loValue
+
+		if regInd == 0:
+			cpu.BC = value
+		elif regInd == 1:
+			cpu.DE = value
+		elif regInd == 2:
+			cpu.HL = value
+		elif regInd == 3:
+			cpu.SP = value
+
 		cpu.debug("LD");
 
 	@staticmethod
@@ -84,3 +94,19 @@ class Opcodes(object):
 		cpu.pc += 1
 		value = cpu.rom.readMemory(cpu.pc)
 		cpu.ram.storeAddr(cpu.HL, value)
+
+	@staticmethod
+	def dec16b(cpu, opcode):
+		regInd = (opcode >> 4) & 2
+		cpu.debug(regInd)
+		value = 0
+		if regInd == 0:
+			cpu.BC = cpu.BC - 1
+		elif regInd == 1:
+			cpu.DE = cpu.DE - 1
+		elif regInd == 2:
+			cpu.HL = cpu.HL - 1
+		elif regInd == 3:
+			cpu.SP = cpu.SP - 1
+
+		cpu.debug("DEC (rr)")
