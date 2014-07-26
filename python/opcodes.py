@@ -27,10 +27,8 @@ class Opcodes(object):
 	@staticmethod
 	def ld16(cpu, opcode, logger):
 		regInd = (opcode & 0x30) >> 4
-		cpu.pc += 1
-		loValue = cpu.rom.readMemory(cpu.pc)
-		cpu.pc += 1
-		hiValue = cpu.rom.readMemory(cpu.pc)
+		loValue = cpu.rom.readMemory(cpu.PC)
+		hiValue = cpu.rom.readMemory(cpu.PC)
 		value = (hiValue << 8) + loValue
 
 		if regInd == 0:
@@ -56,25 +54,23 @@ class Opcodes(object):
 	@staticmethod
 	def ld8n(cpu, opcode, logger):
 		regInd = (opcode >> 3) & 7
-		cpu.pc += 1
-		value = cpu.rom.readMemory(cpu.pc)
+		value = cpu.rom.readMemory(cpu.PC)
 		cpu.regs[regInd] = value
 		logger.info("LD")
 
 	@staticmethod
 	def jp(cpu, opcode, logger):
-		cpu.pc += 1
-		loValue = cpu.rom.readMemory(cpu.pc)
-		cpu.pc += 1
-		hiValue = cpu.rom.readMemory(cpu.pc)
-		cpu.pc = (hiValue << 8) + loValue
-		logger.info("JP {0:x}".format(cpu.pc))
+		loValue = cpu.rom.readMemory(cpu.PC)
+		hiValue = cpu.rom.readMemory(cpu.PC)
+		value = (hiValue << 8) + loValue
+		cpu.PC = value
+
+		logger.info("JP {0:x}".format(value))
 		return True
 
 	@staticmethod
 	def out(cpu, opcode, logger):
-		cpu.pc += 1
-		value = cpu.rom.readMemory(cpu.pc)
+		value = cpu.rom.readMemory(cpu.PC)
 		logger.info("OUT")
 		cpu.ports[value] = cpu.A
 
@@ -91,8 +87,7 @@ class Opcodes(object):
 	@staticmethod
 	def ld_addr(cpu, opcode, logger):
 		logger.info("LD (HL), n")
-		cpu.pc += 1
-		value = cpu.rom.readMemory(cpu.pc)
+		value = cpu.rom.readMemory(cpu.PC)
 		cpu.ram.storeAddr(cpu.HL, value)
 
 	@staticmethod

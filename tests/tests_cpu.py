@@ -5,6 +5,7 @@ import unittest
 from cpu import CPU
 from opcodes import Opcodes
 from fakes import *
+from loggers import Logger
 
 
 class TestCPUFunctions(unittest.TestCase):
@@ -119,9 +120,9 @@ class TestCPUFunctions(unittest.TestCase):
 
 	def test_JP_XX_sets_PC_correctly(self):
 		cpu = CPU(FakeRom('\xc3\xcb\x11'))
-		cpu.pc = 0
+		cpu.PC = 0
 		cpu.readOp()
-		self.assertEqual(0x11cb, cpu.pc)
+		self.assertEqual(0x11cb, cpu.PC)
 
 	def test_ld_B_A_works_correctly(self):
 		cpu = CPU(FakeRom('\x47'))
