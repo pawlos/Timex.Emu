@@ -105,3 +105,17 @@ class Opcodes(object):
 			cpu.SP = cpu.SP - 1
 
 		logger.info("DEC (rr)")
+
+	@staticmethod
+	def cp(cpu, opcode, logger):
+		regInd = opcode & 7
+		logger.info(regInd)
+		value = cpu.A - cpu.regs[regInd]
+		"""Flags"""
+		cpu.flags[ZF] = True if value == 0 else False
+		cpu.flags[CF] = True if value < 0 else False
+		cpu.flags[NF] = True
+		cpu.flags[HF] = Bits.halfCarrySub(cpu.A, value)
+		cpu.flags[SF] = True if value < 0 else False
+		cpu.flags[PVF] = Bits.overflow(cpu.A, value)
+		logger.info("CP r")
