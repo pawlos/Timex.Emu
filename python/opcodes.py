@@ -119,3 +119,11 @@ class Opcodes(object):
 		cpu.flags[SF] = True if value < 0 else False
 		cpu.flags[PVF] = Bits.overflow(cpu.A, value)
 		logger.info("CP r")
+
+	@staticmethod
+	def jpnz(cpu, opcode, logger):
+		jumpOffset = cpu.rom.readMemory(cpu.PC)
+		if cpu.ZFlag:
+			return
+		logger.info(jumpOffset)
+		cpu.PC = cpu.PC + Bits.twos_comp(jumpOffset)

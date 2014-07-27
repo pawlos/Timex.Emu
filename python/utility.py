@@ -12,3 +12,10 @@ class Bits(object):
 	@staticmethod
 	def overflow(firstByte, secondByte):
 		return True if (secondByte < 0) and (firstByte > 0) else False
+
+	@staticmethod
+	def twos_comp(val, bits = 8):
+		"""compute the 2's compliment of int value val"""
+		if ((val & (1 << ( bits - 1 ))) != 0):
+			val = val - (1 << bits )
+		return val
