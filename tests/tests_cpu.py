@@ -257,5 +257,11 @@ class TestCPUFunctions(unittest.TestCase):
 		cpu.readOp()
 		self.assertEqual(0x02, cpu.PC)
 
+	def test_and_a_performs_and_operation(self):
+		cpu = CPU(FakeRom('\xa7'))
+		cpu.A = 0x12
+		cpu.readOp()
+		self.assertEqual(0x12, cpu.A)
+
 if __name__ == '__main__':
 	unittest.main()

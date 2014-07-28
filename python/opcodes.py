@@ -127,3 +127,9 @@ class Opcodes(object):
 			return
 		logger.info(jumpOffset)
 		cpu.PC = cpu.PC + Bits.twos_comp(jumpOffset)
+
+	@staticmethod
+	def _and(cpu, opcode, logger):
+		logger.info("AND A")
+		regInd = opcode & 7
+		cpu.A = cpu.A & cpu.regs[regInd]
