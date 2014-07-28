@@ -133,3 +133,7 @@ class Opcodes(object):
 		logger.info("AND A")
 		regInd = opcode & 7
 		cpu.A = cpu.A & cpu.regs[regInd]
+		cpu.flags[HF] = True
+		cpu.flags[CF] = False
+		cpu.flags[NF] = False
+
