@@ -136,4 +136,4 @@ class Opcodes(object):
 		cpu.flags[HF] = True
 		cpu.flags[CF] = False
 		cpu.flags[NF] = False
-
+		cpu.flags[ZF] = True if cpu.A == 0 else False
