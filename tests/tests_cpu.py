@@ -293,5 +293,21 @@ class TestCPUFunctions(unittest.TestCase):
 		cpu.readOp()
 		self.assertFalse(cpu.ZFlag)
 
+	def test_and_h_that_returns_negative_set_s_flag(self):
+		cpu = CPU(FakeRom('\xa4'))
+		cpu.H = 0x88
+		cpu.A = 0x81
+		cpu.SFlag = False
+		cpu.readOp()
+		self.assertTrue(cpu.SFlag)
+
+	def test_and_h_that_returns_positive_resets_s_flag(self):
+		cpu = CPU(FakeRom('\xa4'))
+		cpu.H = 0x88
+		cpu.A = 0x08
+		cpu.SFlag = True
+		cpu.readOp()
+		self.assertFalse(cpu.SFlag)
+
 if __name__ == '__main__':
 	unittest.main()
