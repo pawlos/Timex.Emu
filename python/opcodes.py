@@ -138,3 +138,4 @@ class Opcodes(object):
 		cpu.flags[NF] = False
 		cpu.flags[ZF] = True if cpu.A == 0 else False
 		cpu.flags[SF] = True if Bits.twos_comp(cpu.A) < 0 else False
+		cpu.flags[PVF] = True if Bits.count(cpu.A) % 2 == 0 else False

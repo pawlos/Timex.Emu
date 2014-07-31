@@ -309,5 +309,21 @@ class TestCPUFunctions(unittest.TestCase):
 		cpu.readOp()
 		self.assertFalse(cpu.SFlag)
 
+	def test_and_h_that_results_with_even_no_of_ones_sets_pv_flag(self):
+		cpu = CPU(FakeRom('\xa4'))
+		cpu.H = 0x89
+		cpu.A = 0x09
+		cpu.PVFlag = False
+		cpu.readOp()
+		self.assertTrue(cpu.PVFlag)
+
+	def test_and_h_that_results_with_odd_no_of_ones_resets_pv_flag(self):
+		cpu = CPU(FakeRom('\xa4'))
+		cpu.H = 0x80
+		cpu.A = 0x09
+		cpu.PVFlag = False
+		cpu.readOp()
+		self.assertTrue(cpu.PVFlag)
+
 if __name__ == '__main__':
 	unittest.main()
