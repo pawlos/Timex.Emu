@@ -19,3 +19,7 @@ class Bits(object):
 		if ((val & (1 << ( bits - 1 ))) != 0):
 			val = val - (1 << bits )
 		return val
+
+	@staticmethod
+	def isZero(val):
+		return True if val == 0 else False

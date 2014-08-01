@@ -16,7 +16,7 @@ class Opcodes(object):
 		regInd = opcode & 7
 		cpu.regs[A] = cpu.regs[A] ^ cpu.regs[regInd]
 		"""Flags"""
-		cpu.flags[ZF] = True if cpu.regs[A] == 0 else False
+		cpu.flags[ZF] = Bits.isZero(cpu.A)
 		cpu.flags[CF] = False
 		cpu.flags[NF] = False
 		cpu.flags[HF] = False
@@ -112,7 +112,7 @@ class Opcodes(object):
 		logger.info(regInd)
 		value = cpu.A - cpu.regs[regInd]
 		"""Flags"""
-		cpu.flags[ZF] = True if value == 0 else False
+		cpu.flags[ZF] = Bits.isZero(value)
 		cpu.flags[CF] = True if value < 0 else False
 		cpu.flags[NF] = True
 		cpu.flags[HF] = Bits.halfCarrySub(cpu.A, value)
@@ -136,6 +136,6 @@ class Opcodes(object):
 		cpu.flags[HF] = True
 		cpu.flags[CF] = False
 		cpu.flags[NF] = False
-		cpu.flags[ZF] = True if cpu.A == 0 else False
+		cpu.flags[ZF] = Bits.isZero(cpu.A)
 		cpu.flags[SF] = True if Bits.twos_comp(cpu.A) < 0 else False
 		cpu.flags[PVF] = True if Bits.count(cpu.A) % 2 == 0 else False
