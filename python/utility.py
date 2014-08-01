@@ -23,3 +23,7 @@ class Bits(object):
 	@staticmethod
 	def isZero(val):
 		return True if val == 0 else False
+
+	@staticmethod
+	def paritySet(val):
+		return True if Bits.count(val) % 2 == 0 else False

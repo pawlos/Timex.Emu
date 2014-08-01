@@ -21,7 +21,7 @@ class Opcodes(object):
 		cpu.flags[NF] = False
 		cpu.flags[HF] = False
 		cpu.flags[SF] = True if cpu.A & 0x80 else False
-		cpu.flags[PVF] = True if Bits.count(cpu.A) % 2 == 0 else False
+		cpu.flags[PVF] = Bits.paritySet(cpu.A)
 		logger.info("XOR A")
 
 	@staticmethod
@@ -138,4 +138,4 @@ class Opcodes(object):
 		cpu.flags[NF] = False
 		cpu.flags[ZF] = Bits.isZero(cpu.A)
 		cpu.flags[SF] = True if Bits.twos_comp(cpu.A) < 0 else False
-		cpu.flags[PVF] = True if Bits.count(cpu.A) % 2 == 0 else False
+		cpu.flags[PVF] = Bits.paritySet(cpu.A)
