@@ -28,7 +28,6 @@ class Bits(object):
 	def paritySet(val):
 		return True if Bits.count(val) % 2 == 0 else False
 
-
 	@staticmethod
 	def carryFlag(val):
 		return True if val < 0 else False
