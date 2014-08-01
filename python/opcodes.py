@@ -20,7 +20,7 @@ class Opcodes(object):
 		cpu.flags[CF] = False
 		cpu.flags[NF] = False
 		cpu.flags[HF] = False
-		cpu.flags[SF] = True if cpu.A & 0x80 else False
+		cpu.flags[SF] = Bits.signInTwosComp(cpu.A)
 		cpu.flags[PVF] = Bits.paritySet(cpu.A)
 		logger.info("XOR A")
 
@@ -116,7 +116,7 @@ class Opcodes(object):
 		cpu.flags[CF] = Bits.carryFlag(value)
 		cpu.flags[NF] = True
 		cpu.flags[HF] = Bits.halfCarrySub(cpu.A, value)
-		cpu.flags[SF] = True if value < 0 else False
+		cpu.flags[SF] = Bits.signFlag(value)
 		cpu.flags[PVF] = Bits.overflow(cpu.A, value)
 		logger.info("CP r")
 
@@ -137,5 +137,5 @@ class Opcodes(object):
 		cpu.flags[CF] = False
 		cpu.flags[NF] = False
 		cpu.flags[ZF] = Bits.isZero(cpu.A)
-		cpu.flags[SF] = True if Bits.twos_comp(cpu.A) < 0 else False
+		cpu.flags[SF] = Bits.signInTwosComp(cpu.A)
 		cpu.flags[PVF] = Bits.paritySet(cpu.A)

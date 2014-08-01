@@ -31,3 +31,11 @@ class Bits(object):
 	@staticmethod
 	def carryFlag(val):
 		return True if val < 0 else False
+
+	@staticmethod
+	def signInTwosComp(val):
+		return True if Bits.twos_comp(val) < 0 else False
+
+	@staticmethod
+	def signFlag(val):
+		return True if val < 0 else False
