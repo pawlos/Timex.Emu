@@ -113,7 +113,7 @@ class Opcodes(object):
 		value = cpu.A - cpu.regs[regInd]
 		"""Flags"""
 		cpu.flags[ZF] = Bits.isZero(value)
-		cpu.flags[CF] = True if value < 0 else False
+		cpu.flags[CF] = Bits.carryFlag(value)
 		cpu.flags[NF] = True
 		cpu.flags[HF] = Bits.halfCarrySub(cpu.A, value)
 		cpu.flags[SF] = True if value < 0 else False
