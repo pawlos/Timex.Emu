@@ -14,14 +14,14 @@ class Opcodes(object):
 	def xorA(cpu, opcode, logger):
 		"""XOR A"""
 		regInd = opcode & 7
-		cpu.regs[A] = cpu.regs[A] ^ cpu.regs[regInd]
+		cpu.A = cpu.A ^ cpu.regs[regInd]
 		"""Flags"""
 		cpu.flags[ZF] = Bits.isZero(cpu.A)
 		cpu.flags[CF] = False
 		cpu.flags[NF] = False
 		cpu.flags[HF] = False
-		cpu.flags[SF] = True if cpu.regs[A] & 0x80 else False
-		cpu.flags[PVF] = True if Bits.count(cpu.regs[A]) % 2 == 0 else False
+		cpu.flags[SF] = True if cpu.A & 0x80 else False
+		cpu.flags[PVF] = True if Bits.count(cpu.A) % 2 == 0 else False
 		logger.info("XOR A")
 
 	@staticmethod
