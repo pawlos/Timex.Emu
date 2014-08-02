@@ -326,7 +326,7 @@ class TestCPUFunctions(unittest.TestCase):
 		self.assertTrue(cpu.PVFlag)
 
 	def test_sbc_hl_de_result_is_correct_if_c_flag_is_set(self):
-		cpu = CPU(FakeRom('\xed\x54'))
+		cpu = CPU(FakeRom('\xed\x52'))
 		cpu.HL = 0x9999
 		cpu.DE = 0x1111
 		cpu.CFlag = True
@@ -334,7 +334,7 @@ class TestCPUFunctions(unittest.TestCase):
 		self.assertEqual(0x8887, cpu.HL)
 
 	def test_sbc_hl_de_result_is_crrect_if_c_flag_is_reset(self):
-		cpu = CPU(FakeRom('\xed\x54'))
+		cpu = CPU(FakeRom('\xed\x52'))
 		cpu.HL = 0x9999
 		cpu.DE = 0x1111
 		cpu.CFlag = False
