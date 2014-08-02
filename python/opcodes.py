@@ -139,3 +139,20 @@ class Opcodes(object):
 		cpu.flags[ZF] = Bits.isZero(cpu.A)
 		cpu.flags[SF] = Bits.signInTwosComp(cpu.A)
 		cpu.flags[PVF] = Bits.paritySet(cpu.A)
+
+	@staticmethod
+	def sbc(cpu, opcode, logger):
+		logger.info("SBC HL")
+		regInd = (opcode & 0x30) >> 4
+		value = 0
+		if regInd == 0:
+			value = cpu.BC
+		elif regInd == 1:
+			value = cpu.DE
+		elif regInd == 2:
+			value = cpu.HL
+		elif regInd == 3:
+			value = cpu.SP
+
+		cpu.HL = cpu.HL - value - (1 if cpu.CFlag else 0)
+

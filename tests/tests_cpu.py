@@ -325,5 +325,21 @@ class TestCPUFunctions(unittest.TestCase):
 		cpu.readOp()
 		self.assertTrue(cpu.PVFlag)
 
+	def test_sbc_hl_de_result_is_correct_if_c_flag_is_set(self):
+		cpu = CPU(FakeRom('\xed\x54'))
+		cpu.HL = 0x9999
+		cpu.DE = 0x1111
+		cpu.CFlag = True
+		cpu.readOp();
+		self.assertEqual(0x8887, cpu.HL)
+
+	def test_sbc_hl_de_result_is_crrect_if_c_flag_is_reset(self):
+		cpu = CPU(FakeRom('\xed\x54'))
+		cpu.HL = 0x9999
+		cpu.DE = 0x1111
+		cpu.CFlag = False
+		cpu.readOp();
+		self.assertEqual(0x8888, cpu.HL)
+
 if __name__ == '__main__':
 	unittest.main()
