@@ -341,5 +341,13 @@ class TestCPUFunctions(unittest.TestCase):
 		cpu.readOp();
 		self.assertEqual(0x8888, cpu.HL)
 
+	def test_sbc_hl_de_sets_n_flag(self):
+		cpu = CPU(FakeRom('\xed\x52'))
+		cpu.HL = 0x9999
+		cpu.HL = 0x1223
+		cpu.NFlag = False
+		cpu.readOp()
+		self.assertTrue(cpu.NFlag)
+
 if __name__ == '__main__':
 	unittest.main()

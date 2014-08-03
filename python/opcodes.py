@@ -156,3 +156,5 @@ class Opcodes(object):
 
 		cpu.HL = cpu.HL - value - (1 if cpu.CFlag else 0)
 
+		cpu.flags[NF] = True
+
