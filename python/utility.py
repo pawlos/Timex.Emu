@@ -10,6 +10,10 @@ class Bits(object):
 		return True if ((firstByte & 0xf) - (secondByte & 0xf)) & 0x10 == 0x10 else False
 
 	@staticmethod
+	def halfCarrySub16(firstByte, secondByte):
+		return True if ((firstByte & 0xf00) - (secondByte & 0xf00)) & 0x1000 == 0x1000 else False
+
+	@staticmethod
 	def overflow(firstByte, secondByte):
 		return True if (secondByte < 0) and (firstByte > 0) else False
 

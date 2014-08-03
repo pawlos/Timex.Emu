@@ -154,8 +154,10 @@ class Opcodes(object):
 		elif regInd == 3:
 			value = cpu.SP
 
+		oldHL = cpu.HL
 		cpu.HL = cpu.HL - value - (1 if cpu.CFlag else 0)
 
 		cpu.flags[NF] = True
 		cpu.flags[ZF] = Bits.isZero(cpu.HL)
+		cpu.flags[HF] = Bits.halfCarrySub(oldHL, cpu.HL)
 

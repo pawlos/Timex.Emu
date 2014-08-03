@@ -46,3 +46,20 @@ class TestSBC(unittest.TestCase):
 		cpu.ZFlag = True
 		cpu.readOp()
 		self.assertFalse(cpu.ZFlag)
+
+	def test_sbc_hl_de_that_results_in_borrow_sets_h_flag(self):
+		cpu = CPU(FakeRom('\xed\x52'))
+		cpu.HL = 0x0800
+		cpu.DE = 0x0
+		cpu.CFlag = True
+		cpu.HFlag = False
+		cpu.readOp()
+		self.assertTrue(cpu.HFlag)
+
+	def test_sb_hl_de_that_does_not_generate_carry_in_12bit_resets_h_flag(self):
+		cpu = CPU(FakeRom('\xed\x52'))
+		cpu.HL = 0x0910
+		cpu.DE = 0x0110
+		cpu.HFlag = True
+		cpu.readOp()
+		self.assertFalse(cpu.HFlag)
