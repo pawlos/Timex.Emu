@@ -56,7 +56,7 @@ class TestSBC(unittest.TestCase):
 		cpu.readOp()
 		self.assertTrue(cpu.HFlag)
 
-	def test_sb_hl_de_that_does_not_generate_carry_in_12bit_resets_h_flag(self):
+	def test_sbc_hl_de_that_does_not_generate_carry_in_12bit_resets_h_flag(self):
 		cpu = CPU(FakeRom('\xed\x52'))
 		cpu.HL = 0x0910
 		cpu.DE = 0x0110
