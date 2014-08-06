@@ -71,3 +71,19 @@ class TestSBC(unittest.TestCase):
 		cpu.HFlag = False
 		cpu.readOp()
 		self.assertTrue(cpu.HFlag)
+
+	def test_sbc_hl_de_that_does_generate_borrow_sets_c_flah(self):
+		cpu = CPU(FakeRom('\xed\x52'))
+		cpu.HL = 0x1000
+		cpu.DE = 0x2000
+		cpu.CFlag = False
+		cpu.readOp()
+		self.assertTrue(cpu.CFlag)
+
+	def test_sbc_hl_de_that_does_not_generate_borrow_resets_c_flag(self):
+		cpu = CPU(FakeRom('\xed\x52'))
+		cpu.HL = 0x1000
+		cpu.DE = 0x0999
+		cpu.CFlag = True
+		cpu.readOp()
+		self.assertFalse(cpu.CFlag)

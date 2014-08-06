@@ -43,3 +43,7 @@ class Bits(object):
 	@staticmethod
 	def signFlag(val):
 		return True if val < 0 else False
+
+	@staticmethod
+	def borrow(val):
+		return True if val < 0 else False
