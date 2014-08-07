@@ -160,5 +160,6 @@ class Opcodes(object):
 		cpu.flags[SF] = Bits.signFlag(cpu.HL)
 		cpu.flags[ZF] = Bits.isZero(cpu.HL)
 		cpu.flags[HF] = Bits.halfCarrySub16(oldHL, cpu.HL)
+		cpu.flags[PVF] = Bits.overflow(Bits.twos_comp(oldHL, bits=16), cpu.HL)
 		cpu.flags[NF] = True
 		cpu.flags[CF] = Bits.borrow(cpu.HL)
