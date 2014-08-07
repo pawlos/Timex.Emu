@@ -87,3 +87,19 @@ class TestSBC(unittest.TestCase):
 		cpu.CFlag = True
 		cpu.readOp()
 		self.assertFalse(cpu.CFlag)
+
+	def test_sbc_hl_de_that_results_in_value_less_than_zero_set_s_flag(self):
+		cpu = CPU(FakeRom('\xed\x52'))
+		cpu.HL = 0x1000
+		cpu.DE = 0x1002
+		cpu.SFLag = False
+		cpu.readOp()
+		self.assertTrue(cpu.SFlag)
+
+	def test_sbc_hl_de_that_results_in_value_greater_than_zero_resets_s_flag(self):
+		cpu = CPU(FakeRom('\xed\x52'))
+		cpu.HL = 0x1000
+		cpu.DE = 0x0999
+		cpu.SFLag = True
+		cpu.readOp()
+		self.assertFalse(cpu.SFlag)

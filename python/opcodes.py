@@ -157,8 +157,8 @@ class Opcodes(object):
 		oldHL = cpu.HL
 		cpu.HL = cpu.HL - value - (1 if cpu.CFlag else 0)
 
-		cpu.flags[NF] = True
+		cpu.flags[SF] = Bits.signFlag(cpu.HL)
 		cpu.flags[ZF] = Bits.isZero(cpu.HL)
 		cpu.flags[HF] = Bits.halfCarrySub16(oldHL, cpu.HL)
+		cpu.flags[NF] = True
 		cpu.flags[CF] = Bits.borrow(cpu.HL)
-
