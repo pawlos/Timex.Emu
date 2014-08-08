@@ -163,3 +163,19 @@ class Opcodes(object):
 		cpu.flags[PVF] = Bits.overflow(Bits.twos_comp(oldHL, bits=16), cpu.HL)
 		cpu.flags[NF] = True
 		cpu.flags[CF] = Bits.borrow(cpu.HL)
+
+	@staticmethod
+	def add16(cpu, opcode, logger):
+		logger.info("ADD HL, rr")
+		regInd = (opcode & 0x30) >> 4
+		value = 0
+		if regInd == 0:
+			value = cpu.BC
+		elif regInd == 1:
+			value = cpu.DE
+		elif regInd == 2:
+			value = cpu.HL
+		elif regInd == 3:
+			value = cpu.SP
+
+		cpu.HL = cpu.HL + value
