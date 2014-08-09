@@ -47,3 +47,8 @@ class Bits(object):
 	@staticmethod
 	def borrow(val):
 		return True if val < 0 else False
+
+	@staticmethod
+	def carryFlag16(oldValue, newValue, bits = 15):
+		_1ToBits = 1 << bits
+		return True if (oldValue & _1ToBits != 0) and (newValue & _1ToBits == 0) else False 

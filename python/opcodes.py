@@ -178,4 +178,9 @@ class Opcodes(object):
 		elif regInd == 3:
 			value = cpu.SP
 
+		oldHL = cpu.HL
 		cpu.HL = cpu.HL + value
+
+		cpu.flags[NF] = False
+		cpu.flags[CF] = Bits.carryFlag16(oldHL, cpu.HL)
+		cpu.flags[HF] = Bits.carryFlag16(oldHL, cpu.HL, bits=11)
