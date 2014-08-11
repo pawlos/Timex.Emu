@@ -72,7 +72,7 @@ class TestSBC(unittest.TestCase):
 		cpu.readOp()
 		self.assertTrue(cpu.HFlag)
 
-	def test_sbc_hl_de_that_does_generate_borrow_sets_c_flah(self):
+	def test_sbc_hl_de_that_does_generate_borrow_sets_c_flag(self):
 		cpu = CPU(FakeRom('\xed\x52'))
 		cpu.HL = 0x1000
 		cpu.DE = 0x2000
