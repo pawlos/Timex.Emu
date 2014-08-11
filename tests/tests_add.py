@@ -13,6 +13,12 @@ class TestAdd(unittest.TestCase):
 		cpu.readOp()
 		self.assertEqual(0xabba, cpu.HL)
 
+	def test_add_hl_de_limits_the_result_to_16bits(self):
+		cpu = CPU(FakeRom('\x19'))
+		cpu.HL = 0xf000
+		cpu.DE = 0x1000
+		cpu.readOp()
+		self.assertEqual(0x0, cpu.HL)
 
 	def test_add_hl_de_does_not_change_s_flag(self):
 		cpu = CPU(FakeRom('\x19\x19'))

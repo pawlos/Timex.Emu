@@ -37,18 +37,22 @@ class Bits(object):
 		return True if val < 0 else False
 
 	@staticmethod
-	def signInTwosComp(val):
-		return True if Bits.twos_comp(val) < 0 else False
+	def signInTwosComp(val, bits = 8):
+		return True if Bits.twos_comp(val, bits) < 0 else False
 
 	@staticmethod
-	def signFlag(val):
-		return True if val < 0 else False
+	def signFlag(val, bits = 8):
+		return Bits.signInTwosComp(val, bits)
 
 	@staticmethod
-	def borrow(val):
-		return True if val < 0 else False
+	def borrow(val, bits = 8):
+		return Bits.signInTwosComp(val, bits)
 
 	@staticmethod
 	def carryFlag16(oldValue, newValue, bits = 15):
 		_1ToBits = 1 << bits
 		return True if (oldValue & _1ToBits != 0) and (newValue & _1ToBits == 0) else False 
+
+	@staticmethod
+	def limitTo16bits(value):
+		return value & 0xFFFF

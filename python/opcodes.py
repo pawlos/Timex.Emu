@@ -155,14 +155,17 @@ class Opcodes(object):
 			value = cpu.SP
 
 		oldHL = cpu.HL
+		logger.info("Old value of HL: " + str(oldHL))
 		cpu.HL = cpu.HL - value - (1 if cpu.CFlag else 0)
+		logger.info("New value of HL: " + str(cpu.HL))
 
-		cpu.flags[SF] = Bits.signFlag(cpu.HL)
+		cpu.flags[SF] = Bits.signFlag(cpu.HL, bits=16)
 		cpu.flags[ZF] = Bits.isZero(cpu.HL)
 		cpu.flags[HF] = Bits.halfCarrySub16(oldHL, cpu.HL)
-		cpu.flags[PVF] = Bits.overflow(Bits.twos_comp(oldHL, bits=16), cpu.HL)
+		cpu.flags[PVF] = Bits.overflow(Bits.twos_comp(oldHL, bits=16), 
+									   Bits.twos_comp(cpu.HL, bits=16))
 		cpu.flags[NF] = True
-		cpu.flags[CF] = Bits.borrow(cpu.HL)
+		cpu.flags[CF] = Bits.borrow(cpu.HL, bits=16)
 
 	@staticmethod
 	def add16(cpu, opcode, logger):
