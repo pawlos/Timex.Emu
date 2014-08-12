@@ -187,3 +187,20 @@ class Opcodes(object):
 		cpu.flags[NF] = False
 		cpu.flags[CF] = Bits.carryFlag16(oldHL, cpu.HL)
 		cpu.flags[HF] = Bits.carryFlag16(oldHL, cpu.HL, bits=11)
+
+	@staticmethod
+	def inc16(cpu, opcode, logger):
+		logger.info("INC rr")
+		regInd = (opcode & 0x30) >> 4
+		value = 0
+
+		if regInd == 0:
+			cpu.BC = cpu.BC + 1
+		elif regInd == 1:
+			cpu.DE = cpu.DE + 1
+		elif regInd == 2:
+			cpu.HL = cpu.HL + 1
+		elif regInd == 3:
+			cpu.SP = cpu.SP + 1
+
+
