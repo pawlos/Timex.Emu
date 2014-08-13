@@ -125,8 +125,18 @@ class Opcodes(object):
 		jumpOffset = cpu.rom.readMemory(cpu.PC)
 		if cpu.ZFlag:
 			return
-		logger.info(jumpOffset)
+
 		cpu.PC = cpu.PC + Bits.twos_comp(jumpOffset)
+		logger.info("JPNZ {0:x}".format(jumpOffset))
+
+	@staticmethod
+	def jpnc(cpu, opcode, logger):
+		jumpOffset = Bits.twos_comp(cpu.rom.readMemory(cpu.PC)) - 2
+		if cpu.CFlag:
+			return
+
+		cpu.PC = cpu.PC + jumpOffset
+		logger.info("JP {0:x}".format(jumpOffset))
 
 	@staticmethod
 	def _and(cpu, opcode, logger):
