@@ -1,1 +1,1 @@
-#Timex 2048import iofrom cpu import CPUif __name__ == '__main__':	print("Starting execution...");	timex = CPU();	timex.run();	print("Ending...")
+#Timex 2048import iofrom cpu import CPUfrom loggers import Loggerif __name__ == '__main__':	print("Starting execution...");	timex = CPU();	timex.run();	print("Ending...")

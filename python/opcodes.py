@@ -136,7 +136,7 @@ class Opcodes(object):
 			return
 
 		cpu.PC = cpu.PC + jumpOffset
-		logger.info("JP {0:x}".format(jumpOffset))
+		logger.info("JP NC {0:x}".format(jumpOffset))
 
 	@staticmethod
 	def _and(cpu, opcode, logger):
@@ -213,4 +213,12 @@ class Opcodes(object):
 		elif regInd == 3:
 			cpu.SP = cpu.SP + 1
 
+	@staticmethod
+	def jrz(cpu, opcode, logger):
 
+		jumpOffset = Bits.twos_comp(cpu.rom.readMemory(cpu.PC))
+		if cpu.ZFlag == False:
+			return
+
+		cpu.PC = cpu.PC + jumpOffset
+		logger.info("JR Z {0:x}".format(jumpOffset))
