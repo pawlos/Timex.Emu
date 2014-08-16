@@ -20,3 +20,12 @@ class jrz(unittest.TestCase):
 		cpu.ZFlag = False
 		cpu.readOp()
 		self.assertEqual(0x02, cpu.PC)
+
+	def test_j_z_does_not_change_the_z_flag(self):
+		cpu = CPU(FakeRom('\x28\x00\x28\x00'))
+		cpu.ZFlag = False
+		cpu.readOp()
+		self.assertFalse(cpu.ZFlag)
+		cpu.ZFlag = True
+		cpu.readOp()
+		self.assertTrue(cpu.ZFlag)
