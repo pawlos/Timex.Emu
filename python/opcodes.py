@@ -222,3 +222,19 @@ class Opcodes(object):
 
 		cpu.PC = cpu.PC + jumpOffset
 		logger.info("JR Z {0:x}".format(jumpOffset))
+
+	@staticmethod
+	def exx(cpu, opcode, logger):
+		logger.info("EXX")
+		
+		tempBC = cpu.BC
+		tempDE = cpu.DE
+		tempHL = cpu.HL
+		
+		cpu.BC = cpu.BCPrim
+		cpu.DE = cpu.DEPrim
+		cpu.HL = cpu.HLPrim
+
+		cpu.BCPrim = tempBC
+		cpu.DEPrim = tempDE
+		cpu.HLPrim = tempHL
