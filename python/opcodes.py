@@ -202,7 +202,6 @@ class Opcodes(object):
 	def inc16(cpu, opcode, logger):
 		logger.info("INC rr")
 		regInd = (opcode & 0x30) >> 4
-		value = 0
 
 		if regInd == 0:
 			cpu.BC = cpu.BC + 1
@@ -238,3 +237,22 @@ class Opcodes(object):
 		cpu.BCPrim = tempBC
 		cpu.DEPrim = tempDE
 		cpu.HLPrim = tempHL
+
+	@staticmethod
+	def ldNnRr(cpu, opcode, logger):
+		logger.info("LD (nn),rr")
+		value = 0
+		regInd = (opcode & 0x30) >> 4
+		nn = cpu.rom.readMemory(cpu.PC) << 8 + cpu.rom.readMemory(cpu.PC)
+		logger.info("Addr: {0:x}".format(nn))
+		if regInd == 0:
+			value = cpu.BC
+		elif regInd == 1:
+			value = cpu.DE
+		elif regInd == 2:
+			value = cpu.HL
+		elif regInd == 3:
+			value = cpu.SP
+
+		cpu.ram.storeAddr(nn, value >> 8)
+		cpu.ram.storeAddr(nn+1, value & 0xFF)
