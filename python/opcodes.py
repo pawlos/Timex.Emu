@@ -243,7 +243,9 @@ class Opcodes(object):
 		logger.info("LD (nn),rr")
 		value = 0
 		regInd = (opcode & 0x30) >> 4
-		nn = cpu.rom.readMemory(cpu.PC) << 8 + cpu.rom.readMemory(cpu.PC)
+		high = cpu.rom.readMemory(cpu.PC)
+		low = cpu.rom.readMemory(cpu.PC)
+		nn =  (high << 8) + low
 		logger.info("Addr: {0:x}".format(nn))
 		if regInd == 0:
 			value = cpu.BC
