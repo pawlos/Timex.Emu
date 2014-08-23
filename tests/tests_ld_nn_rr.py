@@ -8,7 +8,7 @@ from loggers import Logger
 class ld_nn_rr(unittest.TestCase):
 
 	def test_ed43nn_correctly_stores_value_at_given_location(self):
-		cpu = CPU(FakeRom('\xed\x43\x10\0x00'))
+		cpu = CPU(FakeRom('\xed\x43\x10\x00'))
 		cpu.BC = 0x4644
 		cpu.readOp()
 		self.assertEqual(cpu.ram.readAddr(0x1000), 0x46)
@@ -27,3 +27,10 @@ class ld_nn_rr(unittest.TestCase):
 		self.assertEqual(None, cpu.PVFlag)
 		self.assertTrue(cpu.SFlag)
 		self.assertFalse(cpu.HFlag)
+
+	def test_ed53nn_correctly_stores_de_value_at_given_location(self):
+		cpu = CPU(FakeRom('\xed\x53\x10\x00'))
+		cpu.DE = 0xabba
+		cpu.readOp()
+		self.assertEqual(cpu.ram.readAddr(0x1000), 0xab)
+		self.assertEqual(cpu.ram.readAddr(0x1001), 0xba)
