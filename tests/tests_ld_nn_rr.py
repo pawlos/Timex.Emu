@@ -11,8 +11,8 @@ class ld_nn_rr(unittest.TestCase):
 		cpu = CPU(FakeRom('\xed\x43\x10\x00'))
 		cpu.BC = 0x4644
 		cpu.readOp()
-		self.assertEqual(cpu.ram.readAddr(0x1000), 0x46)
-		self.assertEqual(cpu.ram.readAddr(0x1001), 0x44)
+		self.assertEqual(cpu.ram.readAddr(0x1001), 0x46)
+		self.assertEqual(cpu.ram.readAddr(0x1000), 0x44)
 
 	def test_ed43nn_does_not_affect_flags(self):
 		cpu = CPU(FakeRom('\xed\x43\x10\x00'))
@@ -32,5 +32,5 @@ class ld_nn_rr(unittest.TestCase):
 		cpu = CPU(FakeRom('\xed\x53\x10\x00'))
 		cpu.DE = 0xabba
 		cpu.readOp()
-		self.assertEqual(cpu.ram.readAddr(0x1000), 0xab)
-		self.assertEqual(cpu.ram.readAddr(0x1001), 0xba)
+		self.assertEqual(cpu.ram.readAddr(0x1001), 0xab)
+		self.assertEqual(cpu.ram.readAddr(0x1000), 0xba)

@@ -256,8 +256,8 @@ class Opcodes(object):
 		elif regInd == 3:
 			value = cpu.SP
 
-		cpu.ram.storeAddr(nn, value >> 8)
-		cpu.ram.storeAddr(nn+1, value & 0xFF)
+		cpu.ram.storeAddr(nn + 1, value >> 8)
+		cpu.ram.storeAddr(nn, value & 0xFF)
 
 	@staticmethod
 	def ldNnHl(cpu, opcode, logger):
