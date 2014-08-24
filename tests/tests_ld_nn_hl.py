@@ -1,0 +1,15 @@
+import unittest
+
+from cpu import CPU
+from opcodes import Opcodes
+from fakes import *
+from loggers import Logger
+
+class ld_nn_hl(unittest.TestCase):
+
+	def test_ld_nn_hl_correctly_stores_value_at_given_address(self):
+		cpu = CPU(FakeRom('\x22\xb2\x29'))
+		cpu.HL = 0x483a
+		cpu.readOp()
+		self.assertEqual(0x48, cpu.ram.readAddr(0xb22a))
+		self.assertEqual(0x3a, cpu.ram.readAddr(0xb229))

@@ -258,3 +258,13 @@ class Opcodes(object):
 
 		cpu.ram.storeAddr(nn, value >> 8)
 		cpu.ram.storeAddr(nn+1, value & 0xFF)
+
+	@staticmethod
+	def ldNnHl(cpu, opcode, logger):
+		logger.info("LD (nn), HL")
+		high = cpu.rom.readMemory(cpu.PC)
+		low = cpu.rom.readMemory(cpu.PC)
+
+		nn = (high << 8) + low
+		cpu.ram.storeAddr(nn+1, cpu.H)
+		cpu.ram.storeAddr(nn, cpu.L)
