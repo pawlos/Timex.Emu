@@ -268,3 +268,9 @@ class Opcodes(object):
 		nn = (high << 8) + low
 		cpu.ram.storeAddr(nn+1, cpu.H)
 		cpu.ram.storeAddr(nn, cpu.L)
+
+	@staticmethod
+	def inc8(cpu, opcode, logger):
+		logger.info("INC r")
+		index = ( opcode >> 3 ) & 7
+		cpu.regs[index] = cpu.regs[index] + 1

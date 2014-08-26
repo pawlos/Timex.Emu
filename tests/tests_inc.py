@@ -68,3 +68,9 @@ class TestInc(unittest.TestCase):
 		cpu.HFlag = False
 		cpu.readOp()
 		self.assertFalse(cpu.HFlag)
+
+	def test_inc_r_correctly_adds_one(self):
+		cpu = CPU(FakeRom('\x04'))
+		cpu.B = 0
+		cpu.readOp()
+		self.assertEqual(1, cpu.B)
