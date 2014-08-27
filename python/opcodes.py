@@ -274,3 +274,5 @@ class Opcodes(object):
 		logger.info("INC r")
 		index = ( opcode >> 3 ) & 7
 		cpu.regs[index] = cpu.regs[index] + 1
+
+		cpu.NFlag = False
