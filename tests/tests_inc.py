@@ -75,7 +75,7 @@ class TestInc(unittest.TestCase):
 		cpu.readOp()
 		self.assertEqual(1, cpu.B)
 
-	def test_inc_r_does_reset_N_flag_when_it_is_set(self):
+	def test_inc_r_does_reset_N_flag(self):
 		cpu = CPU(FakeRom('\x04\x04'))
 		cpu.B = 0xAA
 		cpu.NFlag = True
@@ -84,3 +84,13 @@ class TestInc(unittest.TestCase):
 		cpu.NFlag = False #redundant but to be explicit
 		cpu.readOp()
 		self.assertFalse(cpu.NFlag)
+
+	def test_inc_r_does_not_affect_C_flag(self):
+		cpu = CPU(FakeRom('\x04\x04'))
+		cpu.B = 0xCB
+		cpu.CFlag = True
+		cpu.readOp()
+		self.assertTrue(cpu.CFlag)
+		cpu.readOp()
+		cpu.CFlag = False
+		self.assertFalse(cpu.CFlag)
