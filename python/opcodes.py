@@ -276,3 +276,4 @@ class Opcodes(object):
 		cpu.regs[index] = cpu.regs[index] + 1
 
 		cpu.NFlag = False
+		cpu.ZFlag = Bits.isZero(cpu.regs[index])
