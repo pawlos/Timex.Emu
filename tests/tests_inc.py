@@ -101,3 +101,10 @@ class TestInc(unittest.TestCase):
 		cpu.ZFlag = True
 		cpu.readOp()
 		self.assertFalse(cpu.ZFlag)
+
+	def test_inc_r_set_Z_flag_when_result_is_zero(self):
+		cpu = CPU(FakeRom('\x04'))
+		cpu.B = 0xff
+		cpu.ZFlag = False
+		cpu.readOp()
+		self.assertTrue(cpu.ZFlag)
