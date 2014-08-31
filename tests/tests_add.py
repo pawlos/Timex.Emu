@@ -92,3 +92,10 @@ class TestAdd(unittest.TestCase):
 		cpu.HFlag = True
 		cpu.readOp()
 		self.assertFalse(cpu.HFlag)
+
+	def test_add_hl_de_does_not_exceed_limit_of_16_bits(self):
+		cpu = CPU(FakeRom('\x19'))
+		cpu.HL = 0xaaaa
+		cpu.DE = 0xaaaa
+		cpu.readOp()
+		self.assertEqual(0x5554, cpu.HL)
