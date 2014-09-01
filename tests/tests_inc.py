@@ -108,3 +108,17 @@ class TestInc(unittest.TestCase):
 		cpu.ZFlag = False
 		cpu.readOp()
 		self.assertTrue(cpu.ZFlag)
+
+	def test_inc_r_set_H_flag_if_bit_no_3_is_set(self):
+		cpu = CPU(FakeRom('\x04'))
+		cpu.B = 0x07
+		cpu.HFlag = False
+		cpu.readOp()
+		self.assertTrue(cpu.HFlag)
+
+	def test_inc_r_reset_H_flag_if_bit_no_3_is_reset(self):
+		cpu = CPU(FakeRom('\x04'))
+		cpu.B = 0x0f
+		cpu.HFlag = True
+		cpu.readOp()
+		self.assertFalse(cpu.HFlag)

@@ -273,7 +273,9 @@ class Opcodes(object):
 	def inc8(cpu, opcode, logger):
 		logger.info("INC r")
 		index = ( opcode >> 3 ) & 7
+		oldValue =  cpu.regs[index]
 		cpu.regs[index] = (cpu.regs[index] + 1 ) & 0xFF
 
 		cpu.NFlag = False
 		cpu.ZFlag = Bits.isZero(cpu.regs[index])
+		cpu.HFlag = Bits.halfCarrySub(oldValue, cpu.regs[index])
