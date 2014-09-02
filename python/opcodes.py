@@ -279,3 +279,4 @@ class Opcodes(object):
 		cpu.NFlag = False
 		cpu.ZFlag = Bits.isZero(cpu.regs[index])
 		cpu.HFlag = Bits.halfCarrySub(oldValue, cpu.regs[index])
+		cpu.PVFlag = True if oldValue == 0x7f else False

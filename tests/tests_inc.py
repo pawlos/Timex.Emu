@@ -122,3 +122,21 @@ class TestInc(unittest.TestCase):
 		cpu.HFlag = True
 		cpu.readOp()
 		self.assertFalse(cpu.HFlag)
+
+	def test_inc_r_sets_PV_flag_if_value_before_was_7f(self):
+		cpu = CPU(FakeRom('\x04'))
+		cpu.B = 0x7f
+		cpu.PVFlag = False
+		cpu.readOp()
+		self.assertTrue(cpu.PVFlag)
+
+	def test_inc_r_resets_PV_flag_when_value_before_was_not_7f(self):
+		cpu = CPU(FakeRom('\x04\x04'))
+		cpu.B = 0x7e
+		cpu.PVFlag = True
+		cpu.readOp()
+		self.assertFalse(cpu.PVFlag)
+		cpu.B = 0x80
+		cpu.PVFlag = True
+		cpu.readOp()
+		self.assertFalse(cpu.PVFlag)
