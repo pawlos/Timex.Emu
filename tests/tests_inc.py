@@ -140,3 +140,16 @@ class TestInc(unittest.TestCase):
 		cpu.PVFlag = True
 		cpu.readOp()
 		self.assertFalse(cpu.PVFlag)
+
+	def test_inc_r_sets_S_flag_when_result_is_negative(self):
+		cpu = CPU(FakeRom('\x04'))
+		cpu.B = 0x7f
+		cpu.readOp()
+		self.assertTrue(cpu.SFlag)
+
+	def test_inc_r_resets_S_flag_when_result_is_positive(self):
+		cpu = CPU(FakeRom('\x04'))
+		cpu.B = 0x11
+		cpu.SFlag = True
+		cpu.readOp()
+		self.assertFalse(cpu.SFlag)
