@@ -281,3 +281,10 @@ class Opcodes(object):
 		cpu.HFlag = Bits.halfCarrySub(oldValue, cpu.regs[index])
 		cpu.PVFlag = True if oldValue == 0x7f else False
 		cpu.SFlag = Bits.twos_comp(cpu.regs[index]) < 0
+
+	@staticmethod
+	def ex_de_hl(cpu, opcode, logger):
+		logger.info("EX DE, HL")
+		oldValue = cpu.DE
+		cpu.DE = cpu.HL
+		cpu.HL = oldValue
