@@ -288,3 +288,17 @@ class Opcodes(object):
 		oldValue = cpu.DE
 		cpu.DE = cpu.HL
 		cpu.HL = oldValue
+
+	@staticmethod
+	def lddr(cpu, opcode, logger):
+		logger.info("LDDR")
+		while True:
+			cpu.ram.storeAddr(cpu.DE, cpu.ram.readAddr(cpu.HL))
+			cpu.HL = cpu.HL - 1
+			cpu.DE = cpu.DE - 1
+			cpu.BC = cpu.BC - 1
+			cpu.NFlag = False
+			cpu.HFlag = False
+			cpu.PVFlag = False
+			if cpu.BC == 0:
+				break
