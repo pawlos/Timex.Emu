@@ -302,3 +302,12 @@ class Opcodes(object):
 			cpu.PVFlag = False
 			if cpu.BC == 0:
 				break
+
+	@staticmethod
+	def ldHl_addr(cpu, opcode, logger):
+		logger.info("LD HL, (nn)")
+		low = cpu.rom.readMemory(cpu.PC)
+		high = cpu.rom.readMemory(cpu.PC)
+		addr = (high << 8) + low
+		cpu.L = cpu.ram.readAddr(addr)
+		cpu.H = cpu.ram.readAddr(addr+1)
