@@ -305,10 +305,10 @@ class Opcodes(object):
 
 	@staticmethod
 	def ldHl_addr(cpu, opcode, logger):
-		logger.info("LD HL, (nn)")
 		low = cpu.rom.readMemory(cpu.PC)
 		high = cpu.rom.readMemory(cpu.PC)
 		addr = (high << 8) + low
+		logger.info("LD HL, (0x{:4X})".format(addr))
 		cpu.L = cpu.ram.readAddr(addr)
 		cpu.H = cpu.ram.readAddr(addr+1)
 
