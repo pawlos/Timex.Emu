@@ -261,11 +261,11 @@ class Opcodes(object):
 
 	@staticmethod
 	def ldNnHl(cpu, opcode, logger):
-		logger.info("LD (nn), HL")
 		high = cpu.rom.readMemory(cpu.PC)
 		low = cpu.rom.readMemory(cpu.PC)
 
 		nn = (high << 8) + low
+		logger.info("LD (0x{:4x}), HL".format(nn))
 		cpu.ram.storeAddr(nn+1, cpu.H)
 		cpu.ram.storeAddr(nn, cpu.L)
 
