@@ -56,3 +56,16 @@ class Bits(object):
 	@staticmethod
 	def limitTo16bits(value):
 		return value & 0xFFFF
+
+
+class IndexToReg(object):
+	@staticmethod
+	def translate16bit(ind):
+		if ind == 0:
+			return "BC"
+		if ind == 1:
+			return "DE"
+		if ind == 2:
+			return "HL"
+		if inf == 3:
+			return "SP"

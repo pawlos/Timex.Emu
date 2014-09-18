@@ -1,6 +1,7 @@
 # Aux class
 from regs import *
 from utility import Bits
+from utility import IndexToReg
 
 class Opcodes(object):
 
@@ -200,9 +201,9 @@ class Opcodes(object):
 
 	@staticmethod
 	def inc16(cpu, opcode, logger):
-		logger.info("INC rr")
+		
 		regInd = (opcode & 0x30) >> 4
-
+		logger.info("INC {0}".format(IndexToReg.translate16bit(regInd)))
 		if regInd == 0:
 			cpu.BC = cpu.BC + 1
 		elif regInd == 1:
@@ -246,7 +247,7 @@ class Opcodes(object):
 		high = cpu.rom.readMemory(cpu.PC)
 		low = cpu.rom.readMemory(cpu.PC)
 		nn =  (high << 8) + low
-		logger.info("Addr: {0:x}".format(nn))
+		logger.info("Addr: 0x{0:x}".format(nn))
 		if regInd == 0:
 			value = cpu.BC
 		elif regInd == 1:
