@@ -41,7 +41,7 @@ class Opcodes(object):
 		elif regInd == 3:
 			cpu.SP = value
 
-		logger.info("LD");
+		logger.info("LD {0}, {1}".format(IndexToReg.translate16bit(regInd),value))
 
 	@staticmethod
 	def ld8(cpu, opcode, logger):

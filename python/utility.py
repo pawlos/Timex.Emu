@@ -67,5 +67,5 @@ class IndexToReg(object):
 			return "DE"
 		if ind == 2:
 			return "HL"
-		if inf == 3:
+		if ind == 3:
 			return "SP"
