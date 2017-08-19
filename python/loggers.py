@@ -1,7 +1,6 @@
 # Logger class
 
 class Logger(object):
-
 	def info(self, msg):
 		print msg
 

@@ -8,8 +8,14 @@ class Opcodes(object):
 	@staticmethod
 	def disableInterrupts(cpu, opcode, logger):
 		"""DI"""
-		cpu.iff = 0x00;		
+		cpu.iff = 0x00
 		logger.info("DI")
+
+	@staticmethod
+	def enableInterrupts(cpu, opcode, logger):
+		''' EI '''
+		cpu.iff = 0x01
+		logger.info("EI")
 
 	@staticmethod
 	def xorA(cpu, opcode, logger):
@@ -321,3 +327,12 @@ class Opcodes(object):
 	@staticmethod
 	def im1(cpu, opcode, logger):
 		logger.info("IM 1")
+
+	@staticmethod
+	def ldiy(cpu, opcode, logger):
+		''' Executes LD IY, nnnn opcode'''
+		low = cpu.rom.readMemory(cpu.PC)
+		high = cpu.rom.readMemory(cpu.PC)
+		imm = (high << 8) + low
+		logger.info("LD IY, 0x{:4X}".format(imm))
+		cpu.IY = imm
