@@ -326,6 +326,7 @@ class Opcodes(object):
 
 	@staticmethod
 	def im1(cpu, opcode, logger):
+		cpu.interruptMode = 1
 		logger.info("IM 1")
 
 	@staticmethod
@@ -336,3 +337,27 @@ class Opcodes(object):
 		imm = (high << 8) + low
 		logger.info("LD IY, 0x{:4X}".format(imm))
 		cpu.IY = imm
+
+	@staticmethod
+	def ldir(cpu, opcode, logger):
+		''' (DE) <- (HL), DE = DE + 1, HL = HL + 1, BC F = BC - 1'''
+		while True:
+			hl_mem = cpu.ram.readAddr(cpu.HL)
+			cpu.ram.storeAddr(cpu.DE, hl_mem)
+			cpu.HL = cpu.HL + 1
+			cpu.DE = cpu.DE + 1
+			cpu.BC = cpu.BC - 1
+			if cpu.BC == 0:
+				break
+		cpu.NFlag = False
+		cpu.HFlag = False
+		cpu.PVFlag = False
+
+	@staticmethod
+	def ldnn_a(cpu, opcode, logger):
+		''' LD (nn),A '''
+		high = cpu.rom.readMemory(cpu.PC)
+		low = cpu.rom.readMemory(cpu.PC)
+		addr = (high << 8) + low
+		logger.info("LD ((0x{:4X}), A".format(addr))
+		cpu.ram.storeAddr(addr, cpu.A)
