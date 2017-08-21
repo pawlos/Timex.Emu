@@ -331,7 +331,7 @@ class Opcodes(object):
 
 	@staticmethod
 	def ldiy(cpu, opcode, logger):
-		''' Executes LD IY, nnnn opcode'''
+		''' Executes LD IY, nn opcode'''
 		low = cpu.rom.readMemory(cpu.PC)
 		high = cpu.rom.readMemory(cpu.PC)
 		imm = (high << 8) + low
