@@ -121,7 +121,7 @@ class Opcodes(object):
 		"""Flags"""
 		cpu.flags[ZF] = Bits.isZero(value)
 		cpu.flags[CF] = Bits.carryFlag(value)
-		cpu.flags[NF] = True
+		cpu.flags[NF] = Bits.set()
 		cpu.flags[HF] = Bits.halfCarrySub(cpu.A, value)
 		cpu.flags[SF] = Bits.signFlag(value)
 		cpu.flags[PVF] = Bits.overflow(cpu.A, value)
@@ -283,7 +283,7 @@ class Opcodes(object):
 		oldValue =  cpu.regs[index]
 		cpu.regs[index] = (cpu.regs[index] + 1 ) & 0xFF
 
-		cpu.NFlag = False
+		cpu.NFlag = Bits.reset()
 		cpu.ZFlag = Bits.isZero(cpu.regs[index])
 		cpu.HFlag = Bits.halfCarrySub(oldValue, cpu.regs[index])
 		cpu.PVFlag = True if oldValue == 0x7f else False
@@ -349,9 +349,9 @@ class Opcodes(object):
 			cpu.BC = cpu.BC - 1
 			if cpu.BC == 0:
 				break
-		cpu.NFlag = False
-		cpu.HFlag = False
-		cpu.PVFlag = False
+		cpu.NFlag = Bits.reset()
+		cpu.HFlag = Bits.reset()
+		cpu.PVFlag = Bits.reset()
 
 	@staticmethod
 	def ldnn_a(cpu, opcode, logger):
@@ -361,3 +361,19 @@ class Opcodes(object):
 		addr = (high << 8) + low
 		logger.info("LD ((0x{:4X}), A".format(addr))
 		cpu.ram.storeAddr(addr, cpu.A)
+
+	@staticmethod
+	def dec_mem_at_iy(cpu, opcode, logger):
+		''' DEC (IY+d) '''
+		displacement = cpu.rom.readMemory(cpu.PC)
+		logger.info("DEC (IY+{:2X})".format(displacement))
+		addr = cpu.IY + displacement
+		value = cpu.ram.readAddr(addr)
+		new_value = value - 1
+		cpu.ram.storeAddr(addr, new_value)
+
+		cpu.NFlag = Bits.set()
+		cpu.SFlag = Bits.isNegative(new_value)
+		cpu.ZFlag = Bits.isZero(new_value)
+		cpu.PVFlag = True if value == 0x80 else False
+		cpu.HFlag = Bits.halfCarrySub16(value, new_value)

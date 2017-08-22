@@ -2,6 +2,14 @@
 
 class Bits(object):
 	@staticmethod
+	def set():
+		return True
+
+	@staticmethod
+	def reset():
+		return False
+
+	@staticmethod
 	def count(value):
 		return bin(value).count('1')
 
@@ -34,6 +42,10 @@ class Bits(object):
 
 	@staticmethod
 	def carryFlag(val):
+		return True if val < 0 else False
+
+	@staticmethod
+	def isNegative(val):
 		return True if val < 0 else False
 
 	@staticmethod
