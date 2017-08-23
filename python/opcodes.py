@@ -100,7 +100,7 @@ class Opcodes(object):
 	@staticmethod
 	def dec16b(cpu, opcode, logger):
 		regInd = (opcode >> 4) & 2
-		logger.info(regInd)
+		#logger.info(regInd)
 		value = 0
 		if regInd == 0:
 			cpu.BC = cpu.BC - 1
@@ -116,7 +116,7 @@ class Opcodes(object):
 	@staticmethod
 	def cp(cpu, opcode, logger):
 		regInd = opcode & 7
-		logger.info(regInd)
+		#logger.info(regInd)
 		value = cpu.A - cpu.regs[regInd]
 		"""Flags"""
 		cpu.flags[ZF] = Bits.isZero(value)
@@ -172,9 +172,9 @@ class Opcodes(object):
 			value = cpu.SP
 
 		oldHL = cpu.HL
-		logger.info("Old value of HL: " + str(oldHL))
+		#logger.info("Old value of HL: " + str(oldHL))
 		cpu.HL = cpu.HL - value - (1 if cpu.CFlag else 0)
-		logger.info("New value of HL: " + str(cpu.HL))
+		#logger.info("New value of HL: " + str(cpu.HL))
 
 		cpu.flags[SF] = Bits.signFlag(cpu.HL, bits=16)
 		cpu.flags[ZF] = Bits.isZero(cpu.HL)
@@ -359,7 +359,7 @@ class Opcodes(object):
 		high = cpu.rom.readMemory(cpu.PC)
 		low = cpu.rom.readMemory(cpu.PC)
 		addr = (high << 8) + low
-		logger.info("LD ((0x{:4X}), A".format(addr))
+		logger.info("LD (0x{:4X}), A".format(addr))
 		cpu.ram.storeAddr(addr, cpu.A)
 
 	@staticmethod
