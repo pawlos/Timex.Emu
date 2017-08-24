@@ -277,7 +277,7 @@ class CPU(object):
 
 	def dispatch(self, opcode, pc):
 		try:
-			self.debugger.next_opcode(pc)
+			self.debugger.next_opcode(pc, self.regs, self.regsPri)
 			self.dispatchTable[opcode](self, opcode, self.logger)
 		except KeyError as e:
 			print "Missing opcode key: {1:x}, PC = 0x{0:x}".format(self.PC, opcode)
