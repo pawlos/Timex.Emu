@@ -21,7 +21,10 @@ class Debugger(object):
 	def setBrekpoint(self, pc):
 		self.breakpoints[pc] = True
 
-	def stop(self, regs, regsPri):
+	def state(self, flag, flag_name):
+		return flag_name if flag == True else flag_name.lower()
+
+	def stop(self, regs, regsPri, flags):
 		while True:
 			input = raw_input()
 			if "ir" == input:
@@ -29,12 +32,16 @@ class Debugger(object):
 					.format(regs[A], regs[B], regs[C],  regs[D],  regs[E], regs[H], regs[L])
 				print "A': {:02X} B': {:02X} C': {:02X} D': {:02X} E': {:02X} H': {:02X} L': {:02X}" \
 					.format(regsPri[A], regsPri[B], regsPri[C], regsPri[D], regsPri[E], regsPri[H], regsPri[L])
-			if "" == input:
+			elif "if" == input:
+				print "{} {} _ {} _ {} {} {}".format(self.state(flags[SF], "S"), self.state(flags[ZF], "Z"), \
+													 self.state(flags[HF], "H"), self.state(flags[PVF], "P/V"), \
+													 self.state(flags[NF], "N"), self.state(flags[CF], "C"))
+			elif "" == input:
 				break
+			else:
+				print "unknown command"
 
-			print "unknown command"
-
-	def next_opcode(self, pc, regs, regsPri):
+	def next_opcode(self, pc, regs, regsPri, flags):
 		if pc in self.breakpoints and self.breakpoints[pc]:
 			print "Stopped...@ 0x{:4X}".format(pc)
-			self.stop(regs, regsPri)
+			self.stop(regs, regsPri, flags)
