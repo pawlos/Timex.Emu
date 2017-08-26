@@ -178,6 +178,22 @@ class CPU(object):
 		self.i = value
 
 	@property
+	def IX(self):
+		return self.ix
+
+	@IX.setter
+	def IX(self, value):
+		self.ix = value
+
+	@property
+	def IY(self):
+		return self.iy
+
+	@IY.setter
+	def IY(self, value):
+		self.iy = value
+
+	@property
 	def PC(self):
 		value = self.pc
 		self.pc += 1
@@ -277,7 +293,7 @@ class CPU(object):
 
 	def dispatch(self, opcode, pc):
 		try:
-			self.debugger.next_opcode(pc, self.regs, self.regsPri, self.flags)
+			self.debugger.next_opcode(pc, self)
 			self.dispatchTable[opcode](self, opcode, self.logger)
 		except KeyError as e:
 			print "Missing opcode key: {1:x}, PC = 0x{0:x}".format(self.PC, opcode)
