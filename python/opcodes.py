@@ -47,23 +47,22 @@ class Opcodes(object):
 		elif regInd == 3:
 			cpu.SP = value
 
-		logger.info("LD {0}, {1}".format(IndexToReg.translate16bit(regInd),value))
+		logger.info("LD {}, 0x{:04X}".format(IndexToReg.translate16bit(regInd),value))
 
 	@staticmethod
 	def ld8(cpu, opcode, logger):
 		regIndPrim = (opcode & 7)
 		logger.info(regIndPrim)
 		regInd     = (opcode >> 3) & 7
-		logger.info(regInd)
 		cpu.regs[regInd] = cpu.regs[regIndPrim]
-		logger.info("LD")
+		logger.info("LD {}, {}'".format(IndexToReg.translate8bit(regInd), IndexToReg.translate8bit(regIndPrim)))
 
 	@staticmethod
 	def ld8n(cpu, opcode, logger):
 		regInd = (opcode >> 3) & 7
 		value = cpu.rom.readMemory(cpu.PC)
 		cpu.regs[regInd] = value
-		logger.info("LD")
+		logger.info("LD {}, {:2X}".format(IndexToReg.translate8bit(IndexToReg), value))
 
 	@staticmethod
 	def jp(cpu, opcode, logger):
@@ -72,7 +71,7 @@ class Opcodes(object):
 		value = (hiValue << 8) + loValue
 		cpu.PC = value
 
-		logger.info("JP {0:x}".format(value))
+		logger.info("JP {0:X}".format(value))
 		return True
 
 	@staticmethod
@@ -272,7 +271,7 @@ class Opcodes(object):
 		low = cpu.rom.readMemory(cpu.PC)
 
 		nn = (high << 8) + low
-		logger.info("LD (0x{:4x}), HL".format(nn))
+		logger.info("LD (0x{:04x}), HL".format(nn))
 		cpu.ram.storeAddr(nn+1, cpu.H)
 		cpu.ram.storeAddr(nn, cpu.L)
 
@@ -315,7 +314,7 @@ class Opcodes(object):
 		low = cpu.rom.readMemory(cpu.PC)
 		high = cpu.rom.readMemory(cpu.PC)
 		addr = (high << 8) + low
-		logger.info("LD HL, (0x{:4X})".format(addr))
+		logger.info("LD HL, (0x{:04X})".format(addr))
 		cpu.L = cpu.ram.readAddr(addr)
 		cpu.H = cpu.ram.readAddr(addr+1)
 
@@ -340,6 +339,7 @@ class Opcodes(object):
 
 	@staticmethod
 	def ldir(cpu, opcode, logger):
+		logger.info("LDIR")
 		''' (DE) <- (HL), DE = DE + 1, HL = HL + 1, BC F = BC - 1'''
 		while True:
 			hl_mem = cpu.ram.readAddr(cpu.HL)

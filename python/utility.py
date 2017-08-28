@@ -81,3 +81,20 @@ class IndexToReg(object):
 			return "HL"
 		if ind == 3:
 			return "SP"
+
+	@staticmethod
+	def translate8bit(ind):
+		if ind == 0:
+			return "B"
+		if ind == 1:
+			return "C"
+		if ind == 2:
+			return "D"
+		if ind == 3:
+			return "E"
+		if ind == 4:
+			return "H"
+		if ind == 5:
+			return "L"
+		if ind == 7:
+			return "A"
