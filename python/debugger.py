@@ -1,5 +1,6 @@
 #Z80 debugger
 import sys
+import re
 from regs import *
 
 class EmptyDebugger(object):
@@ -38,6 +39,12 @@ class Debugger(object):
 													 self.state(cpu.flags[NF], "N"), self.state(cpu.flags[CF], "C"))
 			elif "ir16" == input:
 				print "BC : {:04X} DE : {:04X} HL : {:04X} IX : {:04X} IY : {:04X}".format(cpu.BC, cpu.DE, cpu.HL, cpu.IX, cpu.IY)
+			elif "prom " in input:
+				addr = int(re.search('0x([0-9a-fA-F]+)$', input).group(1), base=16)
+				print "Rom value at: 0x{:04X} is 0x{:02X}".format(addr, cpu.rom.readMemory(addr))
+			elif "pram " in input:
+				addr = int(re.search('^0x([0-9a-fA-F]+)$', input).group(1), base=16)
+				print "Ram value at: 0x{:04X} is 0x{:02X}".format(addr, cpu.ram.readAddr(addr))
 			elif "" == input:
 				break
 			else:

@@ -297,7 +297,7 @@ class CPU(object):
 			self.dispatchTable[opcode](self, opcode, self.logger)
 		except KeyError as e:
 			print "Missing opcode key: {1:x}, PC = 0x{0:x}".format(self.PC, opcode)
-			sys.exit(-1)
+			self.debugger.stop(self)
 
 	def run(self):
 		while True:
