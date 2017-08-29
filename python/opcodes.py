@@ -92,9 +92,9 @@ class Opcodes(object):
 
 	@staticmethod
 	def ld_addr(cpu, opcode, logger):
-		logger.info("LD (HL), n")
 		value = cpu.rom.readMemory(cpu.PC)
 		cpu.ram.storeAddr(cpu.HL, value)
+		logger.info("LD (HL), {:02X}".format(value))
 
 	@staticmethod
 	def dec16b(cpu, opcode, logger):
@@ -110,7 +110,7 @@ class Opcodes(object):
 		elif regInd == 3:
 			cpu.SP = cpu.SP - 1
 
-		logger.info("DEC (rr)")
+		logger.info("DEC {}".format(IndexToReg.translate16bit(regInd)))
 
 	@staticmethod
 	def cp(cpu, opcode, logger):
@@ -124,7 +124,7 @@ class Opcodes(object):
 		cpu.flags[HF] = Bits.halfCarrySub(cpu.A, value)
 		cpu.flags[SF] = Bits.signFlag(value)
 		cpu.flags[PVF] = Bits.overflow(cpu.A, value)
-		logger.info("CP r")
+		logger.info("CP {}".format(IndexToReg.translate8bit(regInd)))
 
 	@staticmethod
 	def jpnz(cpu, opcode, logger):
@@ -133,7 +133,7 @@ class Opcodes(object):
 			return
 
 		cpu.PC = cpu.PC + Bits.twos_comp(jumpOffset)
-		logger.info("JPNZ {0:x}".format(jumpOffset))
+		logger.info("JPNZ 0x{0:04X}".format(jumpOffset))
 
 	@staticmethod
 	def jpnc(cpu, opcode, logger):
@@ -246,7 +246,6 @@ class Opcodes(object):
 
 	@staticmethod
 	def ldNnRr(cpu, opcode, logger):
-		logger.info("LD (nn),rr")
 		value = 0
 		regInd = (opcode & 0x30) >> 4
 		high = cpu.rom.readMemory(cpu.PC)
@@ -264,6 +263,7 @@ class Opcodes(object):
 
 		cpu.ram.storeAddr(nn + 1, value >> 8)
 		cpu.ram.storeAddr(nn, value & 0xFF)
+		logger.info("LD ({:04X}),{}".format(nn, IndexToReg.translate16bit(regInd)))
 
 	@staticmethod
 	def ldNnHl(cpu, opcode, logger):
@@ -277,7 +277,6 @@ class Opcodes(object):
 
 	@staticmethod
 	def inc8(cpu, opcode, logger):
-		logger.info("INC r")
 		index = ( opcode >> 3 ) & 7
 		oldValue =  cpu.regs[index]
 		cpu.regs[index] = (cpu.regs[index] + 1 ) & 0xFF
@@ -287,6 +286,7 @@ class Opcodes(object):
 		cpu.HFlag = Bits.halfCarrySub(oldValue, cpu.regs[index])
 		cpu.PVFlag = True if oldValue == 0x7f else False
 		cpu.SFlag = Bits.twos_comp(cpu.regs[index]) < 0
+		logger.info("INC {}".format(IndexToReg.translate8bit(index)))
 
 	@staticmethod
 	def ex_de_hl(cpu, opcode, logger):
