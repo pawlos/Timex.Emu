@@ -77,7 +77,7 @@ class Opcodes(object):
 	@staticmethod
 	def out(cpu, opcode, logger):
 		value = cpu.rom.readMemory(cpu.PC)
-		logger.info("OUT")
+		logger.info("OUT {:04X}, A".format(value))
 		cpu.ports[value] = cpu.A
 
 	@staticmethod

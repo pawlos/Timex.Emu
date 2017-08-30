@@ -101,6 +101,16 @@ class TestCPUFunctions(unittest.TestCase):
 		self.assertEqual(0x00, cpu.H)
 		self.assertEqual(0xFF, cpu.L)
 
+	def test_ix_set_get(self):
+		cpu = CPU(None)
+		cpu.IX = 0x1223;
+		self.assertEqual(0x1223, cpu.IX)
+
+	def test_iy_set_get(self):
+		cpu = CPU(None)
+		cpu.IY = 0x3456;
+		self.assertEqual(0x3456, cpu.IY)
+
 def suite():
 	return unittest.TestLoader().discover(".", pattern="*.py")
 
