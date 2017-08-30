@@ -10,7 +10,7 @@ class EmptyDebugger(object):
 	def stop(self):
 		pass
 
-	def next_opcode(self, pc):
+	def next_opcode(self, pc, cpu):
 		pass
 
 
