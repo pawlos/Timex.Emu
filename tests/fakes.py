@@ -10,9 +10,8 @@ class FakeRom(object):
 
 class FakeRam(object):
 
-	def __init__(self):
-		self.ram = {}
-
+	def __init__(self, ramdata=[]):
+		self.ram = ramdata
 
 	def readAddr(self, addr):
 		return self.ram[addr]

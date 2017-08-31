@@ -376,4 +376,4 @@ class Opcodes(object):
 		cpu.SFlag = Bits.isNegative(new_value)
 		cpu.ZFlag = Bits.isZero(new_value)
 		cpu.PVFlag = True if value == 0x80 else False
-		cpu.HFlag = Bits.halfCarrySub16(value, new_value)
+		cpu.HFlag = Bits.halfCarrySub(value, new_value)

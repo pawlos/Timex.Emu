@@ -75,7 +75,7 @@ class TestCPUFunctions(unittest.TestCase):
 		self.assertEqual(0xbb, cpu.L)
 
 	def test_0x36nn_opcodes_does_set_value_in_address_pointed_by_HL(self):
-		ram = FakeRam()
+		ram = FakeRam([None]*0x2223)
 		cpu = CPU(FakeRom('\x36\x22'), ram)	
 		cpu.HL = 0x2222
 		cpu.readOp()

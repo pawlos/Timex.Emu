@@ -7,7 +7,7 @@ class EmptyDebugger(object):
 	def setBreakpoint(self, pc):
 		pass
 
-	def stop(self):
+	def stop(self, cpu):
 		pass
 
 	def next_opcode(self, pc, cpu):
