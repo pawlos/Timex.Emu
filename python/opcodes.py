@@ -98,9 +98,8 @@ class Opcodes(object):
 
 	@staticmethod
 	def dec16b(cpu, opcode, logger):
-		regInd = (opcode >> 4) & 2
-		#logger.info(regInd)
-		value = 0
+		regInd = (opcode >> 4) & 3
+		
 		if regInd == 0:
 			cpu.BC = cpu.BC - 1
 		elif regInd == 1:
@@ -158,7 +157,6 @@ class Opcodes(object):
 
 	@staticmethod
 	def sbc(cpu, opcode, logger):
-		logger.info("SBC HL")
 		regInd = (opcode & 0x30) >> 4
 		value = 0
 		if regInd == 0:
@@ -174,7 +172,7 @@ class Opcodes(object):
 		#logger.info("Old value of HL: " + str(oldHL))
 		cpu.HL = cpu.HL - value - (1 if cpu.CFlag else 0)
 		#logger.info("New value of HL: " + str(cpu.HL))
-
+		logger.info("SBC HL, {}".format(IndexToReg.translate16bit(regInd)))
 		cpu.flags[SF] = Bits.signFlag(cpu.HL, bits=16)
 		cpu.flags[ZF] = Bits.isZero(cpu.HL)
 		cpu.flags[HF] = Bits.halfCarrySub16(oldHL, cpu.HL)

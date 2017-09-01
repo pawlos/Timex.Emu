@@ -14,10 +14,10 @@ class TestSBC(unittest.TestCase):
 		cpu.readOp();
 		self.assertEqual(0x8887, cpu.HL)
 
-	def test_sbc_hl_de_result_is_crrect_if_c_flag_is_reset(self):
-		cpu = CPU(FakeRom('\xed\x52'))
+	def test_sbc_hl_bc_result_is_crrect_if_c_flag_is_reset(self):
+		cpu = CPU(FakeRom('\xed\x42'))
 		cpu.HL = 0x9999
-		cpu.DE = 0x1111
+		cpu.BC = 0x1111
 		cpu.CFlag = False
 		cpu.readOp();
 		self.assertEqual(0x8888, cpu.HL)
