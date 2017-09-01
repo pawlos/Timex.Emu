@@ -9,6 +9,24 @@ class TestInc(unittest.TestCase):
 		cpu.readOp()
 		self.assertEqual(0x1000, cpu.HL)
 
+	def test_inc_bc_does_add_1_to_bc_value(self):
+		cpu = CPU(FakeRom('\x03'))
+		cpu.BC = 0xfff
+		cpu.readOp()
+		self.assertEqual(0x1000, cpu.BC)
+
+	def test_inc_de_does_add_1_to_de_value(self):
+		cpu = CPU(FakeRom('\x13'))
+		cpu.DE = 0xfff
+		cpu.readOp()
+		self.assertEqual(0x1000, cpu.DE)
+
+	def test_inc_sp_does_add_1_to_sp_value(self):
+		cpu = CPU(FakeRom('\x33'))
+		cpu.SP = 0xfff
+		cpu.readOp()
+		self.assertEqual(0x1000, cpu.SP)
+
 	def test_inc_hl_does_not_affect_c_flag(self):
 		cpu = CPU(FakeRom('\x23\x23'))
 		cpu.HL = 0xfff
@@ -69,11 +87,18 @@ class TestInc(unittest.TestCase):
 		cpu.readOp()
 		self.assertFalse(cpu.HFlag)
 
-	def test_inc_r_correctly_adds_one(self):
+	def test_inc_B_correctly_adds_one(self):
 		cpu = CPU(FakeRom('\x04'))
 		cpu.B = 0
 		cpu.readOp()
 		self.assertEqual(1, cpu.B)
+
+	def test_inc_C_correctly_adds_one(self):
+		cpu = CPU(FakeRom('\x0c'))
+		cpu.C = 0
+		cpu.readOp()
+		self.assertEqual(1, cpu.C)
+
 
 	def test_inc_r_does_reset_N_flag(self):
 		cpu = CPU(FakeRom('\x04\x04'))
