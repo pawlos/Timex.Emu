@@ -185,7 +185,6 @@ class Opcodes(object):
 
 	@staticmethod
 	def add16(cpu, opcode, logger):
-		logger.info("ADD HL, rr")
 		regInd = (opcode & 0x30) >> 4
 		value = 0
 		if regInd == 0:
@@ -197,6 +196,7 @@ class Opcodes(object):
 		elif regInd == 3:
 			value = cpu.SP
 
+		logger.info("ADD HL, {}".format(IndexToReg.translate16bit(regInd)))
 		oldHL = cpu.HL
 		cpu.HL = cpu.HL + value
 

@@ -13,6 +13,26 @@ class TestAdd(unittest.TestCase):
 		cpu.readOp()
 		self.assertEqual(0xabba, cpu.HL)
 
+	def test_add_hl_bc_returns_correct_result(self):
+		cpu = CPU(FakeRom('\x09'))
+		cpu.HL = 0xa00a
+		cpu.BC = 0x0bb0
+		cpu.readOp()
+		self.assertEqual(0xabba, cpu.HL)
+
+	def test_add_hl_sp_returns_correct_result(self):
+		cpu = CPU(FakeRom('\x39'))
+		cpu.HL = 0xa00a
+		cpu.SP = 0x0bb0
+		cpu.readOp()
+		self.assertEqual(0xabba, cpu.HL)
+
+	def test_add_hl_hl_returns_correct_result(self):
+		cpu = CPU(FakeRom('\x29'))
+		cpu.HL = 0x300a
+		cpu.readOp()
+		self.assertEqual(0x6014, cpu.HL)
+
 	def test_add_hl_de_limits_the_result_to_16bits(self):
 		cpu = CPU(FakeRom('\x19'))
 		cpu.HL = 0xf000
