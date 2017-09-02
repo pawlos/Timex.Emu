@@ -22,12 +22,20 @@ class Debugger(object):
 	def setBrekpoint(self, pc):
 		self.breakpoints[pc] = True
 
+	def help(self):
+		print "available commands"
+		print "ir - print info about 8-bit registers"
+		print "if - print info about flags"
+		print "ir16 - print info about 16-bit registers"
+		print "prom 0x<addr> - print value from ROM at <addr>"
+		print "pram 0x<addr> - print value from RAM at <addr>"
+
 	def state(self, flag, flag_name):
 		return flag_name if flag == True else flag_name.lower()
 
 	def stop(self, cpu):
 		while True:
-			input = raw_input()
+			input = raw_input("> ")
 			if "ir" == input:
 				print "A : {:02X} B : {:02X} C : {:02X} D : {:02X} E : {:02X} H : {:02X} L : {:02X}" \
 					.format(cpu.regs[A], cpu.regs[B], cpu.regs[C],  cpu.regs[D],  cpu.regs[E], cpu.regs[H], cpu.regs[L])
@@ -49,6 +57,7 @@ class Debugger(object):
 				break
 			else:
 				print "unknown command"
+				print self.help()
 
 	def next_opcode(self, pc, cpu):
 		if pc in self.breakpoints and self.breakpoints[pc]:
