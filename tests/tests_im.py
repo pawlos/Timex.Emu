@@ -9,6 +9,7 @@ class tests_im1(unittest.TestCase):
 		cpu = CPU(FakeRom('\xed\x56'))
 		cpu.readOp()
 		#generate interrupt
+		cpu.generateInterrupt()
 		self.assertEqual(0x0038, cpu.PC)
 
 	def test_im1_does_not_affect_flags(self):

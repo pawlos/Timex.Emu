@@ -375,3 +375,14 @@ class Opcodes(object):
 		cpu.ZFlag = Bits.isZero(new_value)
 		cpu.PVFlag = True if value == 0x80 else False
 		cpu.HFlag = Bits.halfCarrySub(value, new_value)
+
+	@staticmethod
+	def set(cpu, opcode, logger):
+		''' SET 1,(IY+index)'''
+		index = cpu.rom.readMemory(cpu.PC)
+		opcode_part = cpu.rom.readMemory(cpu.PC)
+		if opcode_part == 0xC6:
+			logger.info("SET 1,(IY+{})".format(index))
+			val = cpu.ram.readMemory(cpu.IY+index)
+			val |= 1
+			cpu.ram.storeAddr(cpu.IY+index, val)

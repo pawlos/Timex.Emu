@@ -7,29 +7,29 @@ from loggers import Logger
 
 class ld_nn_rr(unittest.TestCase):
 
-	def test_ed4bnn_correctly_stores_value_at_given_location(self):
-		cpu = CPU(FakeRom('\xed\x4b\x10\x00'))
+	def test_ed43nn_correctly_stores_value_at_given_location(self):
+		cpu = CPU(FakeRom('\xed\x43\x10\x00'))
 		cpu.BC = 0x4644
 		cpu.readOp()
 		self.assertEqual(cpu.ram.readAddr(0x1001), 0x46)
 		self.assertEqual(cpu.ram.readAddr(0x1000), 0x44)
 
-	def test_ed6bnn_correctly_stores_value_at_given_location(self):
-		cpu = CPU(FakeRom('\xed\x6b\x10\x00'))
+	def test_ed63nn_correctly_stores_value_at_given_location(self):
+		cpu = CPU(FakeRom('\xed\x63\x10\x00'))
 		cpu.HL = 0x4644
 		cpu.readOp()
 		self.assertEqual(cpu.ram.readAddr(0x1001), 0x46)
 		self.assertEqual(cpu.ram.readAddr(0x1000), 0x44)
 
-	def test_ed7bnn_correctly_stores_value_at_given_location(self):
-		cpu = CPU(FakeRom('\xed\x7b\x10\x00'))
+	def test_ed73nn_correctly_stores_value_at_given_location(self):
+		cpu = CPU(FakeRom('\xed\x73\x10\x00'))
 		cpu.SP = 0x4644
 		cpu.readOp()
 		self.assertEqual(cpu.ram.readAddr(0x1001), 0x46)
 		self.assertEqual(cpu.ram.readAddr(0x1000), 0x44)
 
 	def test_ed43nn_does_not_affect_flags(self):
-		cpu = CPU(FakeRom('\xed\x4b\x10\x00'))
+		cpu = CPU(FakeRom('\xed\x43\x10\x00'))
 		cpu.CFlag = True
 		cpu.ZFlag = False
 		cpu.PVFlag = None
@@ -43,7 +43,7 @@ class ld_nn_rr(unittest.TestCase):
 		self.assertFalse(cpu.HFlag)
 
 	def test_ed53nn_correctly_stores_de_value_at_given_location(self):
-		cpu = CPU(FakeRom('\xed\x5b\x10\x00'))
+		cpu = CPU(FakeRom('\xed\x53\x10\x00'))
 		cpu.DE = 0xabba
 		cpu.readOp()
 		self.assertEqual(cpu.ram.readAddr(0x1001), 0xab)

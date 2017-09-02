@@ -280,18 +280,23 @@ class CPU(object):
 			0xfb : Opcodes.enableInterrupts,
 			0xfd : self.twoBytesOpcodes,
 			0xed42 : Opcodes.sbc,
-			0xed4b : Opcodes.ldNnRr,
+			0xed43 : Opcodes.ldNnRr,
 			0xed47 : Opcodes.ldExt,
 			0xed52 : Opcodes.sbc,
 			0xed56 : Opcodes.im1,
-			0xed5b : Opcodes.ldNnRr,
-			0xed6b : Opcodes.ldNnRr,
-			0xed7b : Opcodes.ldNnRr,
+			0xed53 : Opcodes.ldNnRr,
+			0xed63 : Opcodes.ldNnRr,
+			0xed73 : Opcodes.ldNnRr,
 			0xedb0 : Opcodes.ldir,
 			0xedb8 : Opcodes.lddr,
 			0xfd21 : Opcodes.ldiy,
-			0xfd35 : Opcodes.dec_mem_at_iy
+			0xfd35 : Opcodes.dec_mem_at_iy,
+			0xfdcb : Opcodes.set
 		}
+
+	def generateInterrupt(self):
+		if self.interruptMode == 1:
+			self.PC = 0x38
 
 	def readOp(self):
 		pc = self.PC
