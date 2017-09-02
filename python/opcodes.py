@@ -52,7 +52,7 @@ class Opcodes(object):
 	@staticmethod
 	def ld8(cpu, opcode, logger):
 		regIndPrim = (opcode & 7)
-		logger.info(regIndPrim)
+		#logger.info(regIndPrim)
 		regInd     = (opcode >> 3) & 7
 		cpu.regs[regInd] = cpu.regs[regIndPrim]
 		logger.info("LD {}, {}'".format(IndexToReg.translate8bit(regInd), IndexToReg.translate8bit(regIndPrim)))
@@ -72,7 +72,6 @@ class Opcodes(object):
 		cpu.PC = value
 
 		logger.info("JP {0:X}".format(value))
-		return True
 
 	@staticmethod
 	def out(cpu, opcode, logger):
@@ -381,8 +380,36 @@ class Opcodes(object):
 		''' SET 1,(IY+index)'''
 		index = cpu.rom.readMemory(cpu.PC)
 		opcode_part = cpu.rom.readMemory(cpu.PC)
-		if opcode_part == 0xC6:
+		if opcode_part == 0xCE:
 			logger.info("SET 1,(IY+{})".format(index))
-			val = cpu.ram.readMemory(cpu.IY+index)
-			val |= 1
+			val = cpu.ram.readAddr(cpu.IY+index)
+			val |= (1 << 1)
 			cpu.ram.storeAddr(cpu.IY+index, val)
+
+	@staticmethod
+	def call(cpu, opcode, logger):
+		''' CALL '''
+		pc = cpu.PC
+		addr_lo = cpu.rom.readMemory(pc)
+		pc += 1
+		addr_hi = cpu.rom.readMemory(pc)
+		addr = (addr_hi << 8) + addr_lo
+		cpu.ram.storeAddr(cpu.SP - 1, (pc & 8) >> 8)
+		cpu.ram.storeAddr(cpu.SP - 2, (pc & 8))
+		cpu.SP = cpu.SP - 2
+		cpu.PC = addr
+		logger.info("CALL {:04X}".format(addr)) 
+
+	@staticmethod
+	def ldiy_d_r(cpu, opcode, logger):
+		''' LD (IY+d),r '''
+		regInd = opcode & 7
+		d = cpu.rom.readMemory(cpu.PC)
+		cpu.ram.storeAddr(cpu.IY + d, cpu.regs[regInd])
+		logger.info("LD (IY+{:02X}),{}".format(d, IndexToReg.translate8bit(regInd)))
+
+	@staticmethod
+	def ldhlr(cpu, opcode, logger):
+		regInd = opcode & 7
+		cpu.ram.storeAddr(cpu.HL, cpu.regs[regInd])
+		logger.info("LD (HL), {}".format(IndexToReg.translate8bit(regInd)))

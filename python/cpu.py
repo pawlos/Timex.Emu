@@ -264,6 +264,7 @@ class CPU(object):
 			0x6b : Opcodes.ld8,
 			0x3e : Opcodes.ld8n,
 			0x36 : Opcodes.ld_addr,
+			0x77 : Opcodes.ldhlr,
 			0xa7 : Opcodes._and,
 			0xa4 : Opcodes._and,
 			0xAF : Opcodes.xorA,
@@ -271,6 +272,7 @@ class CPU(object):
 			0xB1 : Opcodes.xorA,
 			0xbc : Opcodes.cp,
 			0xc3 : Opcodes.jp,
+			0xcd : Opcodes.call,
 			0xd3 : Opcodes.out,
 			0xd9 : Opcodes.exx,
 			0xeb : Opcodes.ex_de_hl,
@@ -291,6 +293,7 @@ class CPU(object):
 			0xedb8 : Opcodes.lddr,
 			0xfd21 : Opcodes.ldiy,
 			0xfd35 : Opcodes.dec_mem_at_iy,
+			0xfd75 : Opcodes.ldiy_d_r,
 			0xfdcb : Opcodes.set
 		}
 
