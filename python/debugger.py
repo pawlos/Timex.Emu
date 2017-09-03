@@ -55,6 +55,8 @@ class Debugger(object):
 				print "Ram value at: 0x{:04X} is 0x{:02X}".format(addr, cpu.ram.readAddr(addr))
 			elif "" == input:
 				break
+			elif "?" == input:
+				print self.help()
 			else:
 				print "unknown command"
 				print self.help()
