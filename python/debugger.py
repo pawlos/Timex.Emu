@@ -19,7 +19,7 @@ class Debugger(object):
 		self.isSingleStepping = False
 		self.breakpoints = {}
 
-	def setBrekpoint(self, pc):
+	def setBreakpoint(self, pc):
 		self.breakpoints[pc] = True
 
 	def help(self):
