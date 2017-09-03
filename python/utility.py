@@ -69,6 +69,10 @@ class Bits(object):
 	def limitTo16bits(value):
 		return value & 0xFFFF
 
+	@staticmethod
+	def limitTo8Bits(value):
+		return value & 0xFF
+
 
 class IndexToReg(object):
 	@staticmethod

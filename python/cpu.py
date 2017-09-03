@@ -16,21 +16,21 @@ class CPU(object):
 		return self.regs[A]
 	@A.setter
 	def A(self, value):
-		self.regs[A] = value
+		self.regs[A] = Bits.limitTo8Bits(value)
 
 	@property
 	def B(self):
 		return self.regs[B]
 	@B.setter
 	def B(self, value):
-		self.regs[B] = value
+		self.regs[B] = Bits.limitTo8Bits(value)
 
 	@property
 	def C(self):
 		return self.regs[C]
 	@C.setter
 	def C(self, value):
-		self.regs[C] = value
+		self.regs[C] = Bits.limitTo8Bits(value)
 
 	@property
 	def D(self):
@@ -38,7 +38,7 @@ class CPU(object):
 
 	@D.setter
 	def D(self, value):
-		self.regs[D] = value
+		self.regs[D] = Bits.limitTo8Bits(value)
 
 	@property
 	def E(self):
@@ -46,21 +46,21 @@ class CPU(object):
 
 	@E.setter
 	def E(self, value):
-		self.regs[E] = value
+		self.regs[E] = Bits.limitTo8Bits(value)
 
 	@property
 	def H(self):
 		return self.regs[H]
 	@H.setter
 	def H(self, value):
-		self.regs[H] = value
+		self.regs[H] = Bits.limitTo8Bits(value)
 
 	@property
 	def L(self):
 		return self.regs[L];
 	@L.setter
 	def L(self, value):
-		self.regs[L] = value
+		self.regs[L] = Bits.limitTo8Bits(value)
 
 	@property
 	def ZFlag(self):
@@ -241,6 +241,7 @@ class CPU(object):
 			0x09 : Opcodes.add16,
 			0x0b : Opcodes.dec16b,
 			0x0c : Opcodes.inc8,
+			0x10 : Opcodes.djnz,
 			0x11 : Opcodes.ld16,
 			0x13 : Opcodes.inc16,
 			0x19 : Opcodes.add16,

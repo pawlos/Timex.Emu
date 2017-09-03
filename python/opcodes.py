@@ -52,10 +52,9 @@ class Opcodes(object):
 	@staticmethod
 	def ld8(cpu, opcode, logger):
 		regIndPrim = (opcode & 7)
-		#logger.info(regIndPrim)
 		regInd     = (opcode >> 3) & 7
 		cpu.regs[regInd] = cpu.regs[regIndPrim]
-		logger.info("LD {}, {}'".format(IndexToReg.translate8bit(regInd), IndexToReg.translate8bit(regIndPrim)))
+		logger.info("LD {}, {}".format(IndexToReg.translate8bit(regInd), IndexToReg.translate8bit(regIndPrim)))
 
 	@staticmethod
 	def ld8n(cpu, opcode, logger):
@@ -131,7 +130,7 @@ class Opcodes(object):
 			return
 
 		cpu.PC = cpu.PC + Bits.twos_comp(jumpOffset)
-		logger.info("JPNZ 0x{0:04X}".format(jumpOffset))
+		logger.info("JPNZ {0:04X}".format(jumpOffset))
 
 	@staticmethod
 	def jpnc(cpu, opcode, logger):
@@ -413,3 +412,12 @@ class Opcodes(object):
 		regInd = opcode & 7
 		cpu.ram.storeAddr(cpu.HL, cpu.regs[regInd])
 		logger.info("LD (HL), {}".format(IndexToReg.translate8bit(regInd)))
+
+	@staticmethod
+	def djnz(cpu, opcode, logger):
+		e = cpu.rom.readMemory(cpu.PC)
+		cpu.B = cpu.B - 1
+		if cpu.B != 0:
+			cpu.PC = cpu.PC + Bits.twos_comp(e)
+
+		logger.info("DJNZ {:04X}".format(e))
