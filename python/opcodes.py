@@ -384,6 +384,11 @@ class Opcodes(object):
 			val = cpu.ram.readAddr(cpu.IY+index)
 			val |= (1 << 1)
 			cpu.ram.storeAddr(cpu.IY+index, val)
+		if opcode_part == 0x8E:
+			logger.info("RES 1, (IY+{})".format(index))
+			val = cpu.ram.readAddr(cpu.IY+index)
+			val &= (0 << 1)
+			cpu.ram.storeAddr(cpu.IY+index, val)
 
 	@staticmethod
 	def call(cpu, opcode, logger):
