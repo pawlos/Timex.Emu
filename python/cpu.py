@@ -267,6 +267,7 @@ class CPU(object):
 			0x3e : Opcodes.ld8n,
 			0x36 : Opcodes.ld_addr,
 			0x77 : Opcodes.ldhlr,
+			0x78 : Opcodes.ld8,
 			0xa7 : Opcodes._and,
 			0xa4 : Opcodes._and,
 			0xAF : Opcodes.xorA,

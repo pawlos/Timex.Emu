@@ -61,7 +61,7 @@ class Opcodes(object):
 		regInd = (opcode >> 3) & 7
 		value = cpu.rom.readMemory(cpu.PC)
 		cpu.regs[regInd] = value
-		logger.info("LD {}, {:2X}".format(IndexToReg.translate8bit(IndexToReg), value))
+		logger.info("LD {}, {:2X}".format(IndexToReg.translate8bit(regInd), value))
 
 	@staticmethod
 	def jp(cpu, opcode, logger):
@@ -384,11 +384,19 @@ class Opcodes(object):
 			val = cpu.ram.readAddr(cpu.IY+index)
 			val |= (1 << 1)
 			cpu.ram.storeAddr(cpu.IY+index, val)
-		if opcode_part == 0x8E:
+		elif opcode_part == 0x8E:
 			logger.info("RES 1, (IY+{})".format(index))
 			val = cpu.ram.readAddr(cpu.IY+index)
 			val &= (0 << 1)
 			cpu.ram.storeAddr(cpu.IY+index, val)
+		elif opcode_part == 0x4E:
+			bit = (opcode_part >> 3) & 7
+			cpu.ZFlag = cpu.ram.readAddr(cpu.IY+index) & (1 << bit) != 0
+			cpu.HFlag = Bits.reset()
+			logger.info("BIT {}, (IY+{})".format(bit, index))
+		else:
+			logger.info("Unknown opcode part: {:0X}, {:0X}, {:0X}".format(opcode, index, opcode_part))
+			raise 
 
 	@staticmethod
 	def call(cpu, opcode, logger):
