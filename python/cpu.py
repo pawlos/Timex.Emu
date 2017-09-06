@@ -247,10 +247,10 @@ class CPU(object):
 			0x13 : Opcodes.inc16,
 			0x19 : Opcodes.add16,
 			0x1b : Opcodes.dec16b,
+			0x20 : Opcodes.jpnz,
 			0x21 : Opcodes.ld16,
 			0x22 : Opcodes.ldNnHl,
 			0x23 : Opcodes.inc16,
-			0x20 : Opcodes.jpnz,
 			0x28 : Opcodes.jrz,
 			0x29 : Opcodes.add16,
 			0x2a : Opcodes.ldHl_addr,
@@ -297,7 +297,12 @@ class CPU(object):
 			0xfd21 : Opcodes.ldiy,
 			0xfd35 : Opcodes.dec_mem_at_iy,
 			0xfd75 : Opcodes.ldiy_d_r,
-			0xfdcb : Opcodes.set
+			0xfd86 : Opcodes.add_iy,
+			0xfdcb : self.fourBytesOpcodes,
+			0xfdcb01ce : Opcodes.bit_set,
+			0xfdcb308e : Opcodes.bit_res,
+			0xfdcb014e : Opcodes.bit_bit,
+			0xfdcb0246 : Opcodes.bit_bit
 		}
 
 	def generateInterrupt(self):
@@ -313,6 +318,13 @@ class CPU(object):
 		pc = self.PC
 		secondOpByte = self.rom.readMemory(pc)
 		fullOpcode = (opcode << 8) + secondOpByte
+		self.dispatch(fullOpcode, pc)
+
+	def fourBytesOpcodes(self, cpu, opcode, logger):
+		pc = self.PC
+		thirdbyte = cpu.rom.readMemory(pc)
+		fourthbyte = cpu.rom.readMemory(cpu.PC)
+		fullOpcode = (opcode << 16) + (thirdbyte << 8) + fourthbyte
 		self.dispatch(fullOpcode, pc)
 
 	def dispatch(self, opcode, pc):

@@ -126,11 +126,11 @@ class Opcodes(object):
 	@staticmethod
 	def jpnz(cpu, opcode, logger):
 		jumpOffset = cpu.rom.readMemory(cpu.PC)
+		logger.info("JPNZ {0:04X}".format(jumpOffset))
 		if cpu.ZFlag:
 			return
 
 		cpu.PC = cpu.PC + Bits.twos_comp(jumpOffset)
-		logger.info("JPNZ {0:04X}".format(jumpOffset))
 
 	@staticmethod
 	def jpnc(cpu, opcode, logger):
@@ -218,11 +218,11 @@ class Opcodes(object):
 	def jrz(cpu, opcode, logger):
 
 		jumpOffset = Bits.twos_comp(cpu.rom.readMemory(cpu.PC))
+		logger.info("JR Z {0:x}".format(jumpOffset))
 		if cpu.ZFlag == False:
 			return
 
 		cpu.PC = cpu.PC + jumpOffset
-		logger.info("JR Z {0:x}".format(jumpOffset))
 
 	@staticmethod
 	def exx(cpu, opcode, logger):
@@ -375,28 +375,28 @@ class Opcodes(object):
 		cpu.HFlag = Bits.halfCarrySub(value, new_value)
 
 	@staticmethod
-	def set(cpu, opcode, logger):
-		''' SET 1,(IY+index)'''
-		index = cpu.rom.readMemory(cpu.PC)
-		opcode_part = cpu.rom.readMemory(cpu.PC)
-		if opcode_part == 0xCE:
-			logger.info("SET 1,(IY+{})".format(index))
-			val = cpu.ram.readAddr(cpu.IY+index)
-			val |= (1 << 1)
-			cpu.ram.storeAddr(cpu.IY+index, val)
-		elif opcode_part == 0x8E:
-			logger.info("RES 1, (IY+{})".format(index))
-			val = cpu.ram.readAddr(cpu.IY+index)
-			val &= (0 << 1)
-			cpu.ram.storeAddr(cpu.IY+index, val)
-		elif opcode_part == 0x4E:
-			bit = (opcode_part >> 3) & 7
-			cpu.ZFlag = cpu.ram.readAddr(cpu.IY+index) & (1 << bit) != 0
-			cpu.HFlag = Bits.reset()
-			logger.info("BIT {}, (IY+{})".format(bit, index))
-		else:
-			logger.info("Unknown opcode part: {:0X}, {:0X}, {:0X}".format(opcode, index, opcode_part))
-			raise 
+	def bit_set(cpu, opcode, logger):
+		index = (opcode >> 8) & 255
+		logger.info("SET 1,(IY+{:02X})".format(index))
+		val = cpu.ram.readAddr(cpu.IY+index)
+		val |= (1 << 1)
+		cpu.ram.storeAddr(cpu.IY+index, val)
+
+	@staticmethod
+	def bit_res(cpu, opcode, logger):
+		index = (opcode >> 8) & 255
+		logger.info("RES 1, (IY+{:02X})".format(index))
+		val = cpu.ram.readAddr(cpu.IY+index)
+		val &= (0 << 1)
+		cpu.ram.storeAddr(cpu.IY+index, val)
+
+	@staticmethod
+	def bit_bit(cpu, opcode, logger):
+		index = (opcode >> 8) & 255
+		bit = (opcode >> 3) & 7
+		cpu.ZFlag = cpu.ram.readAddr(cpu.IY+index) & (1 << bit) != 0
+		cpu.HFlag = Bits.reset()
+		logger.info("BIT {:02X}, (IY+{:02X})".format(bit, index))
 
 	@staticmethod
 	def call(cpu, opcode, logger):
@@ -434,3 +434,19 @@ class Opcodes(object):
 			cpu.PC = cpu.PC + Bits.twos_comp(e)
 
 		logger.info("DJNZ {:04X}".format(e))
+
+	@staticmethod
+	def add_iy(cpu, opcode, logger):
+		d = cpu.rom.readMemory(cpu.PC)
+		value = cpu.A + cpu.ram.readAddr(cpu.IY+d)
+
+		cpu.NFlag = Bits.reset()
+		cpu.ZFlag = Bits.isZero(cpu.A)
+		cpu.CFlag = Bits.carryFlag(cpu.A)
+		cpu.SFlag = Bits.isNegative(cpu.A)
+		cpu.PVFlag = Bits.overflow(cpu.A, value)
+		cpu.HFlag = Bits.halfCarrySub(cpu.A, value)
+
+		cpu.A = value
+
+		logger.info("ADD A, (IY+{:02X})".format(d))
