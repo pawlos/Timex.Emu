@@ -1,0 +1,18 @@
+import unittest
+import unittest
+from cpu import CPU
+from opcodes import Opcodes
+from fakes import *
+from loggers import Logger
+
+class jp(unittest.TestCase):
+
+	def test_push_correctly_stores_on_stack(self):
+		ram = FakeRam([None]*0x1100)
+		cpu = CPU(FakeRom('\xF5'), ram)
+		cpu.AF = 0x2233
+		cpu.SP = 0x1007
+		
+		cpu.readOp()
+		self.assertEqual(0x22, ram.readAddr(0x1006))
+		self.assertEqual(0x33, ram.readAddr(0x1005))

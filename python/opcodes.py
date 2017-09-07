@@ -442,7 +442,7 @@ class Opcodes(object):
 
 		cpu.NFlag = Bits.reset()
 		cpu.ZFlag = Bits.isZero(cpu.A)
-		cpu.CFlag = Bits.carryFlag(cpu.A)
+		cpu.CFlag = Bits.carryFlag(value)
 		cpu.SFlag = Bits.isNegative(cpu.A)
 		cpu.PVFlag = Bits.overflow(cpu.A, value)
 		cpu.HFlag = Bits.halfCarrySub(cpu.A, value)
@@ -450,3 +450,40 @@ class Opcodes(object):
 		cpu.A = value
 
 		logger.info("ADD A, (IY+{:02X})".format(d))
+
+	@staticmethod
+	def sub_n(cpu, opcode, logger):
+		n = cpu.rom.readMemory(cpu.PC)
+		value = cpu.A - n
+
+		cpu.NFlag = Bits.set()
+		cpu.ZFlag = Bits.isZero(value)
+		cpu.HFlag = Bits.halfCarrySub(cpu.A, value)
+		cpu.PVFlag = Bits.overflow(cpu.A, value)
+		cpu.CFlag = Bits.carryFlag(value)
+		cpu.A = value
+
+		logger.info("SUB {:02X}".format(n))
+
+	@staticmethod
+	def push(cpu, opcode, logger):
+		index = (opcode >> 4) & 3
+		reg = ""
+		value = 0
+		if index == 0:
+			reg = "BC"
+			value = cpu.BC
+		elif index == 1:
+			reg = "DE"
+			value = cpu.DE
+		elif index == 2:
+			reg = "HL"
+			value = cpu.HL
+		else:
+			reg = "AF"
+			value = cpu.AF
+
+		cpu.ram.storeAddr(cpu.SP-1, value >> 8)
+		cpu.ram.storeAddr(cpu.SP-2, value & 255)
+		cpu.SP -= 2
+		logger.info("PUSH {}".format(reg))

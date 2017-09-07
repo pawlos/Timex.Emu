@@ -65,6 +65,7 @@ class CPU(object):
 	@property
 	def ZFlag(self):
 		return self.flags[ZF]
+
 	@ZFlag.setter
 	def ZFlag(self, value):
 		self.flags[ZF] = value
@@ -268,6 +269,7 @@ class CPU(object):
 			0x36 : Opcodes.ld_addr,
 			0x77 : Opcodes.ldhlr,
 			0x78 : Opcodes.ld8,
+			0x90 : Opcodes.ld8,
 			0xa7 : Opcodes._and,
 			0xa4 : Opcodes._and,
 			0xAF : Opcodes.xorA,
@@ -276,11 +278,14 @@ class CPU(object):
 			0xbc : Opcodes.cp,
 			0xc3 : Opcodes.jp,
 			0xcd : Opcodes.call,
+			0xc5 : Opcodes.push,
 			0xd3 : Opcodes.out,
+			0xd6 : Opcodes.sub_n,
 			0xd9 : Opcodes.exx,
 			0xeb : Opcodes.ex_de_hl,
 			0xed : self.twoBytesOpcodes,
 			0xF3 : Opcodes.disableInterrupts,
+			0xF5 : Opcodes.push,
 			0xf9 : Opcodes.ld_sp_hl,
 			0xfb : Opcodes.enableInterrupts,
 			0xfd : self.twoBytesOpcodes,
