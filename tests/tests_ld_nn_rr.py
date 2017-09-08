@@ -32,13 +32,11 @@ class ld_nn_rr(unittest.TestCase):
 		cpu = CPU(FakeRom('\xed\x43\x10\x00'))
 		cpu.CFlag = True
 		cpu.ZFlag = False
-		cpu.PVFlag = None
 		cpu.SFlag = True
 		cpu.HFlag = False
 		cpu.readOp()
 		self.assertTrue(cpu.CFlag)
 		self.assertFalse(cpu.ZFlag)
-		self.assertEqual(None, cpu.PVFlag)
 		self.assertTrue(cpu.SFlag)
 		self.assertFalse(cpu.HFlag)
 

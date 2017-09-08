@@ -14,6 +14,17 @@ class Bits(object):
 		return bin(value).count('1')
 
 	@staticmethod
+	def getNthBit(value, nth):
+		return (value & (1 << nth)) >> nth
+
+	@staticmethod
+	def setNthBit(value, nth, bit_val):
+		if bit_val == 0:
+			return (value & ~(1 << nth))
+		else:
+			return (value | (1 << nth))
+
+	@staticmethod
 	def halfCarrySub(firstByte, secondByte):
 		return True if ((firstByte & 0xf) - (secondByte & 0xf)) & 0x10 == 0x10 else False
 
@@ -34,15 +45,15 @@ class Bits(object):
 
 	@staticmethod
 	def isZero(val):
-		return True if val == 0 else False
+		return val == 0
 
 	@staticmethod
 	def paritySet(val):
-		return True if Bits.count(val) % 2 == 0 else False
+		return Bits.count(val) % 2 == 0
 
 	@staticmethod
 	def carryFlag(val):
-		return True if val < 0 else False
+		return val < 0
 
 	@staticmethod
 	def isNegative(val):

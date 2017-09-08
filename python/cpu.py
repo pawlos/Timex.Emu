@@ -19,6 +19,13 @@ class CPU(object):
 		self.regs[A] = Bits.limitTo8Bits(value)
 
 	@property
+	def F(self):
+		return self.regs[F]
+	@F.setter
+	def F(self, value):
+		self.regs[F] = Bits.limitTo8Bits(value)
+
+	@property
 	def B(self):
 		return self.regs[B]
 	@B.setter
@@ -64,51 +71,51 @@ class CPU(object):
 
 	@property
 	def ZFlag(self):
-		return self.flags[ZF]
+		return Bits.getNthBit(self.F,ZF) == 1
 
 	@ZFlag.setter
 	def ZFlag(self, value):
-		self.flags[ZF] = value
+		self.F = Bits.setNthBit(self.F, ZF, 1 if value else 0)
 
 	@property
 	def CFlag(self):
-		return self.flags[CF]
+		return Bits.getNthBit(self.F, CF) == 1
 
 	@CFlag.setter
 	def CFlag(self, value):
-		self.flags[CF] = value
+		self.F = Bits.setNthBit(self.F, CF, 1 if value else 0)
 
 	@property
 	def NFlag(self):
-		return self.flags[NF]
+		return Bits.getNthBit(self.F, NF) == 1
 
 	@NFlag.setter
 	def NFlag(self, value):
-		self.flags[NF] = value
+		self.F = Bits.setNthBit(self.F, NF, 1 if value else 0)
 
 	@property
 	def HFlag(self):
-		return self.flags[HF]
+		return Bits.getNthBit(self.F, HF) == 1
 
 	@HFlag.setter
 	def HFlag(self, value):
-		self.flags[HF] = value
+		self.F = Bits.setNthBit(self.F, HF, 1 if value else 0)
 
 	@property
 	def SFlag(self):
-		return self.flags[SF]
+		return Bits.getNthBit(self.F, SF) == 1
 
 	@SFlag.setter
 	def SFlag(self, value):
-		self.flags[SF] = value
+		self.F = Bits.setNthBit(self.F, SF, 1 if value else 0)
 
 	@property
 	def PVFlag(self):
-		return self.flags[PVF]
+		return Bits.getNthBit(self.F, PVF) == 1
 
 	@PVFlag.setter
 	def PVFlag(self, value):
-		self.flags[PVF] = value
+		self.F = Bits.setNthBit(self.F, PVF, 1 if value else 0)
 
 	@property
 	def HL(self):
@@ -224,9 +231,8 @@ class CPU(object):
 
 		self.interruptMode = 0
 
-		self.regs = [0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0x00] #B,C,D,E,H,L,none,A
+		self.regs = [0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0x00,0x00] #B,C,D,E,H,L,none,A, F
 		self.regsPri = [0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0x00] #B',C',D',E',H',L',none,A'
-		self.flags = [False,False,False,False,False,False,False,False]
 		self.fls = [0x00]
 		self.flsPri = [0x00] #flags'
 		self.ports = [x for x in range(0,255)]
@@ -263,13 +269,14 @@ class CPU(object):
 			0x39 : Opcodes.add16,
 			0x3b : Opcodes.dec16b,
 			0x47 : Opcodes.ld8,
+			0x57 : Opcodes.ld8,
 			0x62 : Opcodes.ld8,
 			0x6b : Opcodes.ld8,
 			0x3e : Opcodes.ld8n,
 			0x36 : Opcodes.ld_addr,
 			0x77 : Opcodes.ldhlr,
 			0x78 : Opcodes.ld8,
-			0x90 : Opcodes.ld8,
+			0x90 : Opcodes.sub_r,
 			0xa7 : Opcodes._and,
 			0xa4 : Opcodes._and,
 			0xAF : Opcodes.xorA,
