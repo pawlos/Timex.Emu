@@ -503,3 +503,28 @@ class Opcodes(object):
 		cpu.CFlag = Bits.carryFlag(cpu.A)
 
 		logger.info("SUB {}".format(IndexToReg.translate8bit(index)))
+
+	@staticmethod
+	def rrca(cpu, opcode, logger):
+		cflag = cpu.A & 1
+		cpu.A = (cpu.A >> 1) | (cflag << 7)
+		cpu.CFlag = True if cflag != 0 else False
+		cpu.HFlag = Bits.reset()
+		cpu.NFlag = Bits.reset()
+
+		logger.info("RRCA")
+
+	@staticmethod
+	def and_n(cpu, opcode, logger):
+		n = cpu.rom.readMemory(cpu.PC)
+		old = cpu.A
+		cpu.A = cpu.A & n
+
+		cpu.SFlag = Bits.isNegative(cpu.A)
+		cpu.ZFlag = Bits.isZero(cpu.A)
+		cpu.HFlag = Bits.set()
+		cpu.PVFlag = Bits.overflow(old, cpu.A)
+		cpu.NFlag = Bits.reset()
+		cpu.CFlag = Bits.reset()
+
+		logger.info("AND {:02X}".format(n))
