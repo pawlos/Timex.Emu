@@ -528,3 +528,27 @@ class Opcodes(object):
 		cpu.CFlag = Bits.reset()
 
 		logger.info("AND {:02X}".format(n))
+
+	@staticmethod
+	def or_n(cpu, opcode, logger):
+		n = cpu.rom.readMemory(cpu.PC)
+		old = cpu.A
+		cpu.A = cpu.A | n
+
+		cpu.SFlag = Bits.isNegative(cpu.A)
+		cpu.ZFlag = Bits.isZero(cpu.A)
+		cpu.HFlag = Bits.reset()
+		cpu.PVFlag = Bits.overflow(old, cpu.A)
+		cpu.NFlag = Bits.reset()
+		cpu.CFlag = Bits.reset()
+
+		logger.info("OR {:02X}".format(n))
+
+	@staticmethod
+	def ret(cpu, opcode, logger):
+		low = cpu.ram.readAddr(cpu.SP)
+		high = cpu.ram.readAddr(cpu.SP+1)
+		addr = (high << 8) + low
+		cpu.SP += 2
+		cpu.PC = addr
+		logger.info("RET")
