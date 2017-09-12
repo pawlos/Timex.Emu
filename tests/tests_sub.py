@@ -18,3 +18,10 @@ class TestSUB(unittest.TestCase):
 		cpu.readOp();
 		self.assertTrue(cpu.ZFlag)
 
+	def test_sub_r_set_correct_value(self):
+		cpu = CPU(FakeRom('\x90'))
+		cpu.A = 0x52
+		cpu.B = 0x02
+		cpu.readOp();
+		self.assertEqual(0x50, cpu.A)
+
