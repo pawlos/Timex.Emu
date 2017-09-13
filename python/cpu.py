@@ -324,7 +324,8 @@ class CPU(object):
 			0xfdcb01ce : Opcodes.bit_set,
 			0xfdcb308e : Opcodes.bit_res,
 			0xfdcb014e : Opcodes.bit_bit,
-			0xfdcb0246 : Opcodes.bit_bit
+			0xfdcb0246 : Opcodes.bit_bit,
+			0xfdcb0476 : Opcodes.bit_bit
 		}
 
 	def generateInterrupt(self):
