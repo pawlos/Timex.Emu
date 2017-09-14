@@ -29,6 +29,8 @@ class Debugger(object):
 		print "ir16 - print info about 16-bit registers"
 		print "prom 0x<addr> - print value from ROM at <addr>"
 		print "pram 0x<addr> - print value from RAM at <addr>"
+		print "s - single step"
+		print "? - this help"
 
 	def state(self, flag, flag_name):
 		return flag_name if flag == True else flag_name.lower()
@@ -53,6 +55,9 @@ class Debugger(object):
 			elif "pram " in input:
 				addr = int(re.search('^0x([0-9a-fA-F]+)$', input).group(1), base=16)
 				print "Ram value at: 0x{:04X} is 0x{:02X}".format(addr, cpu.ram.readAddr(addr))
+			elif "s" == input:
+				self.isSingleStepping = True
+				break
 			elif "" == input:
 				break
 			elif "?" == input:
@@ -62,6 +67,7 @@ class Debugger(object):
 				print self.help()
 
 	def next_opcode(self, pc, cpu):
-		if pc in self.breakpoints and self.breakpoints[pc]:
-			print "Stopped...@ 0x{:4X}".format(pc)
+		if (pc in self.breakpoints and self.breakpoints[pc]) or self.isSingleStepping:
+			self.isSingleStepping = False
+			print "Stopped...@ 0x{:04X}".format(pc)
 			self.stop(cpu)

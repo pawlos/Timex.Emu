@@ -299,13 +299,13 @@ class CPU(object):
 			0xe5 : Opcodes.push,
 			0xe6 : Opcodes.and_n,
 			0xeb : Opcodes.ex_de_hl,
-			0xed : self.twoBytesOpcodes,
+			0xed : [self.twoBytesOpcodes],
 			0xf3 : Opcodes.disableInterrupts,
 			0xf5 : Opcodes.push,
 			0xf6 : Opcodes.or_n,
 			0xf9 : Opcodes.ld_sp_hl,
 			0xfb : Opcodes.enableInterrupts,
-			0xfd : self.twoBytesOpcodes,
+			0xfd : [self.twoBytesOpcodes],
 			0xed42 : Opcodes.sbc,
 			0xed43 : Opcodes.ldNnRr,
 			0xed47 : Opcodes.ldExt,
@@ -320,7 +320,7 @@ class CPU(object):
 			0xfd35 : Opcodes.dec_mem_at_iy,
 			0xfd75 : Opcodes.ldiy_d_r,
 			0xfd86 : Opcodes.add_iy,
-			0xfdcb : self.fourBytesOpcodes,
+			0xfdcb : [self.fourBytesOpcodes],
 			0xfdcb01ce : Opcodes.bit_set,
 			0xfdcb308e : Opcodes.bit_res,
 			0xfdcb014e : Opcodes.bit_bit,
@@ -352,8 +352,12 @@ class CPU(object):
 
 	def dispatch(self, opcode, pc):
 		try:
-			self.debugger.next_opcode(pc, self)
-			self.dispatchTable[opcode](self, opcode, self.logger)
+			_dispatch = self.dispatchTable[opcode]
+			if type(_dispatch) is not list:
+				self.debugger.next_opcode(pc, self)
+			else:
+				_dispatch = _dispatch[0]
+			_dispatch(self, opcode, self.logger)
 		except KeyError as e:
 			print "Missing opcode key: {1:x}, PC = 0x{0:x}".format(self.PC, opcode)
 			self.debugger.stop(self)
