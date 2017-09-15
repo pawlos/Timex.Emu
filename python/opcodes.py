@@ -406,7 +406,7 @@ class Opcodes(object):
 		pc += 1
 		addr_hi = cpu.rom.readMemory(pc)
 		addr = (addr_hi << 8) + addr_lo
-		cpu.ram.storeAddr(cpu.SP - 1, (pc & 8) >> 8)
+		cpu.ram.storeAddr(cpu.SP - 1, pc >> 8)
 		cpu.ram.storeAddr(cpu.SP - 2, (pc & 8))
 		cpu.SP = cpu.SP - 2
 		cpu.PC = addr
@@ -552,3 +552,15 @@ class Opcodes(object):
 		cpu.SP += 2
 		cpu.PC = addr
 		logger.info("RET")
+
+	@staticmethod
+	def rst(cpu, opcode, logger):
+		index = (opcode >> 3) & 7
+		pc = cpu.PC
+		cpu.ram.storeAddr(cpu.SP - 1, pc >> 8)
+		cpu.ram.storeAddr(cpu.SP - 2, pc & 8)
+		cpu.SP -= 2
+		rst_jumps = {0:0x00, 1:0x08, 2:0x10, 3:0x18, 4:0x20, 5:0x28, 6:0x30, 7:0x38}
+
+		cpu.PC = rst_jumps[index]
+		logger.info("RST {:02X}".format(rst_jumps[index]))
