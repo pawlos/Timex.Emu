@@ -294,7 +294,6 @@ class CPU(object):
 			0xc1 : Opcodes.pop,
 			0xc3 : Opcodes.jp,
 			0xc5 : Opcodes.push,
-			0xc5 : Opcodes.push,
 			0xc9 : Opcodes.ret,
 			0xcd : Opcodes.call,
 			0xcf : Opcodes.rst,
