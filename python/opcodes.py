@@ -406,8 +406,9 @@ class Opcodes(object):
 		pc += 1
 		addr_hi = cpu.rom.readMemory(pc)
 		addr = (addr_hi << 8) + addr_lo
+		pc += 1
 		cpu.ram.storeAddr(cpu.SP - 1, pc >> 8)
-		cpu.ram.storeAddr(cpu.SP - 2, (pc & 8))
+		cpu.ram.storeAddr(cpu.SP - 2, (pc & 255))
 		cpu.SP = cpu.SP - 2
 		cpu.PC = addr
 		logger.info("CALL {:04X}".format(addr)) 
@@ -564,3 +565,26 @@ class Opcodes(object):
 
 		cpu.PC = rst_jumps[index]
 		logger.info("RST {:02X}".format(rst_jumps[index]))
+
+	@staticmethod
+	def pop(cpu, opcode, logger):
+		index = (opcode >> 4) & 3
+		high = cpu.ram.readAddr(cpu.SP+1)
+		low = cpu.ram.readAddr(cpu.SP)
+		cpu.SP += 2
+		val = (high << 8) + low
+		reg = ""
+		if index == 0:
+			cpu.BC = val
+			reg = "BC"
+		elif index == 1:
+			cpu.DE = val
+			reg = "DE"
+		elif index == 2:
+			cpu.HL = val
+			reg = "HL"
+		elif index == 3:
+			cpu.AF = val
+			reg = "AF"
+
+		logger.info("POP {}".format(reg))
