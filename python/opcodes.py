@@ -385,9 +385,10 @@ class Opcodes(object):
 	@staticmethod
 	def bit_res(cpu, opcode, logger):
 		index = (opcode >> 8) & 255
-		logger.info("RES 1, (IY+{:02X})".format(index))
+		bit = (opcode >> 3) & 7
+		logger.info("RES {}, (IY+{:02X})".format(bit, index))
 		val = cpu.ram.readAddr(cpu.IY+index)
-		val &= (0 << 1)
+		val &= (0 << bit)
 		cpu.ram.storeAddr(cpu.IY+index, val)
 
 	@staticmethod
@@ -588,3 +589,26 @@ class Opcodes(object):
 			reg = "AF"
 
 		logger.info("POP {}".format(reg))
+
+	@staticmethod
+	def ldiy_d_n(cpu, opcode, logger):
+		''' LD (IY+d),n '''
+		d = cpu.rom.readMemory(cpu.PC)
+		n = cpu.rom.readMemory(cpu.PC)
+		cpu.ram.storeAddr(cpu.IY + d, n)
+		logger.info("LD (IY+{:02X}),{:02X}".format(d, n))
+
+	@staticmethod
+	def add_r(cpu, opcode, logger):
+		''' ADD A,r '''
+		index = (opcode & 7)
+		old = cpu.A
+		cpu.A = old + cpu.regs[index]
+		logger.info("ADD A,{}".format(IndexToReg.translate8bit(index)))
+
+		cpu.SFlag = Bits.isNegative(cpu.A)
+		cpu.ZFlag = Bits.isZero(cpu.A)
+		cpu.HFlag = Bits.halfCarrySub(old, cpu.A)
+		cpu.PVFlag = Bits.overflow(old, cpu.A)
+		cpu.NFlag = Bits.reset()
+		cpu.CFlag = Bits.carryFlag(cpu.A)

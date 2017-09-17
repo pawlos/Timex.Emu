@@ -283,6 +283,7 @@ class CPU(object):
 			0x77 : Opcodes.ldhlr,
 			0x78 : Opcodes.ld8,
 			0x7a : Opcodes.ld8,
+			0x87 : Opcodes.add_r,
 			0x90 : Opcodes.sub_r,
 			0x91 : Opcodes.sub_r,
 			0xa7 : Opcodes._and,
@@ -323,14 +324,16 @@ class CPU(object):
 			0xedb8 : Opcodes.lddr,
 			0xfd21 : Opcodes.ldiy,
 			0xfd35 : Opcodes.dec_mem_at_iy,
+			0xfd36 : Opcodes.ldiy_d_n,
 			0xfd75 : Opcodes.ldiy_d_r,
 			0xfd86 : Opcodes.add_iy,
 			0xfdcb : [self.fourBytesOpcodes],
 			0xfdcb01ce : Opcodes.bit_set,
-			0xfdcb308e : Opcodes.bit_res,
 			0xfdcb014e : Opcodes.bit_bit,
 			0xfdcb0246 : Opcodes.bit_bit,
-			0xfdcb0476 : Opcodes.bit_bit
+			0xfdcb0476 : Opcodes.bit_bit,
+			0xfdcb308e : Opcodes.bit_res,
+			0xfdcb3086 : Opcodes.bit_res,
 		}
 
 	def generateInterrupt(self):
