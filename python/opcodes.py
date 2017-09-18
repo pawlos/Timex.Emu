@@ -612,3 +612,19 @@ class Opcodes(object):
 		cpu.PVFlag = Bits.overflow(old, cpu.A)
 		cpu.NFlag = Bits.reset()
 		cpu.CFlag = Bits.carryFlag(cpu.A)
+
+	@staticmethod
+	def add_r_n(cpu, opcode, logger):
+		''' ADD A,n '''
+		n = cpu.rom.readMemory(cpu.PC)
+		old = cpu.A
+		cpu.A += n
+
+		cpu.SFlag = Bits.isNegative(cpu.A)
+		cpu.ZFlag = Bits.isZero(cpu.A)
+		cpu.HFlag = Bits.halfCarrySub(old, cpu.A)
+		cpu.PVFlag = Bits.overflow(old, cpu.A)
+		cpu.NFlag = Bits.reset()
+		cpu.CFlag = Bits.carryFlag(cpu.A)
+
+		logger.info("ADD A, {:02X}".format(n))
