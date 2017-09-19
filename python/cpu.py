@@ -276,6 +276,8 @@ class CPU(object):
 			0x3e : Opcodes.ld8n,
 			0x47 : Opcodes.ld8,
 			0x57 : Opcodes.ld8,
+			0x56 : Opcodes.ld_r_hl,
+			0x5e : Opcodes.ld_r_hl,
 			0x5f : Opcodes.ld8,
 			0x62 : Opcodes.ld8,
 			0x67 : Opcodes.ld8,

@@ -628,3 +628,16 @@ class Opcodes(object):
 		cpu.CFlag = Bits.carryFlag(cpu.A)
 
 		logger.info("ADD A, {:02X}".format(n))
+
+	@staticmethod
+	def ld_r_hl(cpu, opcode, logger):
+		''' LD r, (HL) '''
+
+		index = (opcode >> 3) & 7
+
+		value = cpu.ram.readAddr(cpu.HL)
+		old = cpu.regs[index]
+
+		cpu.regs[index] = value
+
+		logger.info("LD {},(HL)".format(IndexToReg.translate8bit(index)))
