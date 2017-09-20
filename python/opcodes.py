@@ -641,3 +641,16 @@ class Opcodes(object):
 		cpu.regs[index] = value
 
 		logger.info("LD {},(HL)".format(IndexToReg.translate8bit(index)))
+
+	@staticmethod
+	def _or(cpu, opcode, logger):
+		''' OR r '''
+		regInd = opcode & 7
+		cpu.A = cpu.A | cpu.regs[regInd]
+		cpu.HFlag = Bits.reset()
+		cpu.CFlag = Bits.reset()
+		cpu.NFlag = Bits.reset()
+		cpu.ZFlag = Bits.isZero(cpu.A)
+		cpu.SFlag = Bits.isNegative(cpu.A)
+		cpu.PVFlag = Bits.paritySet(cpu.A)
+		logger.info("OR {}".format(IndexToReg.translate8bit(regInd)))

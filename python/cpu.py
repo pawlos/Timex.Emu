@@ -294,6 +294,7 @@ class CPU(object):
 			0xAF : Opcodes.xorA,
 			0xB0 : Opcodes.xorA,
 			0xB1 : Opcodes.xorA,
+			0xb3 : Opcodes._or,
 			0xbc : Opcodes.cp,
 			0xc1 : Opcodes.pop,
 			0xc3 : Opcodes.jp,

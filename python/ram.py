@@ -3,7 +3,7 @@
 class RAM(object):
 	def __init__(self):
 		#64 kB RAM space
-		self.ram = [None] * 65536
+		self.ram = [0] * 65536
 
 	def storeAddr(self, addr, value):
 		self.ram[addr] = value
