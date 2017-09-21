@@ -2,6 +2,7 @@
 import sys
 import re
 from regs import *
+from utility import Bits
 
 class EmptyDebugger(object):
 	def setBreakpoint(self, pc):
@@ -32,8 +33,8 @@ class Debugger(object):
 		print "s - single step"
 		print "? - this help"
 
-	def state(self, flag, flag_name):
-		return flag_name if flag == True else flag_name.lower()
+	def state(self, flag, flag_bit, flag_name):
+		return flag_name if Bits.getNthBit(flag,flag_bit) == True else flag_name.lower()
 
 	def stop(self, cpu):
 		while True:
@@ -44,9 +45,9 @@ class Debugger(object):
 				print "A': {:02X} B': {:02X} C': {:02X} D': {:02X} E': {:02X} H': {:02X} L': {:02X}" \
 					.format(cpu.regsPri[A], cpu.regsPri[B], cpu.regsPri[C], cpu.regsPri[D], cpu.regsPri[E], cpu.regsPri[H], cpu.regsPri[L])
 			elif "if" == input:
-				print "{} {} _ {} _ {} {} {}".format(self.state(cpu.flags[SF], "S"), self.state(cpu.flags[ZF], "Z"), \
-													 self.state(cpu.flags[HF], "H"), self.state(cpu.flags[PVF], "P/V"), \
-													 self.state(cpu.flags[NF], "N"), self.state(cpu.flags[CF], "C"))
+				print "{} {} _ {} _ {} {} {}".format(self.state(cpu.F, SF, "S"), self.state(cpu.F, ZF, "Z"), \
+													 self.state(cpu.F, HF, "H"), self.state(cpu.F, PVF, "P/V"), \
+													 self.state(cpu.F, NF, "N"), self.state(cpu.F, CF, "C"))
 			elif "ir16" == input:
 				print "BC : {:04X} DE : {:04X} HL : {:04X} IX : {:04X} IY : {:04X} SP : {:04X}".format(cpu.BC, cpu.DE, cpu.HL, cpu.IX, cpu.IY, cpu.SP)
 			elif "prom " in input:
