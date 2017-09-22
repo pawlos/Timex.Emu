@@ -52,12 +52,13 @@ class Bits(object):
 		return Bits.count(val) % 2 == 0
 
 	@staticmethod
-	def carryFlag(val):
-		return val < 0
+	def carryFlag(val, bits = 8):
+		return val >= (1 << bits) or Bits.twos_comp(val, bits) < 0
+	
 
 	@staticmethod
 	def isNegative(val):
-		return True if val < 0 else False
+		return True if Bits.twos_comp(val) < 0 else False
 
 	@staticmethod
 	def signInTwosComp(val, bits = 8):

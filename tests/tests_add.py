@@ -119,3 +119,30 @@ class TestAdd(unittest.TestCase):
 		cpu.DE = 0xaaaa
 		cpu.readOp()
 		self.assertEqual(0x5554, cpu.HL)
+
+	def test_add_A_n_correctly_calculates_value(self):
+		cpu = CPU(FakeRom('\xC6\x33'))
+		cpu.A = 0x23
+		cpu.readOp()
+		self.assertEqual(0x56, cpu.A)
+
+	def test_add_A_n_correctly_set_Z_flag_when_value_is_0(self):
+		cpu = CPU(FakeRom('\xC6\x33'))
+		cpu.A = 0x0-0x33
+		cpu.ZFlag = False
+		cpu.readOp()
+		self.assertTrue(cpu.ZFlag)
+
+	def test_add_A_n_correctly_set_C_flag_when_value_is_outside_range(self):
+		cpu = CPU(FakeRom('\xC6\x33'))
+		cpu.A = 0xCD
+		cpu.CFlag = False
+		cpu.readOp()
+		self.assertTrue(cpu.CFlag)
+
+	def test_add_A_n_correctly_set_S_flag_when_value_is_outside_negative(self):
+		cpu = CPU(FakeRom('\xC6\x03'))
+		cpu.A = 0xCD
+		cpu.SFlag = False
+		cpu.readOp()
+		self.assertTrue(cpu.SFlag)

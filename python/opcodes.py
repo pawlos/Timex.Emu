@@ -618,14 +618,16 @@ class Opcodes(object):
 		''' ADD A,n '''
 		n = cpu.rom.readMemory(cpu.PC)
 		old = cpu.A
-		cpu.A += n
 
-		cpu.SFlag = Bits.isNegative(cpu.A)
+		value = cpu.A + n
+		cpu.A = value
+
+		cpu.SFlag = Bits.isNegative(value)
 		cpu.ZFlag = Bits.isZero(cpu.A)
 		cpu.HFlag = Bits.halfCarrySub(old, cpu.A)
 		cpu.PVFlag = Bits.overflow(old, cpu.A)
 		cpu.NFlag = Bits.reset()
-		cpu.CFlag = Bits.carryFlag(cpu.A)
+		cpu.CFlag = Bits.carryFlag(value)
 
 		logger.info("ADD A, {:02X}".format(n))
 
