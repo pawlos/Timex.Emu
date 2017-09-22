@@ -656,3 +656,11 @@ class Opcodes(object):
 		cpu.SFlag = Bits.isNegative(cpu.A)
 		cpu.PVFlag = Bits.paritySet(cpu.A)
 		logger.info("OR {}".format(IndexToReg.translate8bit(regInd)))
+
+	@staticmethod
+	def jr_e(cpu, opcode, logger):
+
+		jumpOffset = Bits.twos_comp(cpu.rom.readMemory(cpu.PC))
+		logger.info("JR {0:x}".format(jumpOffset))
+
+		cpu.PC = cpu.PC + jumpOffset
