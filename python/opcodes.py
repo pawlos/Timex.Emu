@@ -664,3 +664,22 @@ class Opcodes(object):
 		logger.info("JR {0:x}".format(jumpOffset))
 
 		cpu.PC = cpu.PC + jumpOffset
+
+	@staticmethod
+	def ld16_nn(cpu, opcode, logger):
+		low = cpu.rom.readMemory(cpu.PC)
+		high = cpu.rom.readMemory(cpu.PC)
+		addr = ( high << 8 ) + low
+		value = cpu.ram.readAddr(addr)
+		reg = ( opcode >> 4 ) & 3
+
+		if reg == 0:
+			cpu.BC = value
+		elif reg == 1:
+			cpu.DE = value
+		elif reg == 2:
+			cpu.HL = value
+		else:
+			cpu.SP = value 
+
+		logger.info("LD {},({:0X})".format(IndexToReg.translate16bit(reg), addr))
