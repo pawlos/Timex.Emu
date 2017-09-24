@@ -80,7 +80,6 @@ class Opcodes(object):
 
 	@staticmethod
 	def ldExt(cpu, opcode, logger):
-		logger.info(cpu.A)
 		cpu.I = cpu.A
 		logger.info("LD I,A")
 
@@ -146,9 +145,9 @@ class Opcodes(object):
 		logger.info("AND A")
 		regInd = opcode & 7
 		cpu.A = cpu.A & cpu.regs[regInd]
-		cpu.HFlag = True
-		cpu.CFlag = False
-		cpu.NFlag = False
+		cpu.HFlag = Bits.set()
+		cpu.CFlag = Bits.reset()
+		cpu.NFlag = Bits.reset()
 		cpu.ZFlag = Bits.isZero(cpu.A)
 		cpu.SFlag = Bits.signInTwosComp(cpu.A)
 		cpu.PVFlag = Bits.paritySet(cpu.A)
@@ -167,16 +166,16 @@ class Opcodes(object):
 			value = cpu.SP
 
 		oldHL = cpu.HL
-		#logger.info("Old value of HL: " + str(oldHL))
+
 		cpu.HL = cpu.HL - value - (1 if cpu.CFlag else 0)
-		#logger.info("New value of HL: " + str(cpu.HL))
+
 		logger.info("SBC HL, {}".format(IndexToReg.translate16bit(regInd)))
 		cpu.SFlag = Bits.signFlag(cpu.HL, bits=16)
 		cpu.ZFlag = Bits.isZero(cpu.HL)
 		cpu.HFlag = Bits.halfCarrySub16(oldHL, cpu.HL)
 		cpu.PVFlag = Bits.overflow(Bits.twos_comp(oldHL, bits=16), 
 									   Bits.twos_comp(cpu.HL, bits=16))
-		cpu.NFlag = True
+		cpu.NFlag = Bits.set()
 		cpu.CFlag = Bits.borrow(cpu.HL, bits=16)
 
 	@staticmethod
@@ -299,9 +298,9 @@ class Opcodes(object):
 			cpu.HL = cpu.HL - 1
 			cpu.DE = cpu.DE - 1
 			cpu.BC = cpu.BC - 1
-			cpu.NFlag = False
-			cpu.HFlag = False
-			cpu.PVFlag = False
+			cpu.NFlag = Bits.reset()
+			cpu.HFlag = Bits.reset()
+			cpu.PVFlag = Bits.reset()
 			if cpu.BC == 0:
 				break
 

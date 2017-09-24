@@ -60,3 +60,17 @@ class cp_h(unittest.TestCase):
 		cpu.H = 0x81
 		cpu.readOp()
 		self.assertTrue(cpu.PVFlag)
+
+	def test_cp_H_sets_SF_if_value_is_negative(self):
+		cpu = CPU(FakeRom('\xbc'))
+		cpu.A = 1
+		cpu.H = 3
+		cpu.readOp()
+		self.assertTrue(cpu.SFlag)
+
+	def test_cp_H_sets_CF_if_borrow(self):
+		cpu = CPU(FakeRom('\xbc'))
+		cpu.A = 1
+		cpu.H = 3
+		cpu.readOp()
+		self.assertTrue(cpu.CFlag)
