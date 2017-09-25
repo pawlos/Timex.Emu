@@ -682,3 +682,9 @@ class Opcodes(object):
 			cpu.SP = value 
 
 		logger.info("LD {},({:0X})".format(IndexToReg.translate16bit(reg), addr))
+
+	@staticmethod
+	def ld_a_bc(cpu, opcode, logger):
+		value = cpu.ram.readAddr(cpu.BC)
+		cpu.A = value
+		logger.info("LD A, (BC)")
