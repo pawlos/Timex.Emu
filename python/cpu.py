@@ -274,6 +274,7 @@ class CPU(object):
 			0x33 : Opcodes.inc16,
 			0x36 : Opcodes.ld_addr,
 			0x39 : Opcodes.add16,
+			0x3a : Opcodes.ld_a_nn,
 			0x3b : Opcodes.dec16b,
 			0x3e : Opcodes.ld8n,
 			0x47 : Opcodes.ld8,

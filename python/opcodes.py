@@ -694,3 +694,11 @@ class Opcodes(object):
 		value = cpu.ram.readAddr(cpu.DE)
 		cpu.A = value
 		logger.info("LD A, (DE)")
+
+	@staticmethod
+	def ld_a_nn(cpu, opcode, logger):
+		low = cpu.rom.readMemory(cpu.PC)
+		high = cpu.rom.readMemory(cpu.PC)
+		addr = (high << 8) + low
+		cpu.A = cpu.ram.readAddr(addr)
+		logger.info("LD A, ({:04X})".format(addr))
