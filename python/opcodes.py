@@ -702,3 +702,8 @@ class Opcodes(object):
 		addr = (high << 8) + low
 		cpu.A = cpu.ram.readAddr(addr)
 		logger.info("LD A, ({:04X})".format(addr))
+
+	@staticmethod
+	def ld_bc_a(cpu, opcode, logger):
+		cpu.ram.storeAddr(cpu.BC, cpu.A)
+		logger.info("LD (BC), A")
