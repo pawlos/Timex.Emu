@@ -707,3 +707,8 @@ class Opcodes(object):
 	def ld_bc_a(cpu, opcode, logger):
 		cpu.ram.storeAddr(cpu.BC, cpu.A)
 		logger.info("LD (BC), A")
+
+	@staticmethod
+	def ld_de_a(cpu, opcode, logger):
+		cpu.ram.storeAddr(cpu.DE, cpu.A)
+		logger.info("LD (DE), A")
