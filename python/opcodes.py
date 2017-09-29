@@ -712,3 +712,10 @@ class Opcodes(object):
 	def ld_de_a(cpu, opcode, logger):
 		cpu.ram.storeAddr(cpu.DE, cpu.A)
 		logger.info("LD (DE), A")
+
+	@staticmethod
+	def lra(cpu, opcode, logger):
+		cflag = (cpu.A >> 7) & 1
+		cpu.A = Bits.setNthBit((cpu.A << 1), 0, cpu.CFlag)
+		cpu.CFlag = cflag == 1
+		logger.info("LRA")
