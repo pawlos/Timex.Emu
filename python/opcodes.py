@@ -717,5 +717,12 @@ class Opcodes(object):
 	def lra(cpu, opcode, logger):
 		cflag = (cpu.A >> 7) & 1
 		cpu.A = Bits.setNthBit((cpu.A << 1), 0, cpu.CFlag)
-		cpu.CFlag = cflag == 1
+		cpu.CFlag = Bits.set() if cflag == 1 else Bits.reset()
 		logger.info("LRA")
+
+	@staticmethod
+	def rra(cpu, opcode, logger):
+		cflag = (cpu.A & 1)
+		cpu.A = Bits.setNthBit((cpu.A >> 1), 7, cpu.CFlag)
+		cpu.CFlag = Bits.set() if cflag == 1 else Bits.reset()
+		logger.info("RRA")

@@ -262,6 +262,7 @@ class CPU(object):
 			0x19 : Opcodes.add16,
 			0x1a : Opcodes.ld_a_de,
 			0x1b : Opcodes.dec16b,
+			0x1f : Opcodes.rra,
 			0x20 : Opcodes.jpnz,
 			0x21 : Opcodes.ld16,
 			0x22 : Opcodes.ldNnHl,
