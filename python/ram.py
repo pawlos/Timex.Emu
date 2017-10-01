@@ -6,7 +6,7 @@ class RAM(object):
 		self.ram = [0] * 65536
 
 	def storeAddr(self, addr, value):
-		self.ram[addr] = value
+		self.ram[addr] = (value & 0xFF)
 
 	def readAddr(self, addr):
 		return self.ram[addr]

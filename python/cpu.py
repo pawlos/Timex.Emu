@@ -333,6 +333,7 @@ class CPU(object):
 			0xed56 : Opcodes.im1,
 			0xed53 : Opcodes.ldNnRr,
 			0xed63 : Opcodes.ldNnRr,
+			0xed6f : Opcodes.rld,
 			0xed73 : Opcodes.ldNnRr,
 			0xed7b : Opcodes.ld16_nn,
 			0xedb0 : Opcodes.ldir,

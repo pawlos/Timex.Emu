@@ -17,4 +17,4 @@ class FakeRam(object):
 		return self.ram[addr]
 
 	def storeAddr(self, addr, value):
-		self.ram[addr] = value
+		self.ram[addr] = value & 0xFF

@@ -725,4 +725,22 @@ class Opcodes(object):
 		cflag = (cpu.A & 1)
 		cpu.A = Bits.setNthBit((cpu.A >> 1), 7, cpu.CFlag)
 		cpu.CFlag = Bits.set() if cflag == 1 else Bits.reset()
+		cpu.HFlag = Bits.reset()
+		cpu.NFlag = Bits.reset()
 		logger.info("RRA")
+
+	@staticmethod
+	def rld(cpu, opcode, logger):
+		low_a = cpu.A & 0x0F
+		mem_hl = cpu.ram.readAddr(cpu.HL)
+		low_hl = mem_hl & 0x0F
+		high_hl = (mem_hl & 0xF0) >> 4
+		cpu.A = ((cpu.A & 0xF0) | high_hl)
+		mem_hl = (mem_hl << 4) | low_a
+		cpu.ram.storeAddr(cpu.HL, mem_hl)
+		cpu.ZFlag = Bits.isZero(cpu.A)
+		cpu.SFlag = Bits.isNegative(cpu.A)
+		cpu.HFlag = Bits.reset()
+		cpu.NFlag = Bits.reset()
+		cpu.PVFlag = Bits.paritySet(cpu.A)
+		logger.info("RLD")
