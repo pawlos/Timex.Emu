@@ -744,3 +744,19 @@ class Opcodes(object):
 		cpu.NFlag = Bits.reset()
 		cpu.PVFlag = Bits.paritySet(cpu.A)
 		logger.info("RLD")
+
+	@staticmethod
+	def rrd(cpu, opcode, logger):
+		low_a = cpu.A & 0x0F
+		mem_hl = cpu.ram.readAddr(cpu.HL)
+		low_hl = mem_hl & 0x0F
+		high_hl = (mem_hl & 0xF0) >> 4
+		cpu.A = (cpu.A & 0xF0) | low_hl
+		mem_hl = (low_a << 4) | high_hl
+		cpu.ram.storeAddr(cpu.HL, mem_hl)
+		cpu.ZFlag = Bits.isZero(cpu.A)
+		cpu.SFlag = Bits.isNegative(cpu.A)
+		cpu.HFlag = Bits.reset()
+		cpu.NFlag = Bits.reset()
+		cpu.PVFlag = Bits.paritySet(cpu.A)
+		logger.info("RRD")
