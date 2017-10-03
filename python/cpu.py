@@ -328,6 +328,7 @@ class CPU(object):
 			0xfd : [self.twoBytesOpcodes],
 			0xed42 : Opcodes.sbc,
 			0xed43 : Opcodes.ldNnRr,
+			0xed44 : Opcodes.neg,
 			0xed47 : Opcodes.ldExt,
 			0xed52 : Opcodes.sbc,
 			0xed56 : Opcodes.im1,

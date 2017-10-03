@@ -760,3 +760,15 @@ class Opcodes(object):
 		cpu.NFlag = Bits.reset()
 		cpu.PVFlag = Bits.paritySet(cpu.A)
 		logger.info("RRD")
+
+	@staticmethod
+	def neg(cpu, opcode, logger):
+		old = cpu.A
+		cpu.A = 0 - cpu.A
+		cpu.NFlag = Bits.reset()
+		cpu.ZFlag = Bits.isZero(cpu.A)
+		cpu.SFlag = Bits.isNegative(cpu.A)
+		cpu.PVFlag = old == 0x80	
+		cpu.CFlag = Bits.isZero(old)
+		cpu.HFlag = Bits.halfCarrySub(0x0, old)
+		logger.info("NEG")
