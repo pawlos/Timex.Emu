@@ -772,3 +772,10 @@ class Opcodes(object):
 		cpu.CFlag = Bits.isZero(old)
 		cpu.HFlag = Bits.halfCarrySub(0x0, old)
 		logger.info("NEG")
+
+	@staticmethod
+	def ld_r_iy_d(cpu, opcode, logger):
+		index = (opcode >> 3 ) & 7
+		d = cpu.rom.readMemory(cpu.PC)
+		cpu.regs[index] = cpu.ram.readAddr(cpu.IY + d)
+		logger.info("LD {}, (IY+{:02X})".format(IndexToReg.translate8bit(index), d))
