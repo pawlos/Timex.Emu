@@ -39,6 +39,10 @@ class Debugger(object):
 	def stop(self, cpu):
 		while True:
 			input = raw_input("> ")
+			if input == "":
+				input = self.lastInput
+
+			self.lastInput = input
 			if "ir" == input:
 				print "A : {:02X} B : {:02X} C : {:02X} D : {:02X} E : {:02X} H : {:02X} L : {:02X}" \
 					.format(cpu.regs[A], cpu.regs[B], cpu.regs[C],  cpu.regs[D],  cpu.regs[E], cpu.regs[H], cpu.regs[L])
