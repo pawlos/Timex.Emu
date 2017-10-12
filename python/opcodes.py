@@ -779,3 +779,13 @@ class Opcodes(object):
 		d = cpu.rom.readMemory(cpu.PC)
 		cpu.regs[index] = cpu.ram.readAddr(cpu.IY + d)
 		logger.info("LD {}, (IY+{:02X})".format(IndexToReg.translate8bit(index), d))
+
+	@staticmethod
+	def ld_ix_nn(cpu, opcode, logger):
+		low = cpu.rom.readMemory(cpu.PC)
+		high = cpu.rom.readMemory(cpu.PC)
+		addr = (high << 8) + low
+		low_val = cpu.ram.readAddr(addr)
+		high_val = cpu.ram.readAddr(addr+1)
+		cpu.IX = (high_val << 8) + low_val
+		logger.info("LD IX, ({:04X})".format(addr))
