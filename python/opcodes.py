@@ -789,3 +789,8 @@ class Opcodes(object):
 		high_val = cpu.ram.readAddr(addr+1)
 		cpu.IX = (high_val << 8) + low_val
 		logger.info("LD IX, ({:04X})".format(addr))
+
+	@staticmethod
+	def ldra(cpu, opcode, logger):
+		cpu.R = cpu.A
+		logger.info("LD R, A")

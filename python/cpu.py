@@ -70,6 +70,14 @@ class CPU(object):
 		self.regs[L] = Bits.limitTo8Bits(value)
 
 	@property
+	def R(self):
+		return self.R;
+
+	@R.setter
+	def R(self, value):
+		self.R = value
+
+	@property
 	def ZFlag(self):
 		return Bits.getNthBit(self.F,ZF) == 1
 
@@ -354,6 +362,7 @@ class CPU(object):
 			0xed43 : Opcodes.ldNnRr,
 			0xed44 : Opcodes.neg,
 			0xed47 : Opcodes.ldExt,
+			0xed4f : Opcodes.ldra,
 			0xed52 : Opcodes.sbc,
 			0xed56 : Opcodes.im1,
 			0xed53 : Opcodes.ldNnRr,
