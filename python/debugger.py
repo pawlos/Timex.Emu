@@ -19,6 +19,7 @@ class Debugger(object):
 	def __init__(self):
 		self.isSingleStepping = False
 		self.breakpoints = {}
+		self.lastInput = ""
 
 	def setBreakpoint(self, pc):
 		self.breakpoints[pc] = True
@@ -63,7 +64,7 @@ class Debugger(object):
 			elif "s" == input:
 				self.isSingleStepping = True
 				break
-			elif "" == input:
+			elif "c" == input:
 				break
 			elif "?" == input:
 				print self.help()
