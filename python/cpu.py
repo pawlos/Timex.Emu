@@ -235,7 +235,8 @@ class CPU(object):
 		self.logger = logger
 		self.debugger = debugger
 		
-		self.iff = 0x00
+		self.iff1 = 0x00
+		self.iff2 = 0x00
 
 		self.interruptMode = 0
 
@@ -366,6 +367,7 @@ class CPU(object):
 			0xed52 : Opcodes.sbc,
 			0xed56 : Opcodes.im1,
 			0xed53 : Opcodes.ldNnRr,
+			0xed5f : Opcodes.ldar,
 			0xed63 : Opcodes.ldNnRr,
 			0xed67 : Opcodes.rrd,
 			0xed6f : Opcodes.rld,

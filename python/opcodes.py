@@ -8,13 +8,15 @@ class Opcodes(object):
 	@staticmethod
 	def disableInterrupts(cpu, opcode, logger):
 		"""DI"""
-		cpu.iff = 0x00
+		cpu.iff1 = 0x00
+		cpu.iff2
 		logger.info("DI")
 
 	@staticmethod
 	def enableInterrupts(cpu, opcode, logger):
 		''' EI '''
-		cpu.iff = 0x01
+		cpu.iff1 = 0x01
+		cpu.iff2 = 0x01
 		logger.info("EI")
 
 	@staticmethod
@@ -794,3 +796,14 @@ class Opcodes(object):
 	def ldra(cpu, opcode, logger):
 		cpu.R = cpu.A
 		logger.info("LD R, A")
+
+	@staticmethod
+	def ldar(cpu, opcode, logger):
+		cpu.A = cpu.R
+
+		cpu.SFlag = Bits.isNegative(cpu.R)
+		cpu.ZFlag = Bits.isZero(cpu.R)
+		cpu.HFlag = Bits.reset()
+		cpu.PVFlag = cpu.iff2
+		cpu.NFlag = Bits.reset()
+		logger.info("LD A, R")

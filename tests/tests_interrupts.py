@@ -9,10 +9,10 @@ class tests_interrupts(unittest.TestCase):
 		cpu = CPU(FakeRom('\xf3'))
 		cpu.readOp()
 
-		self.assertEqual(0x00, cpu.iff)
+		self.assertEqual(0x00, cpu.iff1)
 
 	def test_di_(self):
 		cpu = CPU(FakeRom('\xfb'))
 		cpu.readOp()
 
-		self.assertEqual(0x01, cpu.iff)
+		self.assertEqual(0x01, cpu.iff1)
