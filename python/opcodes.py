@@ -807,3 +807,8 @@ class Opcodes(object):
 		cpu.PVFlag = cpu.iff2
 		cpu.NFlag = Bits.reset()
 		logger.info("LD A, R")
+
+	@staticmethod
+	def im2(cpu, opcode, logger):
+		cpu.interruptMode = 2
+		logger.info("IM 2")
