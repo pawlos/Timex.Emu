@@ -812,3 +812,8 @@ class Opcodes(object):
 	def im2(cpu, opcode, logger):
 		cpu.interruptMode = 2
 		logger.info("IM 2")
+
+	@staticmethod
+	def im0(cpu, opcode, logger):
+		cpu.interruptMode = 0
+		logger.info("IM 0")
