@@ -5,7 +5,7 @@ from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
 
-class jp(unittest.TestCase):
+class push(unittest.TestCase):
 
 	def test_push_correctly_stores_af_on_stack(self):
 		ram = FakeRam([None]*0x1100)
