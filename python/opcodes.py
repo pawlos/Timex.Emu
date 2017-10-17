@@ -817,3 +817,12 @@ class Opcodes(object):
 	def im0(cpu, opcode, logger):
 		cpu.interruptMode = 0
 		logger.info("IM 0")
+
+	@staticmethod
+	def pop_ix(cpu, opcode, logger):
+		low = cpu.ram.readAddr(cpu.SP)
+		cpu.SP = cpu.SP + 1
+		high = cpu.ram.readAddr(cpu.SP)
+		cpu.SP = cpu.SP + 1
+		cpu.IX = (high << 8) + low
+		logger.info("POP IX")
