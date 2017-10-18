@@ -4,7 +4,7 @@ from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
 
-class TestNEG(unittest.TestCase):
+class tests_neg(unittest.TestCase):
 
 	def test_neg_does_negate_the_value(self):
 		cpu = CPU(FakeRom('\xed\x44'))

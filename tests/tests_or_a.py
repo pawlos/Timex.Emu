@@ -5,7 +5,7 @@ from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
 
-class or_a(unittest.TestCase):
+class tests_or_a(unittest.TestCase):
 	def test_or_a_performs_or_operation_value_is_correct(self):
 		cpu = CPU(FakeRom('\xf6\x48'))
 		cpu.A = 0x12

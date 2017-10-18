@@ -5,7 +5,7 @@ from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
 
-class ld_hl_addr(unittest.TestCase):
+class tests_ld_hl_addr(unittest.TestCase):
 
 	def test_ld_hl_addr_correctly_stores_value_from_given_address_to_hl(self):
 		cpu = CPU(FakeRom('\x2a\x45\x45'))

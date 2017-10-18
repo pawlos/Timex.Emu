@@ -5,7 +5,7 @@ from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
 
-class ld_ix_nn(unittest.TestCase):
+class tests_ld_ix_nn(unittest.TestCase):
 	''' DD 2A n n '''
 	def test_ld_ix_nn_correctly_copies_nn_value_to_ix(self):
 		ram = FakeRam([None]*0x6668)

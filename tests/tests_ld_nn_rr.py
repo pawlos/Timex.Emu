@@ -5,7 +5,7 @@ from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
 
-class ld_nn_rr(unittest.TestCase):
+class tests_ld_nn_rr(unittest.TestCase):
 
 	def test_ed43nn_correctly_stores_value_at_given_location(self):
 		cpu = CPU(FakeRom('\xed\x43\x10\x00'))

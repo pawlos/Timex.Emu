@@ -4,7 +4,7 @@ from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
 
-class test_ld_de_a_loads_corect_value(unittest.TestCase):
+class test_ld_de_a(unittest.TestCase):
 
 	def test_ld_de_a_loads_corect_value(self):
 		ram = FakeRam([0x00]*0x1130)

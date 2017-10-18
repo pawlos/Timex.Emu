@@ -4,7 +4,7 @@ from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
 
-class jpnc(unittest.TestCase):
+class tests_jpnc(unittest.TestCase):
 
 	def test_jp_nc_jumps_if_CFlag_is_reset(self):
 		rom = [None] * 0x0482

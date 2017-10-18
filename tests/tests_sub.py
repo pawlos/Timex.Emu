@@ -4,7 +4,7 @@ from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
 
-class TestSUB(unittest.TestCase):
+class tests_sub(unittest.TestCase):
 
 	def test_sub_n_set_corrects_value(self):
 		cpu = CPU(FakeRom('\xd6\x52'))

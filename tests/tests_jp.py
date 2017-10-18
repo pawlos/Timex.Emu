@@ -5,7 +5,7 @@ from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
 
-class jp(unittest.TestCase):
+class tests_jp(unittest.TestCase):
 
 	def test_jp_nz_jumps_if_ZFlag_is_non_zero(self):
 		rom = [None] * 0x0482

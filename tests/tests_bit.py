@@ -5,7 +5,7 @@ from fakes import *
 from loggers import Logger
 from utility import Bits
 
-class TestBIT(unittest.TestCase):
+class tests_bit(unittest.TestCase):
 
 	def test_bit_IY_plus_4_set_correctly_set_z_flag(self):
 		ram = FakeRam([None]*0x2005)

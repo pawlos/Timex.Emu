@@ -4,7 +4,7 @@ from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
 
-class tests_im1(unittest.TestCase):
+class tests_im(unittest.TestCase):
 	def test_im1_interrupt_restart_execution_at_given_address(self):
 		cpu = CPU(FakeRom('\xed\x56'))
 		cpu.readOp()

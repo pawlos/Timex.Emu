@@ -4,7 +4,7 @@ from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
 
-class TestAdd(unittest.TestCase):
+class tests_add(unittest.TestCase):
 
 	def test_add_hl_de_returns_correct_result(self):
 		cpu = CPU(FakeRom('\x19'))

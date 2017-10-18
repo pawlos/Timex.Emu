@@ -4,7 +4,7 @@ from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
 
-class TestSBC(unittest.TestCase):
+class tests_sbc(unittest.TestCase):
 
 	def test_sbc_hl_de_result_is_correct_if_c_flag_is_set(self):
 		cpu = CPU(FakeRom('\xed\x52'))

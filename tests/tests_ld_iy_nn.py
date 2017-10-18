@@ -5,7 +5,7 @@ from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
 
-class ld_iy_nn(unittest.TestCase):
+class tests_ld_iy_nn(unittest.TestCase):
 	''' FD 21 n n '''
 	def test_ld_iy_nn_correctly_copies_nn_value_to_iy(self):
 		cpu = CPU(FakeRom('\xFD\x21\x33\x77'))

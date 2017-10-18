@@ -4,7 +4,7 @@ from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
 
-class TestNOP(unittest.TestCase):
+class tests_nop(unittest.TestCase):
 
 	def test_nop_does_not_change_hl(self):
 		cpu = CPU(FakeRom('\x00'))

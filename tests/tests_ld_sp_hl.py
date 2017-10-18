@@ -5,7 +5,7 @@ from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
 
-class ld_sp_hl(unittest.TestCase):
+class tests_ld_sp_hl(unittest.TestCase):
 
 	def test_ld_sp_hl_correctly_copies_hl_value_to_sp(self):
 		cpu = CPU(FakeRom('\xf9'))

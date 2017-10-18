@@ -4,7 +4,7 @@ from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
 
-class test_and_h(unittest.TestCase):
+class tests_and_h(unittest.TestCase):
 	def test_and_h_that_returns_0_set_z_flag(self):
 		cpu = CPU(FakeRom('\xa4'))
 		cpu.H = 0x10

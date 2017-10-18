@@ -4,7 +4,7 @@ from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
 
-class TestRRA(unittest.TestCase):
+class tests_rra(unittest.TestCase):
 
 	def test_rra_does_modify_value_correctly(self):
 		cpu = CPU(FakeRom('\x1f'))

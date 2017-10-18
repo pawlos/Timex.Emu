@@ -5,7 +5,7 @@ from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
 
-class xor_a(unittest.TestCase):
+class tests_xor_a(unittest.TestCase):
 	def test_xor_A_works_correctly(self):
 		cpu = CPU(FakeRom('\xb0'))
 		cpu.A = 12

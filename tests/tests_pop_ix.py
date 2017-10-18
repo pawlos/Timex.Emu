@@ -5,7 +5,7 @@ from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
 
-class pop(unittest.TestCase):
+class tests_pop(unittest.TestCase):
 
 	def test_pop_ix_correctly_retreives_value_from_stack(self):
 		ram = FakeRam([None]*0x1100)

@@ -4,7 +4,7 @@ from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
 
-class TestSBC(unittest.TestCase):
+class tests_dec_mem(unittest.TestCase):
 
 	def test_dec_mem_iy_result_doesnt_affect_c_flag(self):
 		ram = FakeRam([0x01])

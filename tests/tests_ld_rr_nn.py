@@ -5,7 +5,7 @@ from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
 
-class ld_rr_nn(unittest.TestCase):
+class tests_ld_rr_nn(unittest.TestCase):
 
 	def test_ld_BC_nn_correctly_stores_value_to_BC(self):
 		cpu = CPU(FakeRom('\x01\xba\xab'))

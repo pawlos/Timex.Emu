@@ -3,7 +3,7 @@ from cpu import CPU
 from opcodes import Opcodes
 from fakes import *
 
-class jrz(unittest.TestCase):
+class tests_jrz(unittest.TestCase):
 
 	def test_jr_z_jumps_if_ZFlag_is_set(self):
 		rom = [None] * 0x0302

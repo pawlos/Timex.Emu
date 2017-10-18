@@ -4,7 +4,7 @@ from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
 
-class TestAdd(unittest.TestCase):
+class tests_lddr(unittest.TestCase):
 
 	def test_lddr(self):
 		cpu = CPU(FakeRom('\xed\xb8'))

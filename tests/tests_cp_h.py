@@ -5,7 +5,7 @@ from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
 
-class cp_h(unittest.TestCase):
+class tests_cp_h(unittest.TestCase):
 
 	def test_cp_H_sets_ZF_if_H_is_equal_to_0(self):
 		cpu = CPU(FakeRom('\xbc'))
