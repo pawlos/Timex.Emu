@@ -826,3 +826,50 @@ class Opcodes(object):
 		cpu.SP = cpu.SP + 1
 		cpu.IX = (high << 8) + low
 		logger.info("POP IX")
+
+	@staticmethod
+	def jp_cond(cpu, opcode, logger):
+		cond = (opcode >> 3) & 7
+		low = cpu.rom.readMemory(cpu.PC)
+		high = cpu.rom.readMemory(cpu.PC)
+		addr = (high << 8) + low
+
+		taken = False
+		flag = ""
+		if cond == 0:
+			flag = "NZ"
+		if cond == 1:
+			flag == "Z"
+		if cond == 2:
+			flag = "NC"
+		if cond == 3:
+			flag = "C"
+		if cond == 4:
+			flag = "NPV"
+		if cond == 5:
+			flag = "PV"
+		if cond == 6:
+			flag = "NS"
+		if cond == 7:
+			flag = "S"
+		if cond == 0 and cpu.ZFlag == False:
+			taken = True
+		if cond == 1 and cpu.ZFlag:
+			taken = True
+		if cond == 2 and cpu.CFlag == False:
+			taken = True
+		if cond == 3 and cpu.CFlag:
+			taken = True
+		if cond == 4 and cpu.PVFlag == False:
+			taken = True
+		if cond == 5 and cpu.PVFlag:
+			taken = True
+		if cond == 6 and cpu.SFlag == False:
+			taken = True
+		if cond == 7 and cpu.SFlag:
+			taken = True
+
+		if taken:
+			cpu.PC = addr
+
+		logger.info("JP {} {:04X}".format(flag, addr))
