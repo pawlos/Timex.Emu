@@ -42,3 +42,15 @@ class tests_jp_cond(unittest.TestCase):
 		cpu.PVFlag = True
 		cpu.readOp()
 		self.assertEqual(0x1520, cpu.PC)
+
+	def test_jp_s_jumps_if_SFlag_is_not_set(self):
+		cpu = CPU(FakeRom('\xF2\x20\x15'))
+		cpu.SFlag = False
+		cpu.readOp()
+		self.assertEqual(0x1520, cpu.PC)
+
+	def test_jp_s_jumps_if_SFlag_is_set(self):
+		cpu = CPU(FakeRom('\xFA\x20\x15'))
+		cpu.SFlag = True
+		cpu.readOp()
+		self.assertEqual(0x1520, cpu.PC)
