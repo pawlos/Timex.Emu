@@ -873,3 +873,30 @@ class Opcodes(object):
 			cpu.PC = addr
 
 		logger.info("JP {} {:04X}".format(flag, addr))
+
+	@staticmethod
+	def call_cond(cpu, opcode, logger):
+		cond = (opcode >> 3) & 7
+		pc = cpu.PC
+		addr_lo = cpu.rom.readMemory(pc)
+		pc += 1
+		addr_hi = cpu.rom.readMemory(pc)
+		addr = (addr_hi << 8) + addr_lo
+		pc += 1
+
+		taken = False
+		flag = ""
+		if cond == 2:
+			flag = "NC"
+
+		if cond == 2 and cpu.CFlag == False:
+			taken = True
+
+		if taken:
+			cpu.ram.storeAddr(cpu.SP - 1, pc >> 8)
+			cpu.ram.storeAddr(cpu.SP - 2, (pc & 255))
+			cpu.SP = cpu.SP - 2
+			cpu.PC = addr
+
+
+		logger.info("CALL {}, {:04X}".format(flag, addr))
