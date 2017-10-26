@@ -888,8 +888,12 @@ class Opcodes(object):
 		flag = ""
 		if cond == 2:
 			flag = "NC"
+		if cond == 4:
+			flag = "NPV"
 
 		if cond == 2 and cpu.CFlag == False:
+			taken = True
+		if cond == 4 and cpu.PVFlag == False:
 			taken = True
 
 		if taken:
