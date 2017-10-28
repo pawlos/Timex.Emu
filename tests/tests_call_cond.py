@@ -55,13 +55,18 @@ class tests_call_cond(unittest.TestCase):
 		self.assertEqual(0x1A49, cpu.PC)
 		self.assertEqual(0x3002, cpu.SP)
 
-	'''def test_jp_s_jumps_if_SFlag_is_not_set(self):
-		cpu = CPU(FakeRom('\xF2\x20\x15'))
-		cpu.SFlag = False
+	def test_call_not_po_jumps_if_PVFlag_is_not_set(self):
+		ram = FakeRam([None]*0x3002)
+		cpu = CPU(FakeRom('\x00'*0x1A47+'\xec\x20\x15'))
+		cpu.PVFlag = False
+		cpu.PC = 0x1A47
+		cpu.SP = 0x3002
+		
+		cpu.PVFlag = True
 		cpu.readOp()
 		self.assertEqual(0x1520, cpu.PC)
 
-	def test_jp_s_jumps_if_SFlag_is_set(self):
+	'''def test_jp_s_jumps_if_SFlag_is_set(self):
 		cpu = CPU(FakeRom('\xFA\x20\x15'))
 		cpu.SFlag = True
 		cpu.readOp()

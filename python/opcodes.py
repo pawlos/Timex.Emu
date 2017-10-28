@@ -890,10 +890,14 @@ class Opcodes(object):
 			flag = "NC"
 		if cond == 4:
 			flag = "NPV"
+		if cond == 5:
+			flag = "PV"
 
 		if cond == 2 and cpu.CFlag == False:
 			taken = True
 		if cond == 4 and cpu.PVFlag == False:
+			taken = True
+		if cond == 5 and cpu.PVFlag:
 			taken = True
 
 		if taken:
