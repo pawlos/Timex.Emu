@@ -1,4 +1,3 @@
-
 #Z80 CPU
 from opcodes import *
 from regs import *
@@ -6,7 +5,6 @@ from ram import *
 from rom import *
 from loggers import EmptyLogger
 from debugger import EmptyDebugger
-import sys
 
 
 class CPU(object):

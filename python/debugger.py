@@ -32,6 +32,7 @@ class Debugger(object):
 		print "prom 0x<addr> - print value from ROM at <addr>"
 		print "pram 0x<addr> - print value from RAM at <addr>"
 		print "s - single step"
+		print "c - continue"
 		print "? - this help"
 
 	def state(self, flag, flag_bit, flag_name):
