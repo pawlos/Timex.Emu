@@ -31,6 +31,10 @@ class Debugger(object):
 	def getAddr(self, input):
 		return int(re.search('0x([0-9a-fA-F]+)$', input).group(1), base=16)
 
+	def printBreakpoints(self):
+		for pc in self.breakpoints:
+			print "Breakpoint at {:04X}, {}".format(pc, "active" if self.breakpoints[pc] else "inactive")
+
 	def help(self):
 		print "available commands"
 		print "ir - print info about 8-bit registers"
@@ -40,6 +44,7 @@ class Debugger(object):
 		print "pram 0x<addr> - print value from RAM at <addr>"
 		print "b 0x<addr> - set a breakpoint at <addr>"
 		print "bc 0x<addr> - clear a breakpoint at <addr>"
+		print "bl - list all breakpoints"
 		print "s - single step"
 		print "c - continue"
 		print "? - this help"
@@ -71,6 +76,9 @@ class Debugger(object):
 			elif "pram " in input:
 				addr = self.getAddr(input)
 				print "Ram value at: 0x{:04X} is 0x{:02X}".format(addr, cpu.ram.readAddr(addr))
+			elif "bl" == input:
+				print "List of breakpoints:"
+				self.printBreakpoints()
 			elif "bc " in input:
 				addr = self.getAddr(input)
 				self.clearBreakpoint(addr)
