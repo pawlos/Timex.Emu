@@ -24,9 +24,13 @@ class Debugger(object):
 	def setBreakpoint(self, pc):
 		self.breakpoints[pc] = True
 
-	def clearBreakpoint(self, pc):
+	def disableBreakpoint(self, pc):
 		if pc in self.breakpoints:
 			self.breakpoints[pc] = False
+
+	def clearBreakpoint(self, pc):
+		if pc in self.breakpoints:
+			del self.breakpoints[pc]
 
 	def getAddr(self, input):
 		return int(re.search('0x([0-9a-fA-F]+)$', input).group(1), base=16)
@@ -44,6 +48,7 @@ class Debugger(object):
 		print "pram 0x<addr> - print value from RAM at <addr>"
 		print "b 0x<addr> - set a breakpoint at <addr>"
 		print "bc 0x<addr> - clear a breakpoint at <addr>"
+		print "bd 0x<addr> - disable a breakpoint at <addr>"
 		print "bl - list all breakpoints"
 		print "s - single step"
 		print "c - continue"
@@ -83,6 +88,10 @@ class Debugger(object):
 				addr = self.getAddr(input)
 				self.clearBreakpoint(addr)
 				print "Breakpoint cleared at: {:04X}".format(addr)
+			elif "bd " in input:
+				addr = self.getAddr(input)
+				self.disableBreakpoint(addr)
+				print "Breakpoint disabled at: {:04X}".format(addr)
 			elif "b " in input:
 				addr = self.getAddr(input)
 				self.setBreakpoint(addr)
