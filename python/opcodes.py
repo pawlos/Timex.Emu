@@ -886,26 +886,39 @@ class Opcodes(object):
 
 		taken = False
 		flag = ""
-		if cond == 2:
+
+		if cond == 0:
+			flag == "NZ"
+		elif cond == 1:
+			flag == "Z"
+		elif cond == 2:
 			flag = "NC"
-		if cond == 4:
+		elif cond == 3:
+			flag = "C"
+		elif cond == 4:
 			flag = "NPV"
-		if cond == 5:
+		elif cond == 5:
 			flag = "PV"
-		if cond == 6:
+		elif cond == 6:
 			flag = "NS"
-		if cond == 7:
+		elif cond == 7:
 			flag = "S"
 
-		if cond == 2 and cpu.CFlag == False:
+		if cond == 0 and cpu.ZFlag == False:
 			taken = True
-		if cond == 4 and cpu.PVFlag == False:
+		elif cond == 1 and cpu.ZFlag:
 			taken = True
-		if cond == 5 and cpu.PVFlag:
+		elif cond == 2 and cpu.CFlag == False:
 			taken = True
-		if cond == 6 and cpu.SFlag == False:
+		elif cond == 3 and cpu.CFlag:
 			taken = True
-		if cond == 7 and cpu.SFlag:
+		elif cond == 4 and cpu.PVFlag == False:
+			taken = True
+		elif cond == 5 and cpu.PVFlag:
+			taken = True
+		elif cond == 6 and cpu.SFlag == False:
+			taken = True
+		elif cond == 7 and cpu.SFlag:
 			taken = True
 
 		if taken:
