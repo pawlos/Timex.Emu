@@ -929,3 +929,11 @@ class Opcodes(object):
 
 
 		logger.info("CALL {}, {:04X}".format(flag, addr))
+
+	@staticmethod
+	def dec8b(cpu, opcode, logger):
+		reg_index = (opcode >> 7) & 7
+		cpu.regs[reg_index] = cpu.regs[reg_index] - 1
+
+		cpu.ZFlag = Bits.isZero(cpu.regs[reg_index])
+		logger.info("DEC {}".format(IndexToReg.translate8bit(reg_index)))

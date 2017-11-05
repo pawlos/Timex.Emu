@@ -253,6 +253,7 @@ class CPU(object):
 			0x02 : Opcodes.ld_bc_a,
 			0x03 : Opcodes.inc16,
 			0x04 : Opcodes.inc8,
+			0x05 : Opcodes.dec8b,
 			0x06 : Opcodes.ld8n,
 			0x09 : Opcodes.add16,
 			0x0a : Opcodes.ld_a_bc,
