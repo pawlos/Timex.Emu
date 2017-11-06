@@ -936,4 +936,5 @@ class Opcodes(object):
 		cpu.regs[reg_index] = cpu.regs[reg_index] - 1
 
 		cpu.ZFlag = Bits.isZero(cpu.regs[reg_index])
+		cpu.SFlag = Bits.isNegative(cpu.regs[reg_index])
 		logger.info("DEC {}".format(IndexToReg.translate8bit(reg_index)))

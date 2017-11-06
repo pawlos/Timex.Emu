@@ -23,3 +23,15 @@ class tests_dec(unittest.TestCase):
 		cpu.B = 0x00
 		cpu.readOp();
 		self.assertFalse(cpu.ZFlag)
+
+	def test_dec_b_sets_s_flag_if_value_is_negative(self):
+		cpu = CPU(FakeRom('\x05'), FakeRam())
+		cpu.B = 0x00
+		cpu.readOp();
+		self.assertTrue(cpu.SFlag)
+
+	def test_dec_b_resets_s_flag_if_value_is_positive(self):
+		cpu = CPU(FakeRom('\x05'), FakeRam())
+		cpu.B = 0x02
+		cpu.readOp();
+		self.assertFalse(cpu.SFlag)
