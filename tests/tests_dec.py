@@ -35,3 +35,10 @@ class tests_dec(unittest.TestCase):
 		cpu.B = 0x02
 		cpu.readOp();
 		self.assertFalse(cpu.SFlag)
+
+	def test_dec_b_sets_n_flag(self):
+		cpu = CPU(FakeRom('\x05'), FakeRam())
+		cpu.B = 0x02
+		cpu.NFlag = False
+		cpu.readOp();
+		self.assertTrue(cpu.NFlag)
