@@ -42,3 +42,10 @@ class tests_dec(unittest.TestCase):
 		cpu.NFlag = False
 		cpu.readOp();
 		self.assertTrue(cpu.NFlag)
+
+	def test_dec_b_sets_PV_flag_if_borrow(self):
+		cpu = CPU(FakeRom('\x05'), FakeRam())
+		cpu.B = 0b00010000
+		cpu.PVFlag = False
+		cpu.readOp()
+		self.assertTrue(cpu.PVFlag)
