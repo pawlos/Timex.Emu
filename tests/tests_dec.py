@@ -49,3 +49,9 @@ class tests_dec(unittest.TestCase):
 		cpu.PVFlag = False
 		cpu.readOp()
 		self.assertTrue(cpu.PVFlag)
+
+	def test_dec_c_sets_correct_value(self):
+		cpu = CPU(FakeRom('\x0D'), FakeRam())
+		cpu.C = 10
+		cpu.readOp();
+		self.assertEqual(9, cpu.C)

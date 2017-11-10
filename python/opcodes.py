@@ -932,7 +932,7 @@ class Opcodes(object):
 
 	@staticmethod
 	def dec8b(cpu, opcode, logger):
-		reg_index = (opcode >> 7) & 7
+		reg_index = (opcode >> 3) & 7
 		old_val = cpu.regs[reg_index]
 		cpu.regs[reg_index] = cpu.regs[reg_index] - 1
 
