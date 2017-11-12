@@ -61,3 +61,9 @@ class tests_dec(unittest.TestCase):
 		cpu.D = 0xFF
 		cpu.readOp()
 		self.assertEqual(0xFE, cpu.D)
+
+	def test_dec_e_sets_correct_value(self):
+		cpu = CPU(FakeRom('\x1d'),FakeRam())
+		cpu.E = 0x15
+		cpu.readOp()
+		self.assertEqual(0x14, cpu.E)
