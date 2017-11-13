@@ -280,6 +280,7 @@ class CPU(object):
 			0x21 : Opcodes.ld16,
 			0x22 : Opcodes.ldNnHl,
 			0x23 : Opcodes.inc16,
+			0x25 : Opcodes.dec8b,
 			0x26 : Opcodes.ld8n,
 			0x28 : Opcodes.jrz,
 			0x29 : Opcodes.add16,
