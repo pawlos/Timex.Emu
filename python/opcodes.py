@@ -941,3 +941,13 @@ class Opcodes(object):
 		cpu.NFlag = Bits.set()
 		cpu.PVFlag = Bits.halfCarrySub(old_val, cpu.regs[reg_index])
 		logger.info("DEC {}".format(IndexToReg.translate8bit(reg_index)))
+
+	@staticmethod
+	def dec_at_hl(cpu, opcode, logger):
+		old_val = cpu.ram.readAddr(cpu.HL)
+		new_val = old_val - 1
+		cpu.ram.storeAddr(cpu.HL, new_val)
+		cpu.ZFlag = Bits.isZero(new_val)
+		cpu.SFlag = Bits.isNegative(new_val)
+		cpu.NFlag = Bits.set()
+		cpu.PVFlag = Bits.halfCarrySub(old_val, new_val)
