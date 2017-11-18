@@ -951,3 +951,14 @@ class Opcodes(object):
 		cpu.SFlag = Bits.isNegative(new_val)
 		cpu.NFlag = Bits.set()
 		cpu.PVFlag = Bits.halfCarrySub(old_val, new_val)
+
+	@staticmethod
+	def dec_at_ix_d(cpu, opcode, logger):
+		d = cpu.rom.readMemory(cpu.PC)
+		old_val = cpu.ram.readAddr(cpu.IX+d)
+		new_val = old_val - 1
+		cpu.ram.storeAddr(cpu.IX+d, new_val)
+		cpu.ZFlag = Bits.isZero(new_val)
+		cpu.SFlag = Bits.isNegative(new_val)
+		cpu.NFlag = Bits.set()
+		cpu.PVFlag = Bits.halfCarrySub(old_val, new_val)
