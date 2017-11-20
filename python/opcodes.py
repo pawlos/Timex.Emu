@@ -962,3 +962,11 @@ class Opcodes(object):
 		cpu.SFlag = Bits.isNegative(new_val)
 		cpu.NFlag = Bits.set()
 		cpu.PVFlag = Bits.halfCarrySub(old_val, new_val)
+
+	@staticmethod
+	def cpl(cpu, opcode, logger):
+		old = cpu.A
+		new = ~old
+		cpu.A = new
+		cpu.HFlag = Bits.set()
+		cpu.NFlag = Bits.set()

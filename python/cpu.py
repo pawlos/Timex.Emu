@@ -288,6 +288,7 @@ class CPU(object):
 			0x2b : Opcodes.dec16b,
 			0x2d : Opcodes.dec8b,
 			0x2e : Opcodes.ld8n,
+			0x2f : Opcodes.cpl,
 			0x30 : Opcodes.jpnc,
 			0x31 : Opcodes.ld16,
 			0x32 : Opcodes.ldnn_a,
