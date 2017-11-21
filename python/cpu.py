@@ -300,6 +300,7 @@ class CPU(object):
 			0x3b : Opcodes.dec16b,
 			0x3d : Opcodes.dec8b,
 			0x3e : Opcodes.ld8n,
+			0x3f : Opcodes.ccf,
 			0x46 : Opcodes.ld_r_hl,
 			0x47 : Opcodes.ld8,
 			0x4e : Opcodes.ld_r_hl,

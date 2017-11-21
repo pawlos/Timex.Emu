@@ -970,3 +970,7 @@ class Opcodes(object):
 		cpu.A = new
 		cpu.HFlag = Bits.set()
 		cpu.NFlag = Bits.set()
+
+	@staticmethod
+	def ccf(cpu, opcode, logger):
+		cpu.CFlag = cpu.CFlag == False
