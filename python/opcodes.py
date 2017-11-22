@@ -974,3 +974,9 @@ class Opcodes(object):
 	@staticmethod
 	def ccf(cpu, opcode, logger):
 		cpu.CFlag = cpu.CFlag == False
+
+	@staticmethod
+	def scf(cpu, opcode, logger):
+		cpu.CFlag = Bits.set()
+		cpu.NFlag = Bits.reset()
+		cpu.HFlag = Bits.reset();
