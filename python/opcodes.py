@@ -951,6 +951,7 @@ class Opcodes(object):
 		cpu.SFlag = Bits.isNegative(new_val)
 		cpu.NFlag = Bits.set()
 		cpu.PVFlag = Bits.halfCarrySub(old_val, new_val)
+		logger.info("DEC (HL)")
 
 	@staticmethod
 	def dec_at_ix_d(cpu, opcode, logger):
@@ -962,6 +963,7 @@ class Opcodes(object):
 		cpu.SFlag = Bits.isNegative(new_val)
 		cpu.NFlag = Bits.set()
 		cpu.PVFlag = Bits.halfCarrySub(old_val, new_val)
+		logger.info("DEC (IX+{:02X})".format(d))
 
 	@staticmethod
 	def cpl(cpu, opcode, logger):
@@ -970,16 +972,19 @@ class Opcodes(object):
 		cpu.A = new
 		cpu.HFlag = Bits.set()
 		cpu.NFlag = Bits.set()
+		logger.info("CPL")
 
 	@staticmethod
 	def ccf(cpu, opcode, logger):
 		cpu.CFlag = cpu.CFlag == False
+		logger.info("CCF")
 
 	@staticmethod
 	def scf(cpu, opcode, logger):
 		cpu.CFlag = Bits.set()
 		cpu.NFlag = Bits.reset()
 		cpu.HFlag = Bits.reset();
+		logger.info("SCF")
 
 	@staticmethod
 	def hlt(cpu, opcode, logger):
