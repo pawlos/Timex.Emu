@@ -321,6 +321,7 @@ class CPU(object):
 			0x73 : Opcodes.ldhlr,
 			0x74 : Opcodes.ldhlr,
 			0x75 : Opcodes.ldhlr,
+			0x76 : Opcodes.hlt,
 			0x77 : Opcodes.ldhlr,
 			0x78 : Opcodes.ld8,
 			0x7a : Opcodes.ld8,

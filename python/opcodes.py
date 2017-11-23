@@ -980,3 +980,9 @@ class Opcodes(object):
 		cpu.CFlag = Bits.set()
 		cpu.NFlag = Bits.reset()
 		cpu.HFlag = Bits.reset();
+
+	@staticmethod
+	def hlt(cpu, opcode, logger):
+		logger.Info("HALT")
+		while True:
+			pass
