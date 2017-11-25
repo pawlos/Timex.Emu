@@ -991,3 +991,20 @@ class Opcodes(object):
 		logger.Info("HALT")
 		while True:
 			pass
+
+	@staticmethod
+	def add_Hl_rr_c(cpu, opcode, logger):
+		r = (opcode >> 4) & 3
+		val = 0
+		if r == 0:
+			val = cpu.BC
+		elif r == 1:
+			val = cpu.DE
+		elif r == 2:
+			val = cpu.HL
+		else:
+			val = cpu.SP
+
+		old = cpu.HL
+		cpu.HL = cpu.HL + val + 1 if cpu.CFlag else 0
+		logger.info("ADC HL, {0}".format(IndexToReg.translate16bit(r)))
