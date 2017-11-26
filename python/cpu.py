@@ -389,6 +389,7 @@ class CPU(object):
 			0xed44 : Opcodes.neg,
 			0xed46 : Opcodes.im0,
 			0xed47 : Opcodes.ldExt,
+			0xed4a : Opcodes.add_Hl_rr_c,
 			0xed4f : Opcodes.ldra,
 			0xed52 : Opcodes.sbc,
 			0xed56 : Opcodes.im1,
