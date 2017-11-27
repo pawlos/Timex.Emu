@@ -1007,4 +1007,11 @@ class Opcodes(object):
 
 		old = cpu.HL
 		cpu.HL = cpu.HL + val + 1 if cpu.CFlag else 0
+		cpu.SFlag = Bits.signFlag(cpu.HL, bits=16)
+		cpu.ZFlag = Bits.isZero(cpu.HL)
+		cpu.HFlag = Bits.halfCarrySub16(old, cpu.HL)
+		cpu.PVFlag = Bits.overflow(Bits.twos_comp(old, bits=16),
+								   Bits.twos_comp(cpu.HL, bits=16))
+		cpu.NFlag = Bits.reset()
+		cpu.CFlag = Bits.set() if Bits.getNthBit(old, 15) == 1 and Bits.getNthBit(cpu.HL, 15) == 0 else Bits.reset()
 		logger.info("ADC HL, {0}".format(IndexToReg.translate16bit(r)))
