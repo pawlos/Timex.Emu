@@ -381,6 +381,7 @@ class CPU(object):
 			0xfc : Opcodes.call_cond,
 			0xfd : [self.twoBytesOpcodes],
 			0xff : Opcodes.rst,
+			0xdd09 : Opcodes.add_ix,
 			0xdd2a : Opcodes.ld_ix_nn,
 			0xdd35 : Opcodes.dec_at_ix_d,
 			0xdde1 : Opcodes.pop_ix,

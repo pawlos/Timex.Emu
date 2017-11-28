@@ -1015,3 +1015,25 @@ class Opcodes(object):
 		cpu.NFlag = Bits.reset()
 		cpu.CFlag = Bits.set() if Bits.getNthBit(old, 15) == 1 and Bits.getNthBit(cpu.HL, 15) == 0 else Bits.reset()
 		logger.info("ADC HL, {0}".format(IndexToReg.translate16bit(r)))
+
+	@staticmethod
+	def add_ix_rr(cpu, opcode, logger):
+		r = (opcode >> 4) & 3
+		val = 0;
+		reg = ""
+		if r == 0:
+			val = cpu.BC
+			reg = "BC"
+		elif r == 1:
+			val = cpu.DE
+			reg = "DE"
+		elif r == 2:
+			val = cpu.IX
+			reg = "IX"
+		else:
+			val = cpu.SP
+			reg = "SP"
+
+		old = cpu.IX
+		cpu.IX = cpu.IX + val
+		logger.info("ADD IX, {}".format(reg))
