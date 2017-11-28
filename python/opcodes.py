@@ -1014,7 +1014,7 @@ class Opcodes(object):
 								   Bits.twos_comp(cpu.HL, bits=16))
 		cpu.NFlag = Bits.reset()
 		cpu.CFlag = Bits.set() if Bits.getNthBit(old, 15) == 1 and Bits.getNthBit(cpu.HL, 15) == 0 else Bits.reset()
-		logger.info("ADC HL, {0}".format(IndexToReg.translate16bit(r)))
+		logger.info("ADC HL, {}".format(IndexToReg.translate16bit(r)))
 
 	@staticmethod
 	def add_ix_rr(cpu, opcode, logger):
