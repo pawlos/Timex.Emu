@@ -1036,4 +1036,5 @@ class Opcodes(object):
 
 		old = cpu.IX
 		cpu.IX = cpu.IX + val
+		cpu.NFlag = Bits.reset()
 		logger.info("ADD IX, {}".format(reg))
