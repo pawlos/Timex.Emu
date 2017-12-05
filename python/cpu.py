@@ -197,7 +197,7 @@ class CPU(object):
 
 	@IX.setter
 	def IX(self, value):
-		self.ix = value
+		self.ix = value & 0xffff
 
 	@property
 	def IY(self):
@@ -205,7 +205,7 @@ class CPU(object):
 
 	@IY.setter
 	def IY(self, value):
-		self.iy = value
+		self.iy = value & 0xffff
 
 	@property
 	def PC(self):

@@ -41,3 +41,11 @@ class tests_add_ix(unittest.TestCase):
 		cpu.NFlag = Bits.set()
 		cpu.readOp()
 		self.assertFalse(cpu.NFlag)
+
+	def test_add_ix_rr_sets_c_flag_is_results_is_too_big(self):
+		cpu = CPU(FakeRom('\xdd\x39'))
+		cpu.IX = 0xFFFF
+		cpu.SP = 0x0001
+		cpu.CFlag = False
+		cpu.readOp()
+		self.assertTrue(cpu.CFlag)

@@ -33,8 +33,8 @@ class Bits(object):
 		return True if max(firstWord, secondWord) - max(secondWord, 1) == 1 else False
 
 	@staticmethod
-	def overflow(firstPart, secondPart):
-		return True if (secondPart < 0) and (firstPart > 0) else False
+	def overflow(newValue, oldValue):
+		return True if (oldValue < 0) and (newValue >= 0) else False
 
 	@staticmethod
 	def twos_comp(val, bits = 8):
