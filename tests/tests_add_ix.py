@@ -49,3 +49,11 @@ class tests_add_ix(unittest.TestCase):
 		cpu.CFlag = False
 		cpu.readOp()
 		self.assertTrue(cpu.CFlag)
+
+	def test_add_ix_rr_sets_h_flag_if_carry_from_11th_bit(self):
+		cpu = CPU(FakeRom('\xdd\x39'))
+		cpu.IX = 0xFFF
+		cpu.SP = 0x0001
+		cpu.HFlag = False
+		cpu.readOp()
+		self.assertTrue(cpu.HFlag)

@@ -1037,5 +1037,6 @@ class Opcodes(object):
 		old = cpu.IX
 		cpu.IX = cpu.IX + val
 		cpu.NFlag = Bits.reset()
+		cpu.HFlag = Bits.carryFlagAdd16(old, cpu.IX)
 		cpu.CFlag = Bits.overflow(Bits.twos_comp(cpu.IX, bits=16), Bits.twos_comp(old, bits=16))
 		logger.info("ADD IX, {}".format(reg))
