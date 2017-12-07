@@ -1040,3 +1040,25 @@ class Opcodes(object):
 		cpu.HFlag = Bits.carryFlagAdd16(old, cpu.IX)
 		cpu.CFlag = Bits.overflow(Bits.twos_comp(cpu.IX, bits=16), Bits.twos_comp(old, bits=16))
 		logger.info("ADD IX, {}".format(reg))
+
+	@staticmethod
+	def add_iy_rr(cpu, opcode, logger):
+		r = (opcode >> 4) & 3
+		val = 0;
+		reg = ""
+		if r == 0:
+			val = cpu.BC
+			reg = "BC"
+		elif r == 1:
+			val = cpu.DE
+			reg = "DE"
+		elif r == 2:
+			val = cpu.IX
+			reg = "IX"
+		else:
+			val = cpu.SP
+			reg = "SP"
+
+		old = cpu.IY
+		cpu.IY = cpu.IY + val
+		logger.info("ADD IY, {}".format(reg))
