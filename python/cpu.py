@@ -411,6 +411,7 @@ class CPU(object):
 			0xedb0 : Opcodes.ldir,
 			0xedb8 : Opcodes.lddr,
 			0xfd09 : Opcodes.add_iy_rr,
+			0xfd19 : Opcodes.add_iy_rr,
 			0xfd21 : Opcodes.ldiy,
 			0xfd35 : Opcodes.dec_mem_at_iy,
 			0xfd36 : Opcodes.ldiy_d_n,

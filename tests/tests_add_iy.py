@@ -14,14 +14,14 @@ class tests_add_iy(unittest.TestCase):
 		cpu.readOp()
 		self.assertEqual(0x1bb1, cpu.IY)
 
-	'''def test_add_iy_de_returns_correct_result(self):
+	def test_add_iy_de_returns_correct_result(self):
 		cpu = CPU(FakeRom('\xfd\x19'))
 		cpu.IY = 0x1001
 		cpu.DE = 0x0bb0
 		cpu.readOp()
-		self.assertEqual(0x1bb1, cpu.IX)
+		self.assertEqual(0x1bb1, cpu.IY)
 
-	def test_add_iy_iy_returns_correct_result(self):
+	'''def test_add_iy_iy_returns_correct_result(self):
 		cpu = CPU(FakeRom('\xfd\x29'))
 		cpu.IX = 0x1001
 		cpu.readOp()
