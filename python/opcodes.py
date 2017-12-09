@@ -1053,8 +1053,8 @@ class Opcodes(object):
 			val = cpu.DE
 			reg = "DE"
 		elif r == 2:
-			val = cpu.IX
-			reg = "IX"
+			val = cpu.IY
+			reg = "IY"
 		else:
 			val = cpu.SP
 			reg = "SP"
