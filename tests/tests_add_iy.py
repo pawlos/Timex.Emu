@@ -36,7 +36,7 @@ class tests_add_iy(unittest.TestCase):
 
 	def test_add_iy_rr_resets_n_flag(self):
 		cpu = CPU(FakeRom('\xfd\x39'))
-		cpu.IX = 0x1001
+		cpu.IY = 0x1001
 		cpu.SP = 0x0880
 		cpu.NFlag = Bits.set()
 		cpu.readOp()
