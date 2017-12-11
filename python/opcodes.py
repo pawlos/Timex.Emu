@@ -1061,4 +1061,5 @@ class Opcodes(object):
 
 		old = cpu.IY
 		cpu.IY = cpu.IY + val
+		cpu.NFlag = Bits.reset()
 		logger.info("ADD IY, {}".format(reg))

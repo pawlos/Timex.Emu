@@ -34,7 +34,7 @@ class tests_add_iy(unittest.TestCase):
 		cpu.readOp()
 		self.assertEqual(0x1881, cpu.IY)
 
-	'''def test_add_iy_rr_resets_n_flag(self):
+	def test_add_iy_rr_resets_n_flag(self):
 		cpu = CPU(FakeRom('\xfd\x39'))
 		cpu.IX = 0x1001
 		cpu.SP = 0x0880
@@ -42,7 +42,7 @@ class tests_add_iy(unittest.TestCase):
 		cpu.readOp()
 		self.assertFalse(cpu.NFlag)
 
-	def test_add_iy_rr_sets_c_flag_is_results_is_too_big(self):
+	'''def test_add_iy_rr_sets_c_flag_is_results_is_too_big(self):
 		cpu = CPU(FakeRom('\xfd\x39'))
 		cpu.IX = 0xFFFF
 		cpu.SP = 0x0001
