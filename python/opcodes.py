@@ -1062,4 +1062,5 @@ class Opcodes(object):
 		old = cpu.IY
 		cpu.IY = cpu.IY + val
 		cpu.NFlag = Bits.reset()
+		cpu.CFlag = Bits.overflow(Bits.twos_comp(cpu.IY, bits=16), Bits.twos_comp(old, bits=16))
 		logger.info("ADD IY, {}".format(reg))

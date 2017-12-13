@@ -42,15 +42,15 @@ class tests_add_iy(unittest.TestCase):
 		cpu.readOp()
 		self.assertFalse(cpu.NFlag)
 
-	'''def test_add_iy_rr_sets_c_flag_is_results_is_too_big(self):
+	def test_add_iy_rr_sets_c_flag_is_results_is_too_big(self):
 		cpu = CPU(FakeRom('\xfd\x39'))
-		cpu.IX = 0xFFFF
+		cpu.IY = 0xFFFF
 		cpu.SP = 0x0001
 		cpu.CFlag = False
 		cpu.readOp()
 		self.assertTrue(cpu.CFlag)
 
-	def test_add_ix_rr_sets_h_flag_if_carry_from_11th_bit(self):
+	'''def test_add_ix_rr_sets_h_flag_if_carry_from_11th_bit(self):
 		cpu = CPU(FakeRom('\xdd\x39'))
 		cpu.IX = 0xFFF
 		cpu.SP = 0x0001
