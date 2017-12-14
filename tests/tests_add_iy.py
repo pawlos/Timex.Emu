@@ -50,10 +50,10 @@ class tests_add_iy(unittest.TestCase):
 		cpu.readOp()
 		self.assertTrue(cpu.CFlag)
 
-	'''def test_add_ix_rr_sets_h_flag_if_carry_from_11th_bit(self):
-		cpu = CPU(FakeRom('\xdd\x39'))
-		cpu.IX = 0xFFF
+	def test_add_iy_rr_sets_h_flag_if_carry_from_11th_bit(self):
+		cpu = CPU(FakeRom('\xfd\x39'))
+		cpu.IY = 0xFFF
 		cpu.SP = 0x0001
 		cpu.HFlag = False
 		cpu.readOp()
-		self.assertTrue(cpu.HFlag)'''
+		self.assertTrue(cpu.HFlag)
