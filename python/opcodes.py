@@ -1065,3 +1065,8 @@ class Opcodes(object):
 		cpu.HFlag = Bits.carryFlagAdd16(old, cpu.IY)
 		cpu.CFlag = Bits.overflow(Bits.twos_comp(cpu.IY, bits=16), Bits.twos_comp(old, bits=16))
 		logger.info("ADD IY, {}".format(reg))
+
+	@staticmethod
+	def jp_hl(cpu, opcode, logger):
+		cpu.IP = cpu.HL
+		logger.info("JP HL")

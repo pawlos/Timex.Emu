@@ -364,6 +364,7 @@ class CPU(object):
 			0xe6 : Opcodes.and_n,
 			0xe7 : Opcodes.rst,
 			0xe8 : Opcodes.jp_cond,
+			0xe9 : Opcodes.jp_hl,
 			0xeb : Opcodes.ex_de_hl,
 			0xec : Opcodes.call_cond,
 			0xed : [self.twoBytesOpcodes],
