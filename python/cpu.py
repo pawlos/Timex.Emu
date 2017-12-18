@@ -389,6 +389,7 @@ class CPU(object):
 			0xdd35 : Opcodes.dec_at_ix_d,
 			0xdd39 : Opcodes.add_ix_rr,
 			0xdde1 : Opcodes.pop_ix,
+			0xdde9 : Opcodes.jp_ix,
 			0xed42 : Opcodes.sbc,
 			0xed43 : Opcodes.ldNnRr,
 			0xed44 : Opcodes.neg,
