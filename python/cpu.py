@@ -429,6 +429,7 @@ class CPU(object):
 			0xfd7e : Opcodes.ld_r_iy_d,
 			0xfd86 : Opcodes.add_iy,
 			0xfdcb : [self.fourBytesOpcodes],
+			0xfde9 : Opcodes.jp_iy,
 			0xfdcb01ce : Opcodes.bit_set,
 			0xfdcb014e : Opcodes.bit_bit,
 			0xfdcb0246 : Opcodes.bit_bit,

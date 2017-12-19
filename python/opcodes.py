@@ -1075,3 +1075,8 @@ class Opcodes(object):
 	def jp_ix(cpu, opcode, logger):
 		cpu.IP = cpu.IX
 		logger.info("JP IX")
+
+	@staticmethod
+	def jp_iy(cpu, opcode, logger):
+		cpu.IP = cpu.IY
+		logger.infp("JP IY")
