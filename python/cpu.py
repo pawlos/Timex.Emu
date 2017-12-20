@@ -339,6 +339,7 @@ class CPU(object):
 			0xc1 : Opcodes.pop,
 			0xc2 : Opcodes.jp_cond,
 			0xc3 : Opcodes.jp,
+			0xc4 : Opcodes.call_cond,
 			0xc5 : Opcodes.push,
 			0xc6 : Opcodes.add_r_n,
 			0xc7 : Opcodes.rst,
