@@ -356,6 +356,7 @@ class CPU(object):
 			0xd7 : Opcodes.rst,
 			0xd9 : Opcodes.exx,
 			0xda : Opcodes.jp_cond,
+			0xdc : Opcodes.call_cond,
 			0xdd : [self.twoBytesOpcodes],
 			0xdf : Opcodes.rst,
 			0xe0 : Opcodes.jp_cond,
