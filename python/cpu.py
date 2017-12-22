@@ -345,6 +345,7 @@ class CPU(object):
 			0xc7 : Opcodes.rst,
 			0xc9 : Opcodes.ret,
 			0xca : Opcodes.jp_cond,
+			0xcc : Opcodes.call_cond,
 			0xcd : Opcodes.call,
 			0xcf : Opcodes.rst,
 			0xd1 : Opcodes.pop,
