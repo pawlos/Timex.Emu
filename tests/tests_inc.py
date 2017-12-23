@@ -178,3 +178,9 @@ class tests_inc(unittest.TestCase):
 		cpu.SFlag = True
 		cpu.readOp()
 		self.assertFalse(cpu.SFlag)
+
+	def test_inc_r_increases_h_when_opcode_is_24(self):
+		cpu = CPU(FakeRom('\x24'))
+		cpu.H = 0x11
+		cpu.readOp()
+		self.assertEqual(0x12,cpu.H)
