@@ -184,3 +184,9 @@ class tests_inc(unittest.TestCase):
 		cpu.H = 0x11
 		cpu.readOp()
 		self.assertEqual(0x12,cpu.H)
+
+	def test_inc_r_increases_l_when_opcode_is_2c(self):
+		cpu = CPU(FakeRom('\x2c'))
+		cpu.L = 0x99
+		cpu.readOp()
+		self.assertEqual(0x9a, cpu.L)
