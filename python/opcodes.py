@@ -1080,3 +1080,14 @@ class Opcodes(object):
 	def jp_iy(cpu, opcode, logger):
 		cpu.IP = cpu.IY
 		logger.infp("JP IY")
+
+	@staticmethod
+	def inc_at_hl(cpu, opcode, logger):
+		old_val = cpu.ram.readAddr(cpu.HL)
+		new_val = old_val + 1
+		cpu.ram.storeAddr(cpu.HL, new_val)
+		cpu.ZFlag = Bits.isZero(new_val)
+		cpu.SFlag = Bits.isNegative(new_val)
+		cpu.NFlag = Bits.reset()
+		cpu.PVFlag = Bits.halfCarrySub(old_val, new_val)
+		logger.info("INC (HL)")

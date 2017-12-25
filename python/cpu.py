@@ -295,6 +295,7 @@ class CPU(object):
 			0x31 : Opcodes.ld16,
 			0x32 : Opcodes.ldnn_a,
 			0x33 : Opcodes.inc16,
+			0x34 : Opcodes.inc_at_hl,
 			0x35 : Opcodes.dec_at_hl,
 			0x36 : Opcodes.ld_addr,
 			0x37 : Opcodes.scf,
