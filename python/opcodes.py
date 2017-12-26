@@ -1091,3 +1091,12 @@ class Opcodes(object):
 		cpu.NFlag = Bits.reset()
 		cpu.PVFlag = Bits.halfCarrySub(old_val, new_val)
 		logger.info("INC (HL)")
+
+	@staticmethod
+	def jr_c(cpu, opcode, logger):
+		jumpOffset = Bits.twos_comp(cpu.rom.readMemory(cpu.PC)) - 2
+		if cpu.CFlag == False:
+			return
+
+		cpu.PC = cpu.PC + jumpOffset
+		logger.info("JP C {0:x}".format(jumpOffset))
