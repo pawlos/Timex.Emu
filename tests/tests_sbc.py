@@ -6,6 +6,21 @@ from loggers import Logger
 
 class tests_sbc(unittest.TestCase):
 
+	def test_sbc_hl_hl_result_is_correct_if_c_flag_is_reset(self):
+		cpu = CPU(FakeRom('\xed\x62'))
+		cpu.HL = 0x9999
+		cpu.CFlag = False
+		cpu.readOp();
+		self.assertEqual(0x0, cpu.HL)
+
+	def test_sbc_hl_sp_result_is_crrect_if_c_flag_is_reset(self):
+		cpu = CPU(FakeRom('\xed\x72'))
+		cpu.HL = 0x9999
+		cpu.SP = 0x1111
+		cpu.CFlag = False
+		cpu.readOp();
+		self.assertEqual(0x8888, cpu.HL)
+
 	def test_sbc_hl_de_result_is_correct_if_c_flag_is_set(self):
 		cpu = CPU(FakeRom('\xed\x52'))
 		cpu.HL = 0x9999
