@@ -15,3 +15,12 @@ class tests_bit(unittest.TestCase):
 		cpu.IY = 0x2000
 		cpu.readOp();
 		self.assertTrue(cpu.ZFlag)
+
+	def test_bit_IY_plus_1_set_correctly_the_value(self):
+		ram = FakeRam([None]*0x2002)
+		ram.storeAddr(0x2001, 0b00001101)
+		cpu = CPU(FakeRom('\xfd\xcb\x01\xce'), ram)
+		cpu.IY = 0x2000
+		cpu.readOp()
+
+		self.assertEquals(0x0F, ram.readAddr(0x2001))
