@@ -22,5 +22,12 @@ class tests_bit(unittest.TestCase):
 		cpu = CPU(FakeRom('\xfd\xcb\x01\xce'), ram)
 		cpu.IY = 0x2000
 		cpu.readOp()
-
 		self.assertEquals(0x0F, ram.readAddr(0x2001))
+
+	def test_bit_IY_plus_30_reset_correctly_bit(self):
+		ram = FakeRam([None]*0x2032)
+		ram.storeAddr(0x2030, 0b00001111)
+		cpu = CPU(FakeRom('\xfd\xcb\x30\x8e'), ram)
+		cpu.IY = 0x2000
+		cpu.readOp()
+		self.assertEquals(0b1101, ram.readAddr(0x2030))

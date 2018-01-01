@@ -389,7 +389,7 @@ class Opcodes(object):
 		bit = (opcode >> 3) & 7
 		logger.info("RES {}, (IY+{:02X})".format(bit, index))
 		val = cpu.ram.readAddr(cpu.IY+index)
-		val &= (0 << bit)
+		val = Bits.setNthBit(val, bit, 0)
 		cpu.ram.storeAddr(cpu.IY+index, val)
 
 	@staticmethod
