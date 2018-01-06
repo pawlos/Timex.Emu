@@ -184,6 +184,15 @@ class CPU(object):
 		self.regsPri[C] = value & 0xFF
 
 	@property
+	def SP(self):
+		return self.sp
+
+	@SP.setter
+	def SP(self, value):
+		self.sp = Bits.limitTo16bits(value)
+
+
+	@property
 	def I(self):
 		return self.i
 
