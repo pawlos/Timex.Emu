@@ -10,5 +10,6 @@ if __name__ == '__main__':
 	debugger.setBreakpoint(0x11CB)
 	debugger.setBreakpoint(0x11E2)
 	timex = CPU(debugger=debugger);
+	timex.logger = Logger(timex)
 	timex.run();
 	print("Ending...")

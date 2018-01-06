@@ -460,7 +460,8 @@ class CPU(object):
 			self.PC = 0x38
 
 	def readOp(self):
-		pc = self.PC
+		self.prev_pc = self.PC
+		pc = self.prev_pc
 		opcode = self.rom.readMemory(pc)
 		self.dispatch(opcode, pc)
 
