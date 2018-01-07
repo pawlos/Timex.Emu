@@ -184,6 +184,15 @@ class CPU(object):
 		self.regsPri[C] = value & 0xFF
 
 	@property
+	def SP(self):
+		return self.sp
+
+	@SP.setter
+	def SP(self, value):
+		self.sp = Bits.limitTo16bits(value)
+
+
+	@property
 	def I(self):
 		return self.i
 
@@ -451,7 +460,8 @@ class CPU(object):
 			self.PC = 0x38
 
 	def readOp(self):
-		pc = self.PC
+		self.prev_pc = self.PC
+		pc = self.prev_pc
 		opcode = self.rom.readMemory(pc)
 		self.dispatch(opcode, pc)
 

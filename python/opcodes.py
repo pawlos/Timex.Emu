@@ -135,12 +135,13 @@ class Opcodes(object):
 
 	@staticmethod
 	def jpnc(cpu, opcode, logger):
-		jumpOffset = Bits.twos_comp(cpu.rom.readMemory(cpu.PC)) - 2
+		jumpOffset = Bits.twos_comp(cpu.rom.readMemory(cpu.PC))
 		if cpu.CFlag:
 			return
 
-		cpu.PC = cpu.PC + jumpOffset
-		logger.info("JP NC {0:x}".format(jumpOffset))
+		pc = cpu.PC
+		cpu.PC = pc + jumpOffset
+		logger.info("JP NC {0:2X}".format(jumpOffset))
 
 	@staticmethod
 	def _and(cpu, opcode, logger):
