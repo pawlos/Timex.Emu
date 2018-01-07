@@ -489,6 +489,8 @@ class CPU(object):
 		except KeyError as e:
 			print "Missing opcode key: {1:x}, PC = 0x{0:x}".format(self.PC, opcode)
 			self.debugger.stop(self)
+		except KeyboardInterrupt as e:
+			self.debugger.stop(self)
 
 	def run(self):
 		while True:
