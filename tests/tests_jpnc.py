@@ -14,7 +14,7 @@ class tests_jpnc(unittest.TestCase):
 		cpu.PC = 0x0480
 		cpu.CFlag = False
 		cpu.readOp()
-		self.assertEqual(0x0480, cpu.PC)
+		self.assertEqual(0x0482, cpu.PC)
 
 	def test_jp_nc_does_not_jump_if_CFlag_is_set(self):
 		cpu = CPU(FakeRom('\x30\x00'))
