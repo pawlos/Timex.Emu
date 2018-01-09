@@ -1,0 +1,20 @@
+import unittest
+import unittest
+from cpu import CPU
+from opcodes import Opcodes
+from fakes import *
+from loggers import Logger
+
+class tests_pop(unittest.TestCase):
+
+	def test_pop_correctly_retreives_value_from_stack(self):
+		ram = FakeRam([None]*0x1100)
+		ram.storeAddr(0x1000, 0x55)
+		ram.storeAddr(0x1001, 0x33)
+		cpu = CPU(FakeRom('\xe1'), ram)
+		cpu.SP = 0x1000
+		
+		cpu.readOp()
+		self.assertEqual(0x3355, cpu.HL)
+
+	
