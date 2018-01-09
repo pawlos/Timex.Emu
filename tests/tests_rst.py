@@ -68,4 +68,4 @@ class tests_rst(unittest.TestCase):
 		cpu.PC = 0x15B3
 		cpu.SP = 0x2000
 		cpu.readOp();
-		self.assertEqual(0x30, cpu.PC)
+		self.assertEqual(0x38, cpu.PC)
