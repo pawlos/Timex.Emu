@@ -83,3 +83,45 @@ class tests_call_cond(unittest.TestCase):
 		cpu.SFlag = False
 		cpu.readOp()
 		self.assertEqual(0x1520, cpu.PC)
+
+	def test_call_nz_jumps_if_ZFlag_is_not_set(self):
+		ram = FakeRam([None]*0x3002)
+		
+		rom = FakeRom('\x00'*0x1A47+'\xC4\x35\x21')
+		cpu = CPU(rom, ram)
+		cpu.PC = 0x1A47
+		cpu.SP = 0x3002
+		cpu.ZFlag = False
+		cpu.readOp()
+
+		self.assertEqual(0x2135, cpu.PC)
+		self.assertEqual(0x1A, cpu.ram.readAddr(0x3001))
+		self.assertEqual(0x4A, cpu.ram.readAddr(0x3000))
+
+	def test_call_z_jumps_if_ZFlag_is_set(self):
+		ram = FakeRam([None]*0x3002)
+		
+		rom = FakeRom('\x00'*0x1A47+'\xCC\x35\x21')
+		cpu = CPU(rom, ram)
+		cpu.PC = 0x1A47
+		cpu.SP = 0x3002
+		cpu.ZFlag = True
+		cpu.readOp()
+
+		self.assertEqual(0x2135, cpu.PC)
+		self.assertEqual(0x1A, cpu.ram.readAddr(0x3001))
+		self.assertEqual(0x4A, cpu.ram.readAddr(0x3000))
+
+	def test_call_c_jumps_if_CFlag_is_set(self):
+		ram = FakeRam([None]*0x3002)
+		
+		rom = FakeRom('\x00'*0x1A47+'\xDC\x35\x21')
+		cpu = CPU(rom, ram)
+		cpu.PC = 0x1A47
+		cpu.SP = 0x3002
+		cpu.CFlag = True
+		cpu.readOp()
+
+		self.assertEqual(0x2135, cpu.PC)
+		self.assertEqual(0x1A, cpu.ram.readAddr(0x3001))
+		self.assertEqual(0x4A, cpu.ram.readAddr(0x3000))
