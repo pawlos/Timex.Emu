@@ -69,11 +69,11 @@ class CPU(object):
 
 	@property
 	def R(self):
-		return self.R;
+		return self.r;
 
 	@R.setter
 	def R(self, value):
-		self.R = value
+		self.r= value
 
 	@property
 	def ZFlag(self):
