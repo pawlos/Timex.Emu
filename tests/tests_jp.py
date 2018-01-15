@@ -22,3 +22,10 @@ class tests_jp(unittest.TestCase):
 		cpu.ZFlag = True
 		cpu.readOp()
 		self.assertEqual(0x02, cpu.PC)
+
+
+	def test_jp_hl_does_set_ip_to_value_of_hl(self):
+		cpu = CPU(FakeRom('\xe9'))
+		cpu.HL = 0x4800
+		cpu.readOp()
+		self.assertEqual(0x4800, cpu.IP)
