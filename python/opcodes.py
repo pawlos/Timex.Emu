@@ -661,11 +661,11 @@ class Opcodes(object):
 
 	@staticmethod
 	def jr_e(cpu, opcode, logger):
-
-		jumpOffset = Bits.twos_comp(cpu.rom.readMemory(cpu.PC))
+		pc = cpu.PC
+		jumpOffset = Bits.twos_comp(cpu.rom.readMemory(pc))
 		logger.info("JR {0:x}".format(jumpOffset))
 
-		cpu.PC = cpu.PC + jumpOffset
+		cpu.PC = pc + jumpOffset + 1
 
 	@staticmethod
 	def ld16_nn(cpu, opcode, logger):
@@ -1069,17 +1069,17 @@ class Opcodes(object):
 
 	@staticmethod
 	def jp_hl(cpu, opcode, logger):
-		cpu.IP = cpu.HL
+		cpu.PC = cpu.HL
 		logger.info("JP HL")
 
 	@staticmethod
 	def jp_ix(cpu, opcode, logger):
-		cpu.IP = cpu.IX
+		cpu.PC = cpu.IX
 		logger.info("JP IX")
 
 	@staticmethod
 	def jp_iy(cpu, opcode, logger):
-		cpu.IP = cpu.IY
+		cpu.PC = cpu.IY
 		logger.infp("JP IY")
 
 	@staticmethod

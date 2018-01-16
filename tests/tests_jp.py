@@ -28,4 +28,10 @@ class tests_jp(unittest.TestCase):
 		cpu = CPU(FakeRom('\xe9'))
 		cpu.HL = 0x4800
 		cpu.readOp()
-		self.assertEqual(0x4800, cpu.IP)
+		self.assertEqual(0x4800, cpu.PC)
+
+	def test_jp_e_does_set_ip_to_value_of_e(self):
+		cpu = CPU(FakeRom('\x00'*0x480+'\x18\x03'))
+		cpu.PC = 0x480
+		cpu.readOp()
+		self.assertEqual(0x485, cpu.PC)
