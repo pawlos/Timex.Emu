@@ -3,6 +3,7 @@ import sys
 import re
 from regs import *
 from utility import Bits
+from loggers import *
 
 class EmptyDebugger(object):
 	def setBreakpoint(self, pc):
@@ -39,6 +40,14 @@ class Debugger(object):
 		for pc in self.breakpoints:
 			print "Breakpoint at {:04X}, {}".format(pc, "active" if self.breakpoints[pc] else "inactive")
 
+	def attachDetachLogger(self, cpu):
+		if type(cpu.logger) is not EmptyLogger:
+			print "Detaching logger"
+			cpu.logger = EmptyLogger()
+		else:
+			print "Attaching logger"
+			cpu.logger = Logger(cpu)
+
 	def help(self):
 		print "available commands"
 		print "ir - print info about 8-bit registers"
@@ -50,6 +59,7 @@ class Debugger(object):
 		print "bc 0x<addr> - clear a breakpoint at <addr>"
 		print "bd 0x<addr> - disable a breakpoint at <addr>"
 		print "bl - list all breakpoints"
+		print "log - attach/detach logger"
 		print "s - single step"
 		print "c - continue"
 		print "? - this help"
@@ -101,6 +111,8 @@ class Debugger(object):
 				break
 			elif "c" == input:
 				break
+			elif "log" == input:
+				self.attachDetachLogger(cpu)
 			elif "?" == input:
 				print self.help()
 			else:
