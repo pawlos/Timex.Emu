@@ -12,6 +12,11 @@ class tests_im(unittest.TestCase):
 		cpu.generateInterrupt()
 		self.assertEqual(0x0038, cpu.PC)
 
+	def test_im0_sets_interrupt_mode_to_0(self):
+		cpu = CPU(FakeRom('\xed\x46'))
+		cpu.readOp()
+		self.assertEqual(0x00, cpu.interruptMode)
+
 	def test_im1_does_not_affect_flags(self):
 		cpu = CPU(FakeRom('\xed\x56'))
 		cpu.ZFlag = True
