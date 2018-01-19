@@ -25,3 +25,10 @@ class tests_ld_iy_nn(unittest.TestCase):
 		self.assertTrue(cpu.HFlag)
 		self.assertFalse(cpu.NFlag)
 		self.assertTrue(cpu.SFlag)
+
+	def test_ld_iy_d_n_correctly_copies_n_value_to_iy_plus_d(self):
+		ram = FakeRam([None]*0x2000)
+		cpu = CPU(FakeRom('\xFD\x36\x01\x77'))
+		cpu.IY = 0x1111
+		cpu.readOp()
+		self.assertEqual(0x77, cpu.ram.readAddr(0x1112))
