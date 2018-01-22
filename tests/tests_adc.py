@@ -1,0 +1,16 @@
+import unittest
+from cpu import CPU
+from opcodes import Opcodes
+from fakes import *
+from loggers import Logger
+from utility import *
+
+class tests_adc(unittest.TestCase):
+
+	def test_add_HL_BC_with_C_flag_unset_correctly_calculates_value(self):
+		cpu = CPU(FakeRom('\xed\x4a'))
+		cpu.HL = 0xCDCD
+		cpu.BC = 0x1111
+		cpu.CFlag = Bits.reset()
+		cpu.readOp()
+		self.assertEqual(0XCDCD+0x1111,cpu.HL)

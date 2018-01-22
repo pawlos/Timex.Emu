@@ -1007,7 +1007,7 @@ class Opcodes(object):
 			val = cpu.SP
 
 		old = cpu.HL
-		cpu.HL = cpu.HL + val + 1 if cpu.CFlag else 0
+		cpu.HL = cpu.HL + val + (1 if cpu.CFlag else 0)
 		cpu.SFlag = Bits.signFlag(cpu.HL, bits=16)
 		cpu.ZFlag = Bits.isZero(cpu.HL)
 		cpu.HFlag = Bits.halfCarrySub16(old, cpu.HL)
