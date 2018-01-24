@@ -146,3 +146,51 @@ class tests_add(unittest.TestCase):
 		cpu.SFlag = False
 		cpu.readOp()
 		self.assertTrue(cpu.SFlag)
+
+	def test_add_A_A_correctly_calculates_value(self):
+		cpu = CPU(FakeRom('\x87'))
+		cpu.A = 0x12
+		cpu.readOp()
+		self.assertEqual(0x24, cpu.A)
+
+	def test_add_A_E_correctly_calculates_value(self):
+		cpu = CPU(FakeRom('\x83'))
+		cpu.A = 0x12
+		cpu.E = 0x10
+		cpu.readOp()
+		self.assertEqual(0x22, cpu.A)
+
+	def test_add_A_L_correctly_calculates_value(self):
+		cpu = CPU(FakeRom('\x85'))
+		cpu.A = 0x12
+		cpu.L = 0xE0
+		cpu.readOp()
+		self.assertEqual(0xF2, cpu.A)
+	
+	def test_add_A_C_correctly_calculates_value(self):
+		cpu = CPU(FakeRom('\x81'))
+		cpu.A = 0x12
+		cpu.C = 0x30
+		cpu.readOp()
+		self.assertEqual(0x42, cpu.A)
+
+	def test_add_A_B_correctly_calculates_value(self):
+		cpu = CPU(FakeRom('\x80'))
+		cpu.A = 0x12
+		cpu.B = 0x40
+		cpu.readOp()
+		self.assertEqual(0x52, cpu.A)
+
+	def test_add_A_H_correctly_calculates_value(self):
+		cpu = CPU(FakeRom('\x84'))
+		cpu.A = 0x12
+		cpu.H = 0x60
+		cpu.readOp()
+		self.assertEqual(0x72, cpu.A)
+
+	def test_add_A_D_correctly_calculates_value(self):
+		cpu = CPU(FakeRom('\x82'))
+		cpu.A = 0x12
+		cpu.D = 0x90
+		cpu.readOp()
+		self.assertEqual(0xA2, cpu.A)
