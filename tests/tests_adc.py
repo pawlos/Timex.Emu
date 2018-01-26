@@ -23,3 +23,11 @@ class tests_adc(unittest.TestCase):
 		cpu.CFlag = Bits.set()
 		cpu.readOp()
 		self.assertEqual(0XCDCD+0x1111+0x1,cpu.HL)
+
+	def test_add_HL_DE_with_C_flag_set_correctly_calculates_value(self):
+		cpu = CPU(FakeRom('\xed\x5a'))
+		cpu.HL = 0xCDCD
+		cpu.DE = 0x1111
+		cpu.CFlag = Bits.set()
+		cpu.readOp()
+		self.assertEqual(0XCDCD+0x1111+0x1,cpu.HL)
