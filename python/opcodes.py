@@ -1080,7 +1080,7 @@ class Opcodes(object):
 	@staticmethod
 	def jp_iy(cpu, opcode, logger):
 		cpu.PC = cpu.IY
-		logger.infp("JP IY")
+		logger.info("JP IY")
 
 	@staticmethod
 	def inc_at_hl(cpu, opcode, logger):
