@@ -36,7 +36,7 @@ class tests_jp(unittest.TestCase):
 		cpu.readOp()
 		self.assertEqual(0x485, cpu.PC)
 
-	def test_jp_ix_does_set_ip_to_value_of_hl(self):
+	def test_jp_ix_does_set_ip_to_value_of_ix(self):
 		cpu = CPU(FakeRom('\xdd\xe9'))
 		cpu.IX = 0x4600
 		cpu.readOp()
