@@ -672,7 +672,9 @@ class Opcodes(object):
 		low = cpu.rom.readMemory(cpu.PC)
 		high = cpu.rom.readMemory(cpu.PC)
 		addr = ( high << 8 ) + low
-		value = cpu.ram.readAddr(addr)
+		value_low = cpu.ram.readAddr(addr)
+		value_high = cpu.ram.readAddr(addr+1)
+		value = (value_high << 8) + value_low
 		reg = ( opcode >> 4 ) & 3
 
 		if reg == 0:
