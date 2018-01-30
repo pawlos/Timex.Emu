@@ -22,7 +22,7 @@ class tests_ld_rr_nn(unittest.TestCase):
 		cpu.readOp()
 		self.assertEqual(0xcafe, cpu.HL)
 
-	def test_ld_SP_nn_correctly__Stores_value_to_SP(self):
+	def test_ld_SP_nn_correctly_stores_value_to_SP(self):
 		cpu = CPU(FakeRom('\x31\x37\x13'))
 		cpu.readOp()
 		self.assertEqual(0x1337, cpu.SP)
