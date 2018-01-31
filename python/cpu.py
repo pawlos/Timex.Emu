@@ -425,6 +425,7 @@ class CPU(object):
 			0xed56 : Opcodes.im1,
 			0xed53 : Opcodes.ldNnRr,
 			0xed5a : Opcodes.add_Hl_rr_c,
+			0xed5b : Opcodes.ld16_nn,
 			0xed5e : Opcodes.im2,
 			0xed5f : Opcodes.ldar,
 			0xed62 : Opcodes.sbc,
