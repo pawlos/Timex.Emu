@@ -50,3 +50,11 @@ class tests_ld_rr_nn(unittest.TestCase):
 		cpu = CPU(FakeRom('\xED\x6b\x30\x21'),ram)
 		cpu.readOp()
 		self.assertEqual(0x7865, cpu.HL)
+
+	def test_ld_SP_addr_nn_correctly_loads_value_to_SP(self):
+		ram = FakeRam([None]*0x2132)
+		ram.storeAddr(0x2130, 0x65)
+		ram.storeAddr(0x2131, 0x78)
+		cpu = CPU(FakeRom('\xED\x7b\x30\x21'),ram)
+		cpu.readOp()
+		self.assertEqual(0x7865, cpu.SP)
