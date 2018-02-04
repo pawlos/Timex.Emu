@@ -11,3 +11,11 @@ class tests_djnz(unittest.TestCase):
 		cpu.ZFlag = True
 		cpu.readOp()
 		self.assertEqual(0x02, cpu.PC)
+
+
+	def test_djnz_does_jumps_if_B_is_non_zero_after_dec(self):
+		cpu = CPU(FakeRom('\x10\xFE'))
+		cpu.B = 2
+		cpu.ZFlag = True
+		cpu.readOp()
+		self.assertEqual(0x0, cpu.PC)
