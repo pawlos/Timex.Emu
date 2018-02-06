@@ -26,12 +26,12 @@ class tests_or_a(unittest.TestCase):
 		cpu.readOp()
 		self.assertTrue(cpu.SFlag)
 
-	def test_or_a_e_perform_or_operation_value_is_correct(self):
+	def test_or_a_e_perform_or_operation_and_ZFlag_is_set_when_result_is_0(self):
 		cpu = CPU(FakeRom('\xb3'))
-		cpu.A = 0x01
-		cpu.E = 0x02
+		cpu.A = 0x00
+		cpu.E = 0x00
 		cpu.readOp();
-		self.assertEqual(0x03, cpu.A)
+		self.assertTrue(cpu.ZFlag)
 
 	def test_or_a_b_perform_or_operation_value_is_correct(self):
 		cpu = CPU(FakeRom('\xb0'))
