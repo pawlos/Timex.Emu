@@ -27,3 +27,7 @@ class tests_debugger(unittest.TestCase):
 		debugger.clearBreakpoint(0x2222)
 		self.assertTrue(0x2222 not in debugger.breakpoints)
 
+	def test_getAddr_correctly_parses_address(self):
+		debugger = Debugger()
+		addr = debugger.getAddr("0x1234")
+		self.assertEqual(0x1234, addr)
