@@ -1,6 +1,7 @@
 
 import unittest
 from debugger import *
+from fakes import FakeCpu
 
 class tests_debugger(unittest.TestCase):
 	
@@ -31,3 +32,19 @@ class tests_debugger(unittest.TestCase):
 		debugger = Debugger()
 		addr = debugger.getAddr("0x1234")
 		self.assertEqual(0x1234, addr)
+
+	def test_attachDetachLogger_attaches_logger_when_ther_is_Empty(self):
+		debugger = Debugger()
+		cpu = FakeCpu()
+		cpu.logger = EmptyLogger()
+		debugger.attachDetachLogger(cpu)
+
+		self.assertFalse(type(cpu.logger) is EmptyLogger)
+
+	def test_attachDetachLogger_detaches_logger_when_ther_is_not_Empty(self):
+		debugger = Debugger()
+		cpu = FakeCpu()
+		cpu.logger = Logger(cpu)
+		debugger.attachDetachLogger(cpu)
+
+		self.assertTrue(type(cpu.logger) is EmptyLogger)

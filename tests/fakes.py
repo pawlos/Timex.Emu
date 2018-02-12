@@ -18,3 +18,9 @@ class FakeRam(object):
 
 	def storeAddr(self, addr, value):
 		self.ram[addr] = value & 0xFF
+
+
+class FakeCpu(object):
+
+	def __init__(self):
+		self.logger = None
