@@ -2,6 +2,7 @@
 import unittest
 from debugger import *
 from fakes import FakeCpu
+from regs import *
 
 class tests_debugger(unittest.TestCase):
 	
@@ -48,3 +49,8 @@ class tests_debugger(unittest.TestCase):
 		debugger.attachDetachLogger(cpu)
 
 		self.assertTrue(type(cpu.logger) is EmptyLogger)
+
+	def test_state_returns_flag_name_if_bit_is_set(self):
+		debugger = Debugger()
+
+		self.assertEqual("C", debugger.state(1 << CF,CF,"C"))
