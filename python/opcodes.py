@@ -1103,3 +1103,8 @@ class Opcodes(object):
 
 		cpu.PC = cpu.PC + jumpOffset
 		logger.info("JP C {0:x}".format(jumpOffset))
+
+	@staticmethod
+	def portIn(cpu, opcode, logger):
+		cpu.A = cpu.io.readFrom(cpu.C)
+		logger.info("IN A, (C)")

@@ -5,7 +5,7 @@ from ram import *
 from rom import *
 from loggers import EmptyLogger
 from debugger import EmptyDebugger
-
+from io import IO
 
 class CPU(object):
 
@@ -241,6 +241,8 @@ class CPU(object):
 		self.r = 0x00
 		self.logger = logger
 		self.debugger = debugger
+
+		self.io = IO()
 		
 		self.iff1 = 0x00
 		self.iff2 = 0x00
@@ -275,6 +277,7 @@ class CPU(object):
 			0x11 : Opcodes.ld16,
 			0x12 : Opcodes.ld_de_a,
 			0x13 : Opcodes.inc16,
+			0x14 : Opcodes.inc8,
 			0x15 : Opcodes.dec8b,
 			0x16 : Opcodes.ld8n,
 			0x17 : Opcodes.lra,
@@ -340,6 +343,7 @@ class CPU(object):
 			0x78 : Opcodes.ld8,
 			0x7a : Opcodes.ld8,
 			0x7c : Opcodes.ld8,
+			0x7d : Opcodes.ld8,
 			0x7e : Opcodes.ld_r_hl,
 			0x80 : Opcodes.add_r,
 			0x81 : Opcodes.add_r,
@@ -447,6 +451,7 @@ class CPU(object):
 			0xed6f : Opcodes.rld,
 			0xed72 : Opcodes.sbc,
 			0xed73 : Opcodes.ldNnRr,
+			0xed78 : Opcodes.portIn,
 			0xed7a : Opcodes.add_Hl_rr_c,
 			0xed7b : Opcodes.ld16_nn,
 			0xedb0 : Opcodes.ldir,
