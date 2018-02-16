@@ -5,7 +5,7 @@ from ram import *
 from rom import *
 from loggers import EmptyLogger
 from debugger import EmptyDebugger
-from io import IO
+from ioports import IOPorts
 
 class CPU(object):
 
@@ -242,7 +242,7 @@ class CPU(object):
 		self.logger = logger
 		self.debugger = debugger
 
-		self.io = IO()
+		self.io = IOPorts()
 		
 		self.iff1 = 0x00
 		self.iff2 = 0x00
@@ -371,6 +371,7 @@ class CPU(object):
 			0xb5 : Opcodes._or,
 			0xb7 : Opcodes._or,
 			0xbc : Opcodes.cp,
+			0xc0 : Opcodes.ret_cc,
 			0xc1 : Opcodes.pop,
 			0xc2 : Opcodes.jp_cond,
 			0xc3 : Opcodes.jp,

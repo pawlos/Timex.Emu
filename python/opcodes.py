@@ -1108,3 +1108,22 @@ class Opcodes(object):
 	def portIn(cpu, opcode, logger):
 		cpu.A = cpu.io.readFrom(cpu.C)
 		logger.info("IN A, (C)")
+
+	@staticmethod
+	def ret_cc(cpu, opcode, logger):
+		cond = (opcode >> 3) & 7
+
+		cond_name = ''
+		jump = None
+		if cond == 0:
+			cond_name = 'NZ'
+			jump = cpu.ZFlag == Bits.reset()
+
+		if jump:
+			low = cpu.ram.readAddr(cpu.SP)
+			high = cpu.ram.readAddr(cpu.SP+1)
+			addr = (high << 8) + low
+			cpu.SP += 2
+			cpu.PC = addr
+
+		logger.info("RET {}".format(cond_name))

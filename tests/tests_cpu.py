@@ -6,8 +6,6 @@ from cpu import CPU
 from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
-import tests_sbc
-
 
 class tests_cpu(unittest.TestCase):
 	def test_init_zeros_registers(self):

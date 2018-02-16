@@ -1,7 +1,7 @@
-# IO prots
+# IO ports
 
 
-class IO(object):
+class IOPorts(object):
 
 	def __init__(self):
 		self.ports = [0x00]*0xff
