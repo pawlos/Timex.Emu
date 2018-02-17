@@ -1127,3 +1127,12 @@ class Opcodes(object):
 			cpu.PC = addr
 
 		logger.info("RET {}".format(cond_name))
+
+	@staticmethod
+	def srl_r(cpu, opcode, logger):
+		reg_idx = (opcode & 7)
+		old_val = cpu.regs[reg_idx]
+		last_bit = Bits.getNthBit(old_val, 0)
+		cpu.CFlag = Bits.set() if last_bit == 1 else Bits.reset()
+		cpu.regs[reg_idx] = (old_val >> 1)
+		logger.info("SRL {}".format(IndexToReg.translate8bit(reg_idx)))
