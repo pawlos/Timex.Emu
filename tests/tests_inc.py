@@ -196,3 +196,9 @@ class tests_inc(unittest.TestCase):
 		cpu.A = 0x10
 		cpu.readOp()
 		self.assertEqual(0x11, cpu.A)
+
+	def test_inc_e_does_add_1_to_e_value(self):
+		cpu = CPU(FakeRom('\x1c'))
+		cpu.E = 0xf
+		cpu.readOp()
+		self.assertEqual(0x10, cpu.E)
