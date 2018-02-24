@@ -253,7 +253,6 @@ class CPU(object):
 		self.regsPri = [0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0x00] #B',C',D',E',H',L',none,A'
 		self.fls = [0x00]
 		self.flsPri = [0x00] #flags'
-		self.ports = [x for x in range(0,255)]
 		
 		self.ram = ram
 		self.rom = rom

@@ -9,5 +9,5 @@ class IOPorts(object):
 	def readFrom(self, port):
 		return self.ports[port]
 
-	def writeTo(self, port):
-		pass
+	def writeTo(self, port, value):
+		self.ports[port] = value

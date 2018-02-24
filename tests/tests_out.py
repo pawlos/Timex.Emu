@@ -12,4 +12,4 @@ class tests_out(unittest.TestCase):
 		cpu.A = 0x33
 		
 		cpu.readOp()
-		self.assertEqual(0x33, cpu.ports[0x22])
+		self.assertEqual(0x33, cpu.io.readFrom(0x22))

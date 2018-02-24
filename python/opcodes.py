@@ -78,7 +78,7 @@ class Opcodes(object):
 	def out(cpu, opcode, logger):
 		value = cpu.rom.readMemory(cpu.PC)
 		logger.info("OUT {:04X}, A".format(value))
-		cpu.ports[value] = cpu.A
+		cpu.io.writeTo(value, cpu.A)
 
 	@staticmethod
 	def ldExt(cpu, opcode, logger):
