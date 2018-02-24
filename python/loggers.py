@@ -5,7 +5,7 @@ class Logger(object):
 		self.cpu = cpu
 	
 	def info(self, msg):
-		print "{0:4X}: {1}".format(self.cpu.prev_pc, msg)
+		print "{0:04X}: {1}".format(self.cpu.prev_pc, msg)
 
 class EmptyLogger(object):
 	def info(self, msg):

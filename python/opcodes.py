@@ -49,7 +49,7 @@ class Opcodes(object):
 		elif regInd == 3:
 			cpu.SP = value
 
-		logger.info("LD {}, 0x{:04X}".format(IndexToReg.translate16bit(regInd),value))
+		logger.info("LD {}, {:04X}".format(IndexToReg.translate16bit(regInd),value))
 
 	@staticmethod
 	def ld8(cpu, opcode, logger):
@@ -63,7 +63,7 @@ class Opcodes(object):
 		regInd = (opcode >> 3) & 7
 		value = cpu.rom.readMemory(cpu.PC)
 		cpu.regs[regInd] = value
-		logger.info("LD {}, {:2X}".format(IndexToReg.translate8bit(regInd), value))
+		logger.info("LD {}, {:02X}".format(IndexToReg.translate8bit(regInd), value))
 
 	@staticmethod
 	def jp(cpu, opcode, logger):
@@ -77,13 +77,13 @@ class Opcodes(object):
 	@staticmethod
 	def out(cpu, opcode, logger):
 		value = cpu.rom.readMemory(cpu.PC)
-		logger.info("OUT {:04X}, A".format(value))
+		logger.info("OUT ({:02X}), A".format(value))
 		cpu.io.writeTo(value, cpu.A)
 
 	@staticmethod
 	def ldExt(cpu, opcode, logger):
 		cpu.I = cpu.A
-		logger.info("LD I,A")
+		logger.info("LD I, A")
 
 	@staticmethod
 	def nop(cpu, opcode, logger):
@@ -126,22 +126,25 @@ class Opcodes(object):
 
 	@staticmethod
 	def jpnz(cpu, opcode, logger):
-		jumpOffset = cpu.rom.readMemory(cpu.PC)
-		logger.info("JPNZ {0:04X}".format(jumpOffset))
-		if cpu.ZFlag:
-			return
+		pc = cpu.PC
+		jumpOffset = Bits.twos_comp(cpu.rom.readMemory(pc))
 
-		cpu.PC = cpu.PC + Bits.twos_comp(jumpOffset)
+		no_jump = cpu.ZFlag
+
+		if not no_jump:
+			cpu.PC = pc + jumpOffset+1
+		logger.info("JR NZ, {0:04X}".format(pc+jumpOffset+1))
 
 	@staticmethod
 	def jpnc(cpu, opcode, logger):
-		jumpOffset = Bits.twos_comp(cpu.rom.readMemory(cpu.PC))
-		if cpu.CFlag:
-			return
-
 		pc = cpu.PC
-		cpu.PC = pc + jumpOffset
-		logger.info("JP NC {0:2X}".format(jumpOffset))
+		jumpOffset = Bits.twos_comp(cpu.rom.readMemory(pc))
+		
+		no_jump = cpu.CFlag
+
+		if not no_jump:
+			cpu.PC = pc + jumpOffset+1
+		logger.info("JR NC, {0:04X}".format(pc+jumpOffset+1))
 
 	@staticmethod
 	def _and(cpu, opcode, logger):
@@ -218,13 +221,14 @@ class Opcodes(object):
 
 	@staticmethod
 	def jrz(cpu, opcode, logger):
+		pc = cpu.PC
+		jumpTo = pc + Bits.twos_comp(cpu.rom.readMemory(pc)) + 1
+		
+		no_jump = cpu.ZFlag == False
 
-		jumpOffset = Bits.twos_comp(cpu.rom.readMemory(cpu.PC))
-		logger.info("JR Z {0:x}".format(jumpOffset))
-		if cpu.ZFlag == False:
-			return
-
-		cpu.PC = cpu.PC + jumpOffset
+		if not no_jump:
+			cpu.PC = jumpTo
+		logger.info("JR Z, {:04X}".format(jumpTo))
 
 	@staticmethod
 	def exx(cpu, opcode, logger):
@@ -261,7 +265,7 @@ class Opcodes(object):
 
 		cpu.ram.storeAddr(nn + 1, value >> 8)
 		cpu.ram.storeAddr(nn, value & 0xFF)
-		logger.info("LD ({:04X}),{}".format(nn, IndexToReg.translate16bit(regInd)))
+		logger.info("LD ({:04X}), {}".format(nn, IndexToReg.translate16bit(regInd)))
 
 	@staticmethod
 	def ldNnHl(cpu, opcode, logger):
@@ -269,7 +273,7 @@ class Opcodes(object):
 		low = cpu.rom.readMemory(cpu.PC)
 
 		nn = (high << 8) + low
-		logger.info("LD (0x{:04x}), HL".format(nn))
+		logger.info("LD ({:04X}), HL".format(nn))
 		cpu.ram.storeAddr(nn+1, cpu.H)
 		cpu.ram.storeAddr(nn, cpu.L)
 
@@ -277,7 +281,7 @@ class Opcodes(object):
 	def inc8(cpu, opcode, logger):
 		index = ( opcode >> 3 ) & 7
 		oldValue =  cpu.regs[index]
-		cpu.regs[index] = (cpu.regs[index] + 1 ) & 0xFF
+		cpu.regs[index] = Bits.limitTo8Bits(cpu.regs[index] + 1)
 
 		cpu.NFlag = Bits.reset()
 		cpu.ZFlag = Bits.isZero(cpu.regs[index])
@@ -357,7 +361,7 @@ class Opcodes(object):
 		high = cpu.rom.readMemory(cpu.PC)
 		low = cpu.rom.readMemory(cpu.PC)
 		addr = (high << 8) + low
-		logger.info("LD (0x{:4X}), A".format(addr))
+		logger.info("LD ({:04X}), A".format(addr))
 		cpu.ram.storeAddr(addr, cpu.A)
 
 	@staticmethod
@@ -422,7 +426,7 @@ class Opcodes(object):
 		regInd = opcode & 7
 		d = cpu.rom.readMemory(cpu.PC)
 		cpu.ram.storeAddr(cpu.IY + d, cpu.regs[regInd])
-		logger.info("LD (IY+{:02X}),{}".format(d, IndexToReg.translate8bit(regInd)))
+		logger.info("LD (IY+{:02X}), {}".format(d, IndexToReg.translate8bit(regInd)))
 
 	@staticmethod
 	def ldhlr(cpu, opcode, logger):
@@ -434,10 +438,12 @@ class Opcodes(object):
 	def djnz(cpu, opcode, logger):
 		e = cpu.rom.readMemory(cpu.PC)
 		cpu.B = cpu.B - 1
+		pc = 0
 		if cpu.B != 0:
-			cpu.PC = cpu.PC + Bits.twos_comp(e)
+			pc = cpu.PC + Bits.twos_comp(e)
+			cpu.PC = pc
 
-		logger.info("DJNZ {:04X}".format(e))
+		logger.info("DJNZ {:04X}".format(pc))
 
 	@staticmethod
 	def add_iy(cpu, opcode, logger):

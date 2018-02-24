@@ -134,3 +134,11 @@ class tests_sbc(unittest.TestCase):
 		cpu.PVFlag = True
 		cpu.readOp()
 		self.assertFalse(cpu.PVFlag)
+
+
+	def test_sbc_hl_de_for_negative_values(self):
+		cpu = CPU(FakeRom('\xed\x52'))
+		cpu.HL = 0x3fff
+		cpu.DE = 0xffff
+		cpu.readOp()
+		self.assertEquals(0x4000, cpu.HL)
