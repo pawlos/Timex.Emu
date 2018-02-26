@@ -56,7 +56,7 @@ class tests_cpu(unittest.TestCase):
 		self.assertEqual(0x33, cpu.I)
 
 	def test_registers_are_accessible_by_index_and_name(self):
-		cpu = CPU(None)
+		cpu = CPU(FakeRom(''))
 		cpu.regs[0] = 0x11
 		self.assertEqual(0x11, cpu.B)
 
@@ -104,7 +104,7 @@ class tests_cpu(unittest.TestCase):
 		self.assertEqual(0x1100, cpu.SP)
 
 	def test_16bit_registers_are_accessed_by_8bit_parts(self):
-		cpu = CPU(None)
+		cpu = CPU(FakeRom(''))
 		cpu.HL = 0x1234
 
 		self.assertEqual(0x12, cpu.H)
@@ -118,12 +118,12 @@ class tests_cpu(unittest.TestCase):
 		self.assertEqual(0xFF, cpu.L)
 
 	def test_ix_set_get(self):
-		cpu = CPU(None)
+		cpu = CPU(FakeRom(''))
 		cpu.IX = 0x1223;
 		self.assertEqual(0x1223, cpu.IX)
 
 	def test_iy_set_get(self):
-		cpu = CPU(None)
+		cpu = CPU(FakeRom(''))
 		cpu.IY = 0x3456;
 		self.assertEqual(0x3456, cpu.IY)
 

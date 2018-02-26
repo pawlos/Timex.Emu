@@ -8,9 +8,7 @@ from loggers import Logger
 class tests_jp(unittest.TestCase):
 
 	def test_jp_nz_jumps_if_ZFlag_is_non_zero(self):
-		rom = [None] * 0x0482
-		rom[0x480] = '\x20'
-		rom[0x481] = '\xFA'
+		rom = '\x00' * 0x0480+'\x20\xFA'
 		cpu = CPU(FakeRom(rom))
 		cpu.PC = 0x0480
 		cpu.ZFlag = False

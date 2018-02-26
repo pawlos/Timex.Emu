@@ -6,22 +6,20 @@ from fakes import *
 class tests_jrz(unittest.TestCase):
 
 	def test_jr_z_jumps_if_ZFlag_is_set(self):
-		rom = [None] * 0x0302
-		rom[0x300] = '\x28'
-		rom[0x301] = '\x03'
-		cpu = CPU(FakeRom(rom))
+		rom = '\x00' * 0x0300+'\x28\x03'
+		cpu = CPU(FakeRom(rom), FakeRam())
 		cpu.PC = 0x0300
 		cpu.ZFlag = True
 		cpu.readOp()
 		self.assertEqual(0x0305, cpu.PC)
 
 	def test_jr_z_does_not_jump_if_ZFlag_is_reset(self):
-		cpu = CPU(FakeRom('\x28\x00'))
+		cpu = CPU(FakeRom('\x28\x00'), FakeRam())
 		cpu.ZFlag = False
 		cpu.readOp()
 		self.assertEqual(0x02, cpu.PC)
 
-	def test_j_z_does_not_change_the_z_flag(self):
+	def test_jr_z_does_not_change_the_z_flag(self):
 		cpu = CPU(FakeRom('\x28\x00\x28\x00'))
 		cpu.ZFlag = False
 		cpu.readOp()

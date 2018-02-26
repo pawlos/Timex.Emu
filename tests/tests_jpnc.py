@@ -7,14 +7,12 @@ from loggers import Logger
 class tests_jpnc(unittest.TestCase):
 
 	def test_jp_nc_jumps_if_CFlag_is_reset(self):
-		rom = [None] * 0x0482
-		rom[0x480] = '\x30'
-		rom[0x481] = '\x00'
+		rom = '\x00'*0x480 + '\x30\x00'
 		cpu = CPU(FakeRom(rom))
-		cpu.PC = 0x0480
+		cpu.PC = 0x480
 		cpu.CFlag = False
 		cpu.readOp()
-		self.assertEqual(0x0482, cpu.PC)
+		self.assertEqual(0x482, cpu.PC)
 
 	def test_jp_nc_does_not_jump_if_CFlag_is_set(self):
 		cpu = CPU(FakeRom('\x30\x00'))

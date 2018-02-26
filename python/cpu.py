@@ -256,6 +256,7 @@ class CPU(object):
 		
 		self.ram = ram
 		self.rom = rom
+		self.ram.load(rom)
 		
 		self.dispatchTable = {
 			0x00 : Opcodes.nop,
@@ -400,6 +401,7 @@ class CPU(object):
 			0xb4 : Opcodes._or,
 			0xb5 : Opcodes._or,
 			0xb7 : Opcodes._or,
+			0xb9 : Opcodes.cp,
 			0xbc : Opcodes.cp,
 			0xc0 : Opcodes.ret_cc,
 			0xc1 : Opcodes.pop,
@@ -409,12 +411,14 @@ class CPU(object):
 			0xc5 : Opcodes.push,
 			0xc6 : Opcodes.add_r_n,
 			0xc7 : Opcodes.rst,
+			0xc8 : Opcodes.ret_cc,
 			0xc9 : Opcodes.ret,
 			0xca : Opcodes.jp_cond,
 			0xcb : [self.twoBytesOpcodes],
 			0xcc : Opcodes.call_cond,
 			0xcd : Opcodes.call,
 			0xcf : Opcodes.rst,
+			0xd0 : Opcodes.ret_cc,
 			0xd1 : Opcodes.pop,
 			0xd2 : Opcodes.jp_cond,
 			0xd3 : Opcodes.out,
@@ -513,6 +517,7 @@ class CPU(object):
 			0xfdcb0476 : Opcodes.bit_bit,
 			0xfdcb308e : Opcodes.bit_res,
 			0xfdcb3086 : Opcodes.bit_res,
+			0xfdcb30a6 : Opcodes.bit_res
 		}
 
 	def generateInterrupt(self):
@@ -522,19 +527,19 @@ class CPU(object):
 	def readOp(self):
 		self.prev_pc = self.PC
 		pc = self.prev_pc
-		opcode = self.rom.readMemory(pc)
+		opcode = self.ram.readAddr(pc)
 		self.dispatch(opcode, pc)
 
 	def twoBytesOpcodes(self, cpu, opcode, logger):
 		pc = self.PC
-		secondOpByte = self.rom.readMemory(pc)
+		secondOpByte = self.ram.readAddr(pc)
 		fullOpcode = (opcode << 8) + secondOpByte
 		self.dispatch(fullOpcode, pc)
 
 	def fourBytesOpcodes(self, cpu, opcode, logger):
 		pc = self.PC
-		thirdbyte = cpu.rom.readMemory(pc)
-		fourthbyte = cpu.rom.readMemory(cpu.PC)
+		thirdbyte = cpu.ram.readAddr(pc)
+		fourthbyte = cpu.ram.readAddr(cpu.PC)
 		fullOpcode = (opcode << 16) + (thirdbyte << 8) + fourthbyte
 		self.dispatch(fullOpcode, pc)
 
@@ -546,6 +551,8 @@ class CPU(object):
 			else:
 				_dispatch = _dispatch[0]
 			_dispatch(self, opcode, self.logger)
+		except IndexError as e:
+			self.debugger.stop(self)
 		except KeyError as e:
 			print "Missing opcode key: {1:x}, PC = 0x{0:x}".format(self.PC, opcode)
 			self.debugger.stop(self)
