@@ -426,6 +426,7 @@ class CPU(object):
 			0xd5 : Opcodes.push,
 			0xd6 : Opcodes.sub_n,
 			0xd7 : Opcodes.rst,
+			0xd8 : Opcodes.ret_cc,
 			0xd9 : Opcodes.exx,
 			0xda : Opcodes.jp_cond,
 			0xdc : Opcodes.call_cond,

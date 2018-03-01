@@ -1131,6 +1131,9 @@ class Opcodes(object):
 		if cond == 2:
 			cond_name = 'NC'
 			jump = cpu.CFlag == Bits.reset()
+		if cond == 3:
+			cond_name = 'C'
+			jump = cpu.CFlag == Bits.set()
 
 		if jump:
 			low = cpu.ram.readAddr(cpu.SP)
