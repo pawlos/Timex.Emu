@@ -91,3 +91,15 @@ class tests_ret(unittest.TestCase):
 		cpu.readOp();
 		self.assertEqual(0x18b5, cpu.PC)
 		self.assertEqual(0x4002, cpu.SP)
+
+	def test_ret_po_does_sets_PC_correctly_if_PVflag_is_reset(self):
+		ram = FakeRam([None]*0x8002)
+		ram.storeAddr(0x4000, 0xB5)
+		ram.storeAddr(0x4001, 0x18)
+		cpu = CPU(FakeRom('\x00'*0x3535+'\xe0'), ram)
+		cpu.PC = 0x3535
+		cpu.SP = 0x4000
+		cpu.PVFlag = Bits.reset()
+		cpu.readOp();
+		self.assertEqual(0x18b5, cpu.PC)
+		self.assertEqual(0x4002, cpu.SP)
