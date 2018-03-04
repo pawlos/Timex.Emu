@@ -446,6 +446,7 @@ class CPU(object):
 			0xec : Opcodes.call_cond,
 			0xed : [self.twoBytesOpcodes],
 			0xef : Opcodes.rst,
+			0xf0 : Opcodes.ret_cc,
 			0xf1 : Opcodes.pop,
 			0xf2 : Opcodes.jp_cond,
 			0xf3 : Opcodes.disableInterrupts,
