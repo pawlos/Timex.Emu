@@ -1141,8 +1141,11 @@ class Opcodes(object):
 			cond_name = 'P'
 			jump = cpu.PVFlag == Bits.set()
 		if cond == 6:
-			cond_name = 'S'
+			cond_name = 'P'
 			jump = cpu.SFlag == Bits.reset()
+		if cond == 7:
+			cond_name = 'M'
+			jump = cpu.SFlag == Bits.set()
 
 		if jump:
 			low = cpu.ram.readAddr(cpu.SP)

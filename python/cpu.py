@@ -454,6 +454,7 @@ class CPU(object):
 			0xf5 : Opcodes.push,
 			0xf6 : Opcodes.or_n,
 			0xf7 : Opcodes.rst,
+			0xf8 : Opcodes.ret_cc,
 			0xf9 : Opcodes.ld_sp_hl,
 			0xfa : Opcodes.jp_cond,
 			0xfb : Opcodes.enableInterrupts,
