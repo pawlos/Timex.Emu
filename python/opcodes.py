@@ -1138,7 +1138,7 @@ class Opcodes(object):
 			cond_name = 'PO'
 			jump = cpu.PVFlag == Bits.reset()
 		if cond == 5:
-			cond_name = 'P'
+			cond_name = 'PE'
 			jump = cpu.PVFlag == Bits.set()
 		if cond == 6:
 			cond_name = 'P'
