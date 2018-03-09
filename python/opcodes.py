@@ -1164,3 +1164,15 @@ class Opcodes(object):
 		cpu.CFlag = Bits.set() if last_bit == 1 else Bits.reset()
 		cpu.regs[reg_idx] = (old_val >> 1)
 		logger.info("SRL {}".format(IndexToReg.translate8bit(reg_idx)))
+
+	@staticmethod
+	def adc_r(cpu, opcode, logger):
+		reg_idx = (opcode & 7)
+		old_val = cpu.A
+		cpu.A = old_val + cpu.regs[reg_idx] + (1 if cpu.CFlag else 0)
+
+		cpu.SFlag = Bits.isNegative(cpu.A)
+		cpu.ZFlag = Bits.isZero(cpu.A)
+		cpu.NFlag = Bits.reset()
+
+		logger.info("ADC A, {}".format(IndexToReg.translate8bit(reg_idx)))

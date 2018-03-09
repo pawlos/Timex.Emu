@@ -46,3 +46,19 @@ class tests_adc(unittest.TestCase):
 		cpu.CFlag = Bits.set()
 		cpu.readOp()
 		self.assertEqual(0x1111+0x2222+0x1,cpu.HL)
+
+	def test_add_a_b_with_C_flag_set_correctly_calculates_value(self):
+		cpu = CPU(FakeRom('\x88'))
+		cpu.A = 0x12
+		cpu.B = 0x12
+		cpu.CFlag = Bits.set()
+		cpu.readOp()
+		self.assertEqual(0x25, cpu.A)
+
+	def test_add_a_b_with_C_flag_reset_correctly_calculates_value(self):
+		cpu = CPU(FakeRom('\x88'))
+		cpu.A = 0x22
+		cpu.B = 0x33
+		cpu.CFlag = Bits.reset()
+		cpu.readOp()
+		self.assertEqual(0x55, cpu.A)
