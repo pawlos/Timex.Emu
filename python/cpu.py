@@ -395,6 +395,7 @@ class CPU(object):
 			0x89 : Opcodes.adc_r,
 			0x8a : Opcodes.adc_r,
 			0x8b : Opcodes.adc_r,
+			0x8c : Opcodes.adc_r,
 			0x90 : Opcodes.sub_r,
 			0x91 : Opcodes.sub_r,
 			0xa7 : Opcodes._and,
