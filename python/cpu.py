@@ -253,6 +253,8 @@ class CPU(object):
 		self.regsPri = [0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0x00] #B',C',D',E',H',L',none,A'
 		self.fls = [0x00]
 		self.flsPri = [0x00] #flags'
+		self.t_states = 0
+		self.m_cycles = 0
 		
 		self.ram = ram
 		self.rom = rom
