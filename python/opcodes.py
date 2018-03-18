@@ -49,6 +49,8 @@ class Opcodes(object):
 		elif regInd == 3:
 			cpu.SP = value
 
+		cpu.m_cycles = 2
+		cpu.t_states = 10
 		logger.info("LD {}, {:04X}".format(IndexToReg.translate16bit(regInd),value))
 
 	@staticmethod
