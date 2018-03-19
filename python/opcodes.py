@@ -213,7 +213,6 @@ class Opcodes(object):
 	def inc16(cpu, opcode, logger):
 		
 		regInd = (opcode & 0x30) >> 4
-		logger.info("INC {0}".format(IndexToReg.translate16bit(regInd)))
 		if regInd == 0:
 			cpu.BC = cpu.BC + 1
 		elif regInd == 1:
@@ -222,6 +221,10 @@ class Opcodes(object):
 			cpu.HL = cpu.HL + 1
 		elif regInd == 3:
 			cpu.SP = cpu.SP + 1
+
+		cpu.m_cycles = 1
+		cpu.t_states = 6
+		logger.info("INC {0}".format(IndexToReg.translate16bit(regInd)))
 
 	@staticmethod
 	def jrz(cpu, opcode, logger):
@@ -291,7 +294,10 @@ class Opcodes(object):
 		cpu.ZFlag = Bits.isZero(cpu.regs[index])
 		cpu.HFlag = Bits.halfCarrySub(oldValue, cpu.regs[index])
 		cpu.PVFlag = True if oldValue == 0x7f else False
-		cpu.SFlag = Bits.twos_comp(cpu.regs[index]) < 0
+		cpu.SFlag = Bits.isNegative(Bits.twos_comp(cpu.regs[index]))
+
+		cpu.m_cycles = 1
+		cpu.t_states = 4
 		logger.info("INC {}".format(IndexToReg.translate8bit(index)))
 
 	@staticmethod
@@ -721,6 +727,8 @@ class Opcodes(object):
 	@staticmethod
 	def ld_bc_a(cpu, opcode, logger):
 		cpu.ram.storeAddr(cpu.BC, cpu.A)
+		cpu.m_cycles = 2
+		cpu.t_states = 7
 		logger.info("LD (BC), A")
 
 	@staticmethod
