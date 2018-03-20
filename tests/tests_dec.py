@@ -50,6 +50,30 @@ class tests_dec(unittest.TestCase):
 		cpu.readOp()
 		self.assertTrue(cpu.PVFlag)
 
+	def test_dec_b_sets_h_flag_if_borrow_from_bit_4(self):
+		cpu = CPU(FakeRom('\x05'), FakeRam())
+		cpu.B = 0b00010000
+		cpu.readOp();
+		self.assertTrue(cpu.HFlag)
+
+	def test_dec_b_resets_h_flag_if_no_borrow_from_bit_4(self):
+		cpu = CPU(FakeRom('\x05'), FakeRam())
+		cpu.B = 0b00011000
+		cpu.readOp();
+		self.assertFalse(cpu.HFlag)
+
+	def test_dec_b_sets_pv_flag_if_value_was_80h(self):
+		cpu = CPU(FakeRom('\x05'), FakeRam())
+		cpu.B = 0x80
+		cpu.readOp();
+		self.assertTrue(cpu.PVFlag)
+
+	def test_dec_b_resets_pv_flag_if_value_was_not_80h(self):
+		cpu = CPU(FakeRom('\x05'), FakeRam())
+		cpu.B = 0x7f
+		cpu.readOp();
+		self.assertFalse(cpu.PVFlag)
+
 	def test_dec_c_sets_correct_value(self):
 		cpu = CPU(FakeRom('\x0D'), FakeRam())
 		cpu.C = 10

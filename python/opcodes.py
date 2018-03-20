@@ -961,6 +961,10 @@ class Opcodes(object):
 		cpu.SFlag = Bits.isNegative(cpu.regs[reg_index])
 		cpu.NFlag = Bits.set()
 		cpu.PVFlag = Bits.halfCarrySub(old_val, cpu.regs[reg_index])
+		cpu.HFlag = Bits.halfCarrySub(old_val, cpu.regs[reg_index])
+
+		cpu.m_cycles = 1
+		cpu.t_states = 4
 		logger.info("DEC {}".format(IndexToReg.translate8bit(reg_index)))
 
 	@staticmethod

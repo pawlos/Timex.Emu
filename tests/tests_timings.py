@@ -9,7 +9,7 @@ class tests_timings(unittest.TestCase):
 		cpu.readOp()
 		self.assertEqual(1, cpu.m_cycles)
 
-	def test_nop_takes_1_t_states(self):
+	def test_nop_takes_4_t_states(self):
 		cpu = CPU(FakeRom('\x00'))
 		cpu.readOp()
 		self.assertEqual(4, cpu.t_states)
@@ -19,7 +19,47 @@ class tests_timings(unittest.TestCase):
 		cpu.readOp()
 		self.assertEqual(2, cpu.m_cycles)
 
-	def test_ld16_takes_2_t_states(self):
+	def test_ld16_takes_10_t_states(self):
 		cpu = CPU(FakeRom('\x01'))
 		cpu.readOp()
 		self.assertEqual(10, cpu.t_states)
+
+	def test_ld_bc_a_takes_2_m_cycles(self):
+		cpu = CPU(FakeRom('\x02'))
+		cpu.readOp()
+		self.assertEqual(2, cpu.m_cycles)
+
+	def test_ld_bc_a_takes_7_t_states(self):
+		cpu = CPU(FakeRom('\x02'))
+		cpu.readOp()
+		self.assertEqual(7, cpu.t_states)
+
+	def test_inc_bc_takes_1_m_cycle(self):
+		cpu = CPU(FakeRom('\x03'))
+		cpu.readOp()
+		self.assertEqual(1, cpu.m_cycles)
+
+	def test_inc_bc_takes_6_t_states(self):
+		cpu = CPU(FakeRom('\x03'))
+		cpu.readOp()
+		self.assertEqual(6, cpu.t_states)
+
+	def test_inc_b_takes_1_m_cycle(self):
+		cpu = CPU(FakeRom('\x04'))
+		cpu.readOp()
+		self.assertEqual(1, cpu.m_cycles)
+
+	def test_inc_b_takes_4_t_states(self):
+		cpu = CPU(FakeRom('\x04'))
+		cpu.readOp()
+		self.assertEqual(4, cpu.t_states)
+
+	def test_dec_b_takes_1_m_cycle(self):
+		cpu = CPU(FakeRom('\x05'))
+		cpu.readOp()
+		self.assertEqual(1, cpu.m_cycles)
+
+	def test_dec_b_takes_4_t_states(self):
+		cpu = CPU(FakeRom('\x05'))
+		cpu.readOp()
+		self.assertEqual(4, cpu.t_states)
