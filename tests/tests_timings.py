@@ -75,3 +75,13 @@ class tests_timings(unittest.TestCase):
 		cpu = CPU(FakeRom('\x05'))
 		cpu.readOp()
 		self.assertEqual(4, cpu.t_states)
+
+	def test_ld_r_n_takes_2_m_cycle(self):
+		cpu = CPU(FakeRom('\x06'))
+		cpu.readOp()
+		self.assertEqual(2, cpu.m_cycles)
+
+	def test_ld_r_n_takes_7_t_states(self):
+		cpu = CPU(FakeRom('\x06'))
+		cpu.readOp()
+		self.assertEqual(7, cpu.t_states)

@@ -65,6 +65,9 @@ class Opcodes(object):
 		regInd = (opcode >> 3) & 7
 		value = cpu.ram.readAddr(cpu.PC)
 		cpu.regs[regInd] = value
+
+		cpu.m_cycles = 2
+		cpu.t_states = 7
 		logger.info("LD {}, {:02X}".format(IndexToReg.translate8bit(regInd), value))
 
 	@staticmethod
