@@ -4,6 +4,18 @@ from fakes import *
 
 class tests_timings(unittest.TestCase):
 
+	def test_2_nops_takes_2_m_cycles(self):
+		cpu = CPU(FakeRom('\x00\x00'))
+		cpu.readOp()
+		cpu.readOp()
+		self.assertEqual(2, cpu.m_cycles)
+
+	def test_2_nop_takes_8_t_states(self):
+		cpu = CPU(FakeRom('\x00\x00'))
+		cpu.readOp()
+		cpu.readOp()
+		self.assertEqual(8, cpu.t_states)
+
 	def test_nop_takes_1_m_cycles(self):
 		cpu = CPU(FakeRom('\x00'))
 		cpu.readOp()

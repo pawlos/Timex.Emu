@@ -226,6 +226,22 @@ class CPU(object):
 	def PC(self, value):
 		self.pc = value
 
+	@property
+	def t_states(self):
+		return self.tstates
+
+	@t_states.setter
+	def t_states(self, value):
+		self.tstates += value
+
+	@property
+	def m_cycles(self):
+		return self.mcycles
+
+	@m_cycles.setter
+	def m_cycles(self, value):
+		self.mcycles += value
+
 	def __init__(self,
 				rom = ROM(), 
 				ram = RAM(), 
@@ -253,8 +269,8 @@ class CPU(object):
 		self.regsPri = [0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0x00] #B',C',D',E',H',L',none,A'
 		self.fls = [0x00]
 		self.flsPri = [0x00] #flags'
-		self.t_states = 0
-		self.m_cycles = 0
+		self.tstates = 0
+		self.mcycles = 0
 		
 		self.ram = ram
 		self.rom = rom
