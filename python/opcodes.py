@@ -17,6 +17,8 @@ class Opcodes(object):
 		''' EI '''
 		cpu.iff1 = 0x01
 		cpu.iff2 = 0x01
+		cpu.m_cycles = 1
+		cpu.t_states = 4
 		logger.info("EI")
 
 	@staticmethod
