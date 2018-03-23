@@ -91,7 +91,17 @@ class tests_timings(unittest.TestCase):
 		cpu.readOp()
 		self.assertEqual(1, cpu.m_cycles)
 
-	def test_ei_takes_7_t_states(self):
+	def test_ei_takes_4_t_states(self):
 		cpu = CPU(FakeRom('\xfb'))
+		cpu.readOp()
+		self.assertEqual(4, cpu.t_states)
+
+	def test_di_takes_1_m_cycle(self):
+		cpu = CPU(FakeRom('\xf3'))
+		cpu.readOp()
+		self.assertEqual(1, cpu.m_cycles)
+
+	def test_di_takes_4_m_cycles(self):
+		cpu = CPU(FakeRom('\xf3'))
 		cpu.readOp()
 		self.assertEqual(4, cpu.t_states)

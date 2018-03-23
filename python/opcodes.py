@@ -9,7 +9,9 @@ class Opcodes(object):
 	def disableInterrupts(cpu, opcode, logger):
 		"""DI"""
 		cpu.iff1 = 0x00
-		cpu.iff2
+		cpu.iff2 = 0x00
+		cpu.m_cycles = 1
+		cpu.t_states = 4
 		logger.info("DI")
 
 	@staticmethod
