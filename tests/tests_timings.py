@@ -105,3 +105,13 @@ class tests_timings(unittest.TestCase):
 		cpu = CPU(FakeRom('\xf3'))
 		cpu.readOp()
 		self.assertEqual(4, cpu.t_states)
+
+	def test_xor_a_takes_1_m_cycles(self):
+		cpu = CPU(FakeRom('\xa8'))
+		cpu.readOp()
+		self.assertEqual(1, cpu.m_cycles)
+
+	def test_xor_a_takes_4_t_states(self):
+		cpu = CPU(FakeRom('\xa8'))
+		cpu.readOp()
+		self.assertEqual(4, cpu.t_states)

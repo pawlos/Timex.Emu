@@ -35,6 +35,8 @@ class Opcodes(object):
 		cpu.HFlag = Bits.reset()
 		cpu.SFlag = Bits.signInTwosComp(cpu.A)
 		cpu.PVFlag = Bits.paritySet(cpu.A)
+		cpu.m_cycles = 1
+		cpu.t_states = 4
 		logger.info("XOR A")
 
 	@staticmethod
