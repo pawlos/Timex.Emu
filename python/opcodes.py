@@ -210,13 +210,16 @@ class Opcodes(object):
 		elif regInd == 3:
 			value = cpu.SP
 
-		logger.info("ADD HL, {}".format(IndexToReg.translate16bit(regInd)))
 		oldHL = cpu.HL
 		cpu.HL = cpu.HL + value
 
 		cpu.NFlag = Bits.reset()
 		cpu.CFlag = Bits.carryFlag16(oldHL, cpu.HL)
 		cpu.HFlag = Bits.carryFlag16(oldHL, cpu.HL, bits=11)
+		#S, Z, P/V - not affected
+		cpu.m_cycles = 3
+		cpu.t_states = 11
+		logger.info("ADD HL, {}".format(IndexToReg.translate16bit(regInd)))
 
 	@staticmethod
 	def inc16(cpu, opcode, logger):
