@@ -544,6 +544,9 @@ class Opcodes(object):
 		cpu.HFlag = Bits.reset()
 		cpu.NFlag = Bits.reset()
 
+		cpu.m_cycles = 1
+		cpu.t_states = 4
+
 		logger.info("RRCA")
 
 	@staticmethod
