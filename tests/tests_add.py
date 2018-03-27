@@ -194,3 +194,13 @@ class tests_add(unittest.TestCase):
 		cpu.D = 0x90
 		cpu.readOp()
 		self.assertEqual(0xA2, cpu.A)
+
+	def test_add_hl_takes_3_m_cycles(self):
+		cpu = CPU(FakeRom('\x09'))
+		cpu.readOp()
+		self.assertEqual(3, cpu.m_cycles)
+
+	def test_add_hl_takes_11_t_states(self):
+		cpu = CPU(FakeRom('\x09'))
+		cpu.readOp()
+		self.assertEqual(11, cpu.t_states)

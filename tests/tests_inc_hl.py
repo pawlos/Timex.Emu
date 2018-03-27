@@ -14,3 +14,4 @@ class tests_dec(unittest.TestCase):
 		cpu.readOp();
 		self.assertEqual(0xDE, ram.readAddr(cpu.HL))
 
+

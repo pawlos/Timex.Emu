@@ -35,3 +35,25 @@ class tests_nop(unittest.TestCase):
 		cpu.A = 0x99
 		cpu.readOp()
 		self.assertEqual(0x99, cpu.A)
+
+	def test_2_nops_takes_2_m_cycles(self):
+		cpu = CPU(FakeRom('\x00\x00'))
+		cpu.readOp()
+		cpu.readOp()
+		self.assertEqual(2, cpu.m_cycles)
+
+	def test_2_nop_takes_8_t_states(self):
+		cpu = CPU(FakeRom('\x00\x00'))
+		cpu.readOp()
+		cpu.readOp()
+		self.assertEqual(8, cpu.t_states)
+
+	def test_nop_takes_1_m_cycles(self):
+		cpu = CPU(FakeRom('\x00'))
+		cpu.readOp()
+		self.assertEqual(1, cpu.m_cycles)
+
+	def test_nop_takes_4_t_states(self):
+		cpu = CPU(FakeRom('\x00'))
+		cpu.readOp()
+		self.assertEqual(4, cpu.t_states)

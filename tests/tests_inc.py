@@ -202,3 +202,23 @@ class tests_inc(unittest.TestCase):
 		cpu.E = 0xf
 		cpu.readOp()
 		self.assertEqual(0x10, cpu.E)
+
+	def test_inc_bc_takes_1_m_cycle(self):
+		cpu = CPU(FakeRom('\x03'))
+		cpu.readOp()
+		self.assertEqual(1, cpu.m_cycles)
+
+	def test_inc_bc_takes_6_t_states(self):
+		cpu = CPU(FakeRom('\x03'))
+		cpu.readOp()
+		self.assertEqual(6, cpu.t_states)
+
+	def test_inc_b_takes_1_m_cycle(self):
+		cpu = CPU(FakeRom('\x04'))
+		cpu.readOp()
+		self.assertEqual(1, cpu.m_cycles)
+
+	def test_inc_b_takes_4_t_states(self):
+		cpu = CPU(FakeRom('\x04'))
+		cpu.readOp()
+		self.assertEqual(4, cpu.t_states)
