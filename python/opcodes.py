@@ -463,8 +463,12 @@ class Opcodes(object):
 		cpu.B = cpu.B - 1
 		pc = pc + Bits.twos_comp(e) + 1
 		if cpu.B != 0:
+			cpu.m_cycles = 1
+			cpu.t_states = 5
 			cpu.PC = pc
 
+		cpu.m_cycles = 2
+		cpu.t_states = 8
 		logger.info("DJNZ {:04X}".format(pc))
 
 	@staticmethod
