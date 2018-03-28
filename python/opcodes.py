@@ -440,6 +440,9 @@ class Opcodes(object):
 		cpu.ram.storeAddr(cpu.SP - 2, (pc & 255))
 		cpu.SP = cpu.SP - 2
 		cpu.PC = addr
+
+		cpu.m_cycles = 5
+		cpu.t_states = 17
 		logger.info("CALL {:04X}".format(addr)) 
 
 	@staticmethod
