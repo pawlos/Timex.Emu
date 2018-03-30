@@ -4,6 +4,7 @@ from cpu import CPU
 from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
+from utility import Bits
 
 class tests_call_cond(unittest.TestCase):
 
@@ -125,3 +126,52 @@ class tests_call_cond(unittest.TestCase):
 		self.assertEqual(0x2135, cpu.PC)
 		self.assertEqual(0x1A, cpu.ram.readAddr(0x3001))
 		self.assertEqual(0x4A, cpu.ram.readAddr(0x3000))
+
+
+	def test_call_cc_takes_5_m_cycles_if_condition_is_true(self):
+		ram = FakeRam([None]*0x3002)
+		
+		rom = FakeRom('\x00'*0x1A47+'\xDC\x35\x21')
+		cpu = CPU(rom, ram)
+		cpu.PC = 0x1A47
+		cpu.SP = 0x3002
+		cpu.CFlag = Bits.set()
+		cpu.readOp()
+
+		self.assertEqual(5, cpu.m_cycles)
+
+	def test_call_cc_takes_3_m_cycles_if_condition_is_false(self):
+		ram = FakeRam([None]*0x3002)
+		
+		rom = FakeRom('\x00'*0x1A47+'\xDC\x35\x21')
+		cpu = CPU(rom, ram)
+		cpu.PC = 0x1A47
+		cpu.SP = 0x3002
+		cpu.CFlag = Bits.reset()
+		cpu.readOp()
+
+		self.assertEqual(3, cpu.m_cycles)
+
+	def test_call_cc_takes_17_t_states_if_condition_is_true(self):
+		ram = FakeRam([None]*0x3002)
+		
+		rom = FakeRom('\x00'*0x1A47+'\xDC\x35\x21')
+		cpu = CPU(rom, ram)
+		cpu.PC = 0x1A47
+		cpu.SP = 0x3002
+		cpu.CFlag = Bits.set()
+		cpu.readOp()
+
+		self.assertEqual(17, cpu.t_states)
+
+	def test_call_cc_takes_10_t_cycles_if_condition_is_false(self):
+		ram = FakeRam([None]*0x3002)
+		
+		rom = FakeRom('\x00'*0x1A47+'\xDC\x35\x21')
+		cpu = CPU(rom, ram)
+		cpu.PC = 0x1A47
+		cpu.SP = 0x3002
+		cpu.CFlag = Bits.reset()
+		cpu.readOp()
+
+		self.assertEqual(10, cpu.t_states)
