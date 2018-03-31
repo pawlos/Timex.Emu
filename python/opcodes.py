@@ -64,6 +64,9 @@ class Opcodes(object):
 		regIndPrim = (opcode & 7)
 		regInd     = (opcode >> 3) & 7
 		cpu.regs[regInd] = cpu.regs[regIndPrim]
+
+		cpu.m_cycles = 1
+		cpu.t_states = 4
 		logger.info("LD {}, {}".format(IndexToReg.translate8bit(regInd), IndexToReg.translate8bit(regIndPrim)))
 
 	@staticmethod
