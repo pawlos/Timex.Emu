@@ -45,3 +45,15 @@ class tests_jp(unittest.TestCase):
 		cpu.IY = 0x4622
 		cpu.readOp()
 		self.assertEqual(0x4622, cpu.PC)
+
+	def test_jr_e_takes_3_m_cycles(self):
+		cpu = CPU(FakeRom('\x00'*0x480+'\x18\x03'))
+		cpu.PC = 0x480
+		cpu.readOp()
+		self.assertEqual(3, cpu.m_cycles)
+
+	def test_jr_e_takes_12_t_states(self):
+		cpu = CPU(FakeRom('\x00'*0x480+'\x18\x03'))
+		cpu.PC = 0x480
+		cpu.readOp()
+		self.assertEqual(12, cpu.t_states)

@@ -704,9 +704,11 @@ class Opcodes(object):
 	def jr_e(cpu, opcode, logger):
 		pc = cpu.PC
 		jumpOffset = Bits.twos_comp(cpu.ram.readAddr(pc))
-		logger.info("JR {0:x}".format(jumpOffset))
-
+		
 		cpu.PC = pc + jumpOffset + 1
+		cpu.m_cycles = 3
+		cpu.t_states = 12
+		logger.info("JR {0:x}".format(jumpOffset))
 
 	@staticmethod
 	def ld16_nn(cpu, opcode, logger):
