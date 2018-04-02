@@ -735,6 +735,9 @@ class Opcodes(object):
 	def ld_a_bc(cpu, opcode, logger):
 		value = cpu.ram.readAddr(cpu.BC)
 		cpu.A = value
+
+		cpu.m_cycles = 2
+		cpu.t_states = 7
 		logger.info("LD A, (BC)")
 
 	@staticmethod
