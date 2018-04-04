@@ -596,6 +596,9 @@ class Opcodes(object):
 		addr = (high << 8) + low
 		cpu.SP += 2
 		cpu.PC = addr
+
+		cpu.m_cycles = 3
+		cpu.t_states = 10
 		logger.info("RET")
 
 	@staticmethod
