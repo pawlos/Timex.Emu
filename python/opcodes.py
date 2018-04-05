@@ -611,6 +611,8 @@ class Opcodes(object):
 		rst_jumps = {0:0x00, 1:0x08, 2:0x10, 3:0x18, 4:0x20, 5:0x28, 6:0x30, 7:0x38}
 
 		cpu.PC = rst_jumps[index]
+		cpu.m_cycles = 3
+		cpu.t_states = 11
 		logger.info("RST {:02X}".format(rst_jumps[index]))
 
 	@staticmethod
