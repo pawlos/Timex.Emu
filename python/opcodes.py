@@ -1171,6 +1171,9 @@ class Opcodes(object):
 	@staticmethod
 	def portIn(cpu, opcode, logger):
 		cpu.A = cpu.io.readFrom(cpu.C)
+
+		cpu.m_cycles = 3
+		cpu.t_states = 12
 		logger.info("IN A, (C)")
 
 	@staticmethod

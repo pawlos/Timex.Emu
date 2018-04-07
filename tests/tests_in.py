@@ -14,3 +14,13 @@ class tests_in(unittest.TestCase):
 		
 		cpu.readOp()
 		self.assertEqual(0xAA, cpu.io.readFrom(0x44))
+
+	def test_in_from_port_takes_3_m_cycles(self):
+		cpu = CPU(FakeRom('\xed\x78'))
+		cpu.readOp()
+		self.assertEqual(3, cpu.m_cycles)
+
+	def test_in_from_port_takes_12_t_states(self):
+		cpu = CPU(FakeRom('\xed\x78'))
+		cpu.readOp()
+		self.assertEqual(12, cpu.t_states)
