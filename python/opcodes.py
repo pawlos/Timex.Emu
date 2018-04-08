@@ -1213,7 +1213,11 @@ class Opcodes(object):
 			addr = (high << 8) + low
 			cpu.SP += 2
 			cpu.PC = addr
+			cpu.m_cycles = 2
+			cpu.t_states = 6
 
+		cpu.m_cycles = 1
+		cpu.t_states = 5
 		logger.info("RET {}".format(cond_name))
 
 	@staticmethod

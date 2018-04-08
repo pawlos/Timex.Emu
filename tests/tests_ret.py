@@ -159,3 +159,47 @@ class tests_ret(unittest.TestCase):
 		cpu.SP = 0x4000
 		cpu.readOp();
 		self.assertEqual(10, cpu.t_states)
+
+	def test_ret_cc_does_takes_3_m_cycles_if_cc_is_true(self):
+		ram = FakeRam([None]*0x8002)
+		ram.storeAddr(0x4000, 0xB5)
+		ram.storeAddr(0x4001, 0x18)
+		cpu = CPU(FakeRom('\x00'*0x3535+'\xf0'), ram)
+		cpu.PC = 0x3535
+		cpu.SP = 0x4000
+		cpu.SFlag = Bits.reset()
+		cpu.readOp();
+		self.assertEqual(3, cpu.m_cycles)
+
+	def test_ret_cc_does_takes_1_m_cycles_if_cc_is_false(self):
+		ram = FakeRam([None]*0x8002)
+		ram.storeAddr(0x4000, 0xB5)
+		ram.storeAddr(0x4001, 0x18)
+		cpu = CPU(FakeRom('\x00'*0x3535+'\xf0'), ram)
+		cpu.PC = 0x3535
+		cpu.SP = 0x4000
+		cpu.SFlag = Bits.set()
+		cpu.readOp();
+		self.assertEqual(1, cpu.m_cycles)
+
+	def test_ret_cc_does_takes_11_t_states_if_cc_is_true(self):
+		ram = FakeRam([None]*0x8002)
+		ram.storeAddr(0x4000, 0xB5)
+		ram.storeAddr(0x4001, 0x18)
+		cpu = CPU(FakeRom('\x00'*0x3535+'\xf0'), ram)
+		cpu.PC = 0x3535
+		cpu.SP = 0x4000
+		cpu.SFlag = Bits.reset()
+		cpu.readOp();
+		self.assertEqual(11, cpu.t_states)
+
+	def test_ret_cc_does_takes_5_t_states_if_cc_is_false(self):
+		ram = FakeRam([None]*0x8002)
+		ram.storeAddr(0x4000, 0xB5)
+		ram.storeAddr(0x4001, 0x18)
+		cpu = CPU(FakeRom('\x00'*0x3535+'\xf0'), ram)
+		cpu.PC = 0x3535
+		cpu.SP = 0x4000
+		cpu.SFlag = Bits.set()
+		cpu.readOp();
+		self.assertEqual(5, cpu.t_states)
