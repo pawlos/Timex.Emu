@@ -1227,6 +1227,9 @@ class Opcodes(object):
 		last_bit = Bits.getNthBit(old_val, 0)
 		cpu.CFlag = Bits.set() if last_bit == 1 else Bits.reset()
 		cpu.regs[reg_idx] = (old_val >> 1)
+
+		cpu.m_cycles = 2
+		cpu.t_states = 8
 		logger.info("SRL {}".format(IndexToReg.translate8bit(reg_idx)))
 
 	@staticmethod
