@@ -822,6 +822,8 @@ class Opcodes(object):
 		cpu.HFlag = Bits.reset()
 		cpu.NFlag = Bits.reset()
 		cpu.PVFlag = Bits.paritySet(cpu.A)
+		cpu.m_cycles = 5
+		cpu.t_states = 18
 		logger.info("RRD")
 
 	@staticmethod
