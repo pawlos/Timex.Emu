@@ -1084,6 +1084,8 @@ class Opcodes(object):
 								   Bits.twos_comp(cpu.HL, bits=16))
 		cpu.NFlag = Bits.reset()
 		cpu.CFlag = Bits.set() if Bits.getNthBit(old, 15) == 1 and Bits.getNthBit(cpu.HL, 15) == 0 else Bits.reset()
+		cpu.m_cycles = 4
+		cpu.t_states = 15
 		logger.info("ADC HL, {}".format(IndexToReg.translate16bit(r)))
 
 	@staticmethod

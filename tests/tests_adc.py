@@ -170,3 +170,19 @@ class tests_adc(unittest.TestCase):
 		cpu.CFlag = Bits.set()
 		cpu.readOp()
 		self.assertFalse(cpu.ZFlag)
+
+	def test_add_HL_BC_with_C_flag_unset_takes_4_m_cycles(self):
+		cpu = CPU(FakeRom('\xed\x4a'))
+		cpu.HL = 0xCDCD
+		cpu.BC = 0x1111
+		cpu.CFlag = Bits.reset()
+		cpu.readOp()
+		self.assertEqual(4,cpu.m_cycles)
+
+	def test_add_HL_BC_with_C_flag_unset_takes_15_t_states(self):
+		cpu = CPU(FakeRom('\xed\x4a'))
+		cpu.HL = 0xCDCD
+		cpu.BC = 0x1111
+		cpu.CFlag = Bits.reset()
+		cpu.readOp()
+		self.assertEqual(15,cpu.t_states)
