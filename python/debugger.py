@@ -62,6 +62,7 @@ class Debugger(object):
 		print "log - attach/detach logger"
 		print "s - single step"
 		print "c - continue"
+		print "t - print timing info (m-cycles, t-states)"
 		print "? - this help"
 
 	def state(self, flag, flag_bit, flag_name):
@@ -111,6 +112,8 @@ class Debugger(object):
 				break
 			elif "c" == input:
 				break
+			elif "t" == input:
+				print "m-cycles: {}, t-states: {}".format(cpu.m_cycles, cpu.t_states)
 			elif "log" == input:
 				self.attachDetachLogger(cpu)
 			elif "?" == input:
