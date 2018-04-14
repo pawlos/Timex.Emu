@@ -191,7 +191,6 @@ class Opcodes(object):
 
 		cpu.HL = cpu.HL - value - (1 if cpu.CFlag else 0)
 
-		logger.info("SBC HL, {}".format(IndexToReg.translate16bit(regInd)))
 		cpu.SFlag = Bits.signFlag(cpu.HL, bits=16)
 		cpu.ZFlag = Bits.isZero(cpu.HL)
 		cpu.HFlag = Bits.halfCarrySub16(oldHL, cpu.HL)
@@ -199,6 +198,10 @@ class Opcodes(object):
 									   Bits.twos_comp(cpu.HL, bits=16))
 		cpu.NFlag = Bits.set()
 		cpu.CFlag = Bits.borrow(cpu.HL, bits=16)
+
+		cpu.m_cycles = 4
+		cpu.t_states = 15
+		logger.info("SBC HL, {}".format(IndexToReg.translate16bit(regInd)))
 
 	@staticmethod
 	def add16(cpu, opcode, logger):

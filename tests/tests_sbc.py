@@ -142,3 +142,17 @@ class tests_sbc(unittest.TestCase):
 		cpu.DE = 0xffff
 		cpu.readOp()
 		self.assertEquals(0x4000, cpu.HL)
+
+	def test_sbc_hl_de_takes_4_m_cycles(self):
+		cpu = CPU(FakeRom('\xed\x52'))
+		cpu.HL = 0x3fff
+		cpu.DE = 0xffff
+		cpu.readOp()
+		self.assertEquals(4, cpu.m_cycles)
+
+	def test_sbc_hl_de_takes_15_t_states(self):
+		cpu = CPU(FakeRom('\xed\x52'))
+		cpu.HL = 0x3fff
+		cpu.DE = 0xffff
+		cpu.readOp()
+		self.assertEquals(15, cpu.t_states)
