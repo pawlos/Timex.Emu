@@ -57,3 +57,19 @@ class tests_add_ix(unittest.TestCase):
 		cpu.HFlag = False
 		cpu.readOp()
 		self.assertTrue(cpu.HFlag)
+
+	def test_add_ix_rr_takes_4_m_cycles(self):
+		cpu = CPU(FakeRom('\xdd\x39'))
+		cpu.IX = 0xFFF
+		cpu.SP = 0x0001
+		cpu.HFlag = False
+		cpu.readOp()
+		self.assertEqual(4, cpu.m_cycles)
+
+	def test_add_ix_rr_takes_15_t_states(self):
+		cpu = CPU(FakeRom('\xdd\x39'))
+		cpu.IX = 0xFFF
+		cpu.SP = 0x0001
+		cpu.HFlag = False
+		cpu.readOp()
+		self.assertEqual(15, cpu.t_states)

@@ -1114,6 +1114,9 @@ class Opcodes(object):
 		cpu.NFlag = Bits.reset()
 		cpu.HFlag = Bits.carryFlagAdd16(old, cpu.IX)
 		cpu.CFlag = Bits.overflow(Bits.twos_comp(cpu.IX, bits=16), Bits.twos_comp(old, bits=16))
+		
+		cpu.m_cycles = 4
+		cpu.t_states = 15
 		logger.info("ADD IX, {}".format(reg))
 
 	@staticmethod
