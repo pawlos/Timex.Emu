@@ -66,3 +66,17 @@ class tests_add_iy(unittest.TestCase):
 		cpu.A = 0x11
 		cpu.readOp()
 		self.assertEqual(0x22, cpu.A)
+
+	def test_add_iy_bc_takes_4_m_cycles(self):
+		cpu = CPU(FakeRom('\xfd\x09'))
+		cpu.IY = 0x1001
+		cpu.BC = 0x0bb0
+		cpu.readOp()
+		self.assertEqual(4, cpu.m_cycles)
+
+	def test_add_iy_bc_takes_15_t_states(self):
+		cpu = CPU(FakeRom('\xfd\x09'))
+		cpu.IY = 0x1001
+		cpu.BC = 0x0bb0
+		cpu.readOp()
+		self.assertEqual(15, cpu.t_states)
