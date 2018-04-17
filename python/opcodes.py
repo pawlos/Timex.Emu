@@ -1057,6 +1057,8 @@ class Opcodes(object):
 		cpu.CFlag = Bits.set()
 		cpu.NFlag = Bits.reset()
 		cpu.HFlag = Bits.reset();
+		cpu.m_cycles = 1
+		cpu.t_states = 4
 		logger.info("SCF")
 
 	@staticmethod
