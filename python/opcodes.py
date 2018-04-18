@@ -1050,6 +1050,8 @@ class Opcodes(object):
 	@staticmethod
 	def ccf(cpu, opcode, logger):
 		cpu.CFlag = cpu.CFlag == False
+		cpu.m_cycles = 1
+		cpu.t_states = 4
 		logger.info("CCF")
 
 	@staticmethod
