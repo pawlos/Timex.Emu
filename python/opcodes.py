@@ -1153,6 +1153,8 @@ class Opcodes(object):
 	@staticmethod
 	def jp_hl(cpu, opcode, logger):
 		cpu.PC = cpu.HL
+		cpu.m_cycles = 1
+		cpu.t_states = 4
 		logger.info("JP HL")
 
 	@staticmethod
