@@ -1160,6 +1160,8 @@ class Opcodes(object):
 	@staticmethod
 	def jp_ix(cpu, opcode, logger):
 		cpu.PC = cpu.IX
+		cpu.m_cycles = 2
+		cpu.t_states = 8
 		logger.info("JP IX")
 
 	@staticmethod

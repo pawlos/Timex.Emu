@@ -69,3 +69,15 @@ class tests_jp(unittest.TestCase):
 		cpu.HL = 0x4800
 		cpu.readOp()
 		self.assertEqual(4, cpu.t_states)
+
+	def test_jp_ix_does_take_2_m_cycles(self):
+		cpu = CPU(FakeRom('\xdd\xe9'))
+		cpu.IX = 0x4600
+		cpu.readOp()
+		self.assertEqual(2, cpu.m_cycles)
+
+	def test_jp_ix_does_take_8_t_states(self):
+		cpu = CPU(FakeRom('\xdd\xe9'))
+		cpu.IX = 0x4600
+		cpu.readOp()
+		self.assertEqual(8, cpu.t_states)
