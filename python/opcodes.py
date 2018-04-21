@@ -1167,6 +1167,8 @@ class Opcodes(object):
 	@staticmethod
 	def jp_iy(cpu, opcode, logger):
 		cpu.PC = cpu.IY
+		cpu.m_cycles = 2
+		cpu.t_states = 8
 		logger.info("JP IY")
 
 	@staticmethod
