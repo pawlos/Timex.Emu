@@ -791,6 +791,8 @@ class Opcodes(object):
 		cpu.CFlag = Bits.set() if cflag == 1 else Bits.reset()
 		cpu.HFlag = Bits.reset()
 		cpu.NFlag = Bits.reset()
+		cpu.m_cycles = 1
+		cpu.t_states = 4
 		logger.info("RRA")
 
 	@staticmethod
