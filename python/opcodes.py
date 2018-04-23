@@ -782,6 +782,8 @@ class Opcodes(object):
 		cflag = (cpu.A >> 7) & 1
 		cpu.A = Bits.setNthBit((cpu.A << 1), 0, cpu.CFlag)
 		cpu.CFlag = Bits.set() if cflag == 1 else Bits.reset()
+		cpu.m_cycles = 1
+		cpu.t_states = 4
 		logger.info("LRA")
 
 	@staticmethod
