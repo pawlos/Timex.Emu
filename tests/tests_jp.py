@@ -4,6 +4,7 @@ from cpu import CPU
 from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
+from utility import Bits
 
 class tests_jp(unittest.TestCase):
 
@@ -93,3 +94,35 @@ class tests_jp(unittest.TestCase):
 		cpu.IY = 0x4622
 		cpu.readOp()
 		self.assertEqual(8, cpu.t_states)
+
+	def test_jp_nz_jumps_takes_3_m_cycles_if_jump_is_taken(self):
+		rom = '\x00' * 0x0480+'\x20\xFA'
+		cpu = CPU(FakeRom(rom))
+		cpu.PC = 0x0480
+		cpu.ZFlag = Bits.reset()
+		cpu.readOp()
+		self.assertEqual(3, cpu.m_cycles)
+
+	def test_jp_nz_jumps_takes_12_t_states_if_jump_is_taken(self):
+		rom = '\x00' * 0x0480+'\x20\xFA'
+		cpu = CPU(FakeRom(rom))
+		cpu.PC = 0x0480
+		cpu.ZFlag = Bits.reset()
+		cpu.readOp()
+		self.assertEqual(12, cpu.t_states)
+
+	def test_jp_nz_jumps_takes_2_m_cycles_if_jump_is_not_taken(self):
+		rom = '\x00' * 0x0480+'\x20\xFA'
+		cpu = CPU(FakeRom(rom))
+		cpu.PC = 0x0480
+		cpu.ZFlag = Bits.set()
+		cpu.readOp()
+		self.assertEqual(2, cpu.m_cycles)
+
+	def test_jp_nz_jumps_takes_7_t_states_if_jump_is_taken(self):
+		rom = '\x00' * 0x0480+'\x20\xFA'
+		cpu = CPU(FakeRom(rom))
+		cpu.PC = 0x0480
+		cpu.ZFlag = Bits.set()
+		cpu.readOp()
+		self.assertEqual(7, cpu.t_states)
