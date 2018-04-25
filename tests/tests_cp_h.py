@@ -74,3 +74,17 @@ class tests_cp_h(unittest.TestCase):
 		cpu.H = 3
 		cpu.readOp()
 		self.assertTrue(cpu.CFlag)
+
+	def test_cp_r_takes_1_m_cycles(self):
+		cpu = CPU(FakeRom('\xbc'))
+		cpu.A = 3
+		cpu.H = 3
+		cpu.readOp()
+		self.assertEquals(1, cpu.m_cycles)
+
+	def test_cp_r_takes_4_t_tates(self):
+		cpu = CPU(FakeRom('\xbc'))
+		cpu.A = 3
+		cpu.H = 3
+		cpu.readOp()
+		self.assertEquals(4, cpu.t_states)

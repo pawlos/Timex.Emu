@@ -138,6 +138,8 @@ class Opcodes(object):
 		cpu.HFlag = Bits.halfCarrySub(cpu.A, value)
 		cpu.SFlag = Bits.signFlag(value)
 		cpu.PVFlag = Bits.overflow(cpu.A, value)
+		cpu.m_cycles = 1
+		cpu.t_states = 4
 		logger.info("CP {}".format(IndexToReg.translate8bit(regInd)))
 
 	@staticmethod
