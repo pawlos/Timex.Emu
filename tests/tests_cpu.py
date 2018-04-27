@@ -30,12 +30,6 @@ class tests_cpu(unittest.TestCase):
 		cpu.L = 0x01
 		self.assertEqual(0x6601, cpu.HL)
 
-	def test_JP_XX_sets_PC_correctly(self):
-		cpu = CPU(FakeRom('\xc3\xcb\x11'))
-		cpu.PC = 0
-		cpu.readOp()
-		self.assertEqual(0x11cb, cpu.PC)
-
 	def test_ld_A_07_works_correctly(self):
 		cpu = CPU(FakeRom('\x3e\x07'))
 		cpu.readOp()

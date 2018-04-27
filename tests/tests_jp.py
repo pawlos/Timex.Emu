@@ -126,3 +126,21 @@ class tests_jp(unittest.TestCase):
 		cpu.ZFlag = Bits.set()
 		cpu.readOp()
 		self.assertEqual(7, cpu.t_states)
+
+	def test_JP_XX_sets_PC_correctly(self):
+		cpu = CPU(FakeRom('\xc3\xcb\x11'))
+		cpu.PC = 0
+		cpu.readOp()
+		self.assertEqual(0x11cb, cpu.PC)
+
+	def test_JP_XX_takes_3_m_cycles(self):
+		cpu = CPU(FakeRom('\xc3\xcb\x11'))
+		cpu.PC = 0
+		cpu.readOp()
+		self.assertEqual(3, cpu.m_cycles)
+
+	def test_JP_XX_takes_10_t_states(self):
+		cpu = CPU(FakeRom('\xc3\xcb\x11'))
+		cpu.PC = 0
+		cpu.readOp()
+		self.assertEqual(10, cpu.t_states)

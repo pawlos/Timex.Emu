@@ -85,7 +85,8 @@ class Opcodes(object):
 		hiValue = cpu.ram.readAddr(cpu.PC)
 		value = (hiValue << 8) + loValue
 		cpu.PC = value
-
+		cpu.m_cycles = 3
+		cpu.t_states = 10
 		logger.info("JP {0:04X}".format(value))
 
 	@staticmethod
