@@ -92,8 +92,10 @@ class Opcodes(object):
 	@staticmethod
 	def out(cpu, opcode, logger):
 		value = cpu.ram.readAddr(cpu.PC)
-		logger.info("OUT ({:02X}), A".format(value))
 		cpu.io.writeTo(value, cpu.A)
+		cpu.m_cycles = 3
+		cpu.t_states = 11
+		logger.info("OUT ({:02X}), A".format(value))
 
 	@staticmethod
 	def ldExt(cpu, opcode, logger):
