@@ -100,6 +100,8 @@ class Opcodes(object):
 	@staticmethod
 	def ldExt(cpu, opcode, logger):
 		cpu.I = cpu.A
+		cpu.m_cycles = 3
+		cpu.t_states = 9
 		logger.info("LD I, A")
 
 	@staticmethod

@@ -35,12 +35,6 @@ class tests_cpu(unittest.TestCase):
 		cpu.readOp()
 		self.assertEqual(0x07, cpu.A)
 
-	def test_double_byte_opcode_results_in_correct_assigment(self):
-		cpu = CPU(FakeRom('\xed\x47'))
-		cpu.A = 0x33
-		cpu.readOp()
-		self.assertEqual(0x33, cpu.I)
-
 	def test_registers_are_accessible_by_index_and_name(self):
 		cpu = CPU(FakeRom(''))
 		cpu.regs[0] = 0x11
