@@ -52,13 +52,6 @@ class tests_cpu(unittest.TestCase):
 		cpu.readOp()
 		self.assertEqual(0xbb, cpu.L)
 
-	def test_0x36nn_opcodes_does_set_value_in_address_pointed_by_HL(self):
-		ram = FakeRam([None]*0x2223)
-		cpu = CPU(FakeRom('\x36\x22'), ram)	
-		cpu.HL = 0x2222
-		cpu.readOp()
-		self.assertEqual(0x22, ram.readAddr(0x2222))
-
 	def test_0x0B_opcode_does_decrement_BC(self):
 		cpu = CPU(FakeRom('\x0B'))
 		cpu.BC = 0x1101

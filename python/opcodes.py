@@ -114,6 +114,8 @@ class Opcodes(object):
 	def ld_addr(cpu, opcode, logger):
 		value = cpu.ram.readAddr(cpu.PC)
 		cpu.ram.storeAddr(cpu.HL, value)
+		cpu.m_cycles = 3
+		cpu.t_states = 10
 		logger.info("LD (HL), {:02X}".format(value))
 
 	@staticmethod
