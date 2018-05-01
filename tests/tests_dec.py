@@ -119,3 +119,39 @@ class tests_dec(unittest.TestCase):
 		cpu = CPU(FakeRom('\x05'))
 		cpu.readOp()
 		self.assertEqual(4, cpu.t_states)
+
+	def test_dec_bc_opcode_does_decrement_BC(self):
+		cpu = CPU(FakeRom('\x0B'))
+		cpu.BC = 0x1101
+		cpu.readOp();
+		self.assertEqual(0x1100, cpu.BC)
+
+	def test_dec_de_opcode_does_decrement_DE(self):
+		cpu = CPU(FakeRom('\x1B'))
+		cpu.DE = 0x1101
+		cpu.readOp();
+		self.assertEqual(0x1100, cpu.DE)
+
+	def test_dec_hl_opcode_does_decrement_HL(self):
+		cpu = CPU(FakeRom('\x2B'))
+		cpu.HL = 0x1101
+		cpu.readOp();
+		self.assertEqual(0x1100, cpu.HL)
+
+	def test_dec_sp_opcode_does_decrement_SP(self):
+		cpu = CPU(FakeRom('\x3b'))
+		cpu.SP = 0x1101
+		cpu.readOp();
+		self.assertEqual(0x1100, cpu.SP)
+
+	def test_dec_bc_takes_1_m_cycles(self):
+		cpu = CPU(FakeRom('\x0B'))
+		cpu.BC = 0x1101
+		cpu.readOp();
+		self.assertEqual(1, cpu.m_cycles)
+
+	def test_dec_bc_takes_6_t_states(self):
+		cpu = CPU(FakeRom('\x0B'))
+		cpu.BC = 0x1101
+		cpu.readOp();
+		self.assertEqual(6, cpu.t_states)

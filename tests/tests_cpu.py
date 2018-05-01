@@ -52,29 +52,6 @@ class tests_cpu(unittest.TestCase):
 		cpu.readOp()
 		self.assertEqual(0xbb, cpu.L)
 
-	def test_0x0B_opcode_does_decrement_BC(self):
-		cpu = CPU(FakeRom('\x0B'))
-		cpu.BC = 0x1101
-		cpu.readOp();
-		self.assertEqual(0x1100, cpu.BC)
-
-	def test_0x1B_opcode_does_decrement_DE(self):
-		cpu = CPU(FakeRom('\x1B'))
-		cpu.DE = 0x1101
-		cpu.readOp();
-		self.assertEqual(0x1100, cpu.DE)
-
-	def test_0x2B_opcode_does_decrement_HL(self):
-		cpu = CPU(FakeRom('\x2B'))
-		cpu.HL = 0x1101
-		cpu.readOp();
-		self.assertEqual(0x1100, cpu.HL)
-
-	def test_0x3b_opcode_does_decrement_SP(self):
-		cpu = CPU(FakeRom('\x3b'))
-		cpu.SP = 0x1101
-		cpu.readOp();
-		self.assertEqual(0x1100, cpu.SP)
 
 	def test_16bit_registers_are_accessed_by_8bit_parts(self):
 		cpu = CPU(FakeRom(''))

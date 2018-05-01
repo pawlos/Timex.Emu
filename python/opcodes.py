@@ -131,6 +131,8 @@ class Opcodes(object):
 		elif regInd == 3:
 			cpu.SP = cpu.SP - 1
 
+		cpu.m_cycles = 1
+		cpu.t_states = 6
 		logger.info("DEC {}".format(IndexToReg.translate16bit(regInd)))
 
 	@staticmethod
