@@ -185,7 +185,6 @@ class Opcodes(object):
 
 	@staticmethod
 	def _and(cpu, opcode, logger):
-		logger.info("AND A")
 		regInd = opcode & 7
 		cpu.A = cpu.A & cpu.regs[regInd]
 		cpu.HFlag = Bits.set()
@@ -194,6 +193,10 @@ class Opcodes(object):
 		cpu.ZFlag = Bits.isZero(cpu.A)
 		cpu.SFlag = Bits.signInTwosComp(cpu.A)
 		cpu.PVFlag = Bits.paritySet(cpu.A)
+
+		cpu.m_cycles = 1
+		cpu.t_states = 4
+		logger.info("AND A")
 
 	@staticmethod
 	def sbc(cpu, opcode, logger):

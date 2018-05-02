@@ -26,3 +26,15 @@ class tests_and_a(unittest.TestCase):
 		cpu.readOp()
 		self.assertFalse(cpu.CFlag)
 		self.assertFalse(cpu.NFlag)
+
+	def test_and_a_takes_1_m_cycles(self):
+		cpu = CPU(FakeRom('\xa7'))
+		cpu.A = 0x12
+		cpu.readOp()
+		self.assertEqual(1, cpu.m_cycles)
+
+	def test_and_a_takes_4_t_states(self):
+		cpu = CPU(FakeRom('\xa7'))
+		cpu.A = 0x12
+		cpu.readOp()
+		self.assertEqual(4, cpu.t_states)
