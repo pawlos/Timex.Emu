@@ -277,6 +277,11 @@ class Opcodes(object):
 
 		if not no_jump:
 			cpu.PC = jumpTo
+			cpu.m_cycles = 1
+			cpu.t_states = 5
+
+		cpu.m_cycles = 2
+		cpu.t_states = 7
 		logger.info("JR Z, {:04X}".format(jumpTo))
 
 	@staticmethod
