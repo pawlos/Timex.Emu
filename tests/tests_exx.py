@@ -36,3 +36,13 @@ class tests_exx(unittest.TestCase):
 		self.assertTrue(cpu.PVFlag)
 		self.assertTrue(cpu.HFlag)
 		self.assertTrue(cpu.NFlag)
+
+	def test_exx_takes_1_m_cycle(self):
+		cpu = CPU(FakeRom('\xd9'))
+		cpu.readOp()
+		self.assertEqual(1, cpu.m_cycles)
+
+	def test_exx_takes_4_t_states(self):
+		cpu = CPU(FakeRom('\xd9'))
+		cpu.readOp()
+		self.assertEqual(4, cpu.t_states)

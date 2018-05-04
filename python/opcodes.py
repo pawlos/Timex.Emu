@@ -300,6 +300,9 @@ class Opcodes(object):
 		cpu.DEPrim = tempDE
 		cpu.HLPrim = tempHL
 
+		cpu.m_cycles = 1
+		cpu.t_states = 4
+
 	@staticmethod
 	def ldNnRr(cpu, opcode, logger):
 		value = 0
