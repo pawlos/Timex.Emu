@@ -46,3 +46,15 @@ class tests_ld_nn_rr(unittest.TestCase):
 		cpu.readOp()
 		self.assertEqual(cpu.ram.readAddr(0x1001), 0xab)
 		self.assertEqual(cpu.ram.readAddr(0x1000), 0xba)
+
+	def test_ed53nn_takes_6_m_cycles(self):
+		cpu = CPU(FakeRom('\xed\x53\x10\x00'))
+		cpu.DE = 0xabba
+		cpu.readOp()
+		self.assertEqual(6, cpu.m_cycles)
+
+	def test_ed53nn_takes_20_t_states(self):
+		cpu = CPU(FakeRom('\xed\x53\x10\x00'))
+		cpu.DE = 0xabba
+		cpu.readOp()
+		self.assertEqual(20, cpu.t_states)

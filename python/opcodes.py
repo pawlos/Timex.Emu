@@ -322,6 +322,8 @@ class Opcodes(object):
 
 		cpu.ram.storeAddr(nn + 1, value >> 8)
 		cpu.ram.storeAddr(nn, value & 0xFF)
+		cpu.m_cycles = 6
+		cpu.t_states = 20
 		logger.info("LD ({:04X}), {}".format(nn, IndexToReg.translate16bit(regInd)))
 
 	@staticmethod
