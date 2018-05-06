@@ -330,11 +330,13 @@ class Opcodes(object):
 	def ldNnHl(cpu, opcode, logger):
 		high = cpu.ram.readAddr(cpu.PC)
 		low = cpu.ram.readAddr(cpu.PC)
-
 		nn = (high << 8) + low
-		logger.info("LD ({:04X}), HL".format(nn))
 		cpu.ram.storeAddr(nn+1, cpu.H)
 		cpu.ram.storeAddr(nn, cpu.L)
+
+		cpu.m_cycles = 5
+		cpu.t_states = 16
+		logger.info("LD ({:04X}), HL".format(nn))
 
 	@staticmethod
 	def inc8(cpu, opcode, logger):
