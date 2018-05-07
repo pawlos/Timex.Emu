@@ -12,3 +12,13 @@ class tests_ex(unittest.TestCase):
 		cpu.readOp()
 		self.assertEqual(0xc0de, cpu.HL)
 		self.assertEqual(0xabba, cpu.DE)
+
+	def test_ex_de_hl_takes_1_m_cycle(self):
+		cpu = CPU(FakeRom('\xeb'))
+		cpu.readOp()
+		self.assertEqual(1, cpu.m_cycles)
+
+	def test_ex_de_hl_takes_4_t_states(self):
+		cpu = CPU(FakeRom('\xeb'))
+		cpu.readOp()
+		self.assertEqual(4, cpu.t_states)

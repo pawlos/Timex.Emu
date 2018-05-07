@@ -356,10 +356,13 @@ class Opcodes(object):
 
 	@staticmethod
 	def ex_de_hl(cpu, opcode, logger):
-		logger.info("EX DE, HL")
 		oldValue = cpu.DE
 		cpu.DE = cpu.HL
 		cpu.HL = oldValue
+
+		cpu.m_cycles = 1
+		cpu.t_states = 4
+		logger.info("EX DE, HL")
 
 	@staticmethod
 	def lddr(cpu, opcode, logger):
