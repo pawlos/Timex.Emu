@@ -52,3 +52,35 @@ class tests_lddr(unittest.TestCase):
 		self.assertFalse(cpu.PVFlag)
 		self.assertFalse(cpu.SFlag)
 		self.assertTrue(cpu.ZFlag)
+
+	def test_lddr_when_bc_not_zero_takes_5_m_cycles(self):
+		cpu = CPU(FakeRom('\xed\xb8'))
+		cpu.HL = 0x1114
+		cpu.DE = 0x2225
+		cpu.BC = 0x03
+		cpu.readOp()
+		self.assertEqual(5, cpu.m_cycles)
+
+	def test_lddr_when_bc_is_zero_takes_4_m_cycles(self):
+		cpu = CPU(FakeRom('\xed\xb8'))
+		cpu.HL = 0x1114
+		cpu.DE = 0x2225
+		cpu.BC = 0x0
+		cpu.readOp()
+		self.assertEqual(4, cpu.m_cycles)
+
+	def test_lddr_when_bc_not_zero_takes_21_t_states(self):
+		cpu = CPU(FakeRom('\xed\xb8'))
+		cpu.HL = 0x1114
+		cpu.DE = 0x2225
+		cpu.BC = 0x03
+		cpu.readOp()
+		self.assertEqual(21, cpu.t_states)
+
+	def test_lddr_when_bc_is_zero_takes_16_t_states(self):
+		cpu = CPU(FakeRom('\xed\xb8'))
+		cpu.HL = 0x1114
+		cpu.DE = 0x2225
+		cpu.BC = 0x0
+		cpu.readOp()
+		self.assertEqual(16, cpu.t_states)		

@@ -366,17 +366,22 @@ class Opcodes(object):
 
 	@staticmethod
 	def lddr(cpu, opcode, logger):
-		logger.info("LDDR")
+		isZero = cpu.BC == 0
 		while True:
 			cpu.ram.storeAddr(cpu.DE, cpu.ram.readAddr(cpu.HL))
 			cpu.HL = cpu.HL - 1
 			cpu.DE = cpu.DE - 1
 			cpu.BC = cpu.BC - 1
-			cpu.NFlag = Bits.reset()
-			cpu.HFlag = Bits.reset()
-			cpu.PVFlag = Bits.reset()
 			if cpu.BC == 0:
+				cpu.NFlag = Bits.reset()
+				cpu.HFlag = Bits.reset()
+				cpu.PVFlag = Bits.reset()
 				break
+
+		cpu.m_cycles = 4 if isZero else 5
+		cpu.t_states = 16 if isZero else 21
+
+		logger.info("LDDR")
 
 	@staticmethod
 	def ldHl_addr(cpu, opcode, logger):
