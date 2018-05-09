@@ -286,7 +286,6 @@ class Opcodes(object):
 
 	@staticmethod
 	def exx(cpu, opcode, logger):
-		logger.info("EXX")
 		
 		tempBC = cpu.BC
 		tempDE = cpu.DE
@@ -302,6 +301,7 @@ class Opcodes(object):
 
 		cpu.m_cycles = 1
 		cpu.t_states = 4
+		logger.info("EXX")
 
 	@staticmethod
 	def ldNnRr(cpu, opcode, logger):
@@ -394,8 +394,8 @@ class Opcodes(object):
 
 	@staticmethod
 	def ld_sp_hl(cpu, opcode, logger):
-		logger.info("LD SP, HL")
 		cpu.SP = cpu.HL
+		logger.info("LD SP, HL")
 
 	@staticmethod
 	def im1(cpu, opcode, logger):
@@ -408,12 +408,11 @@ class Opcodes(object):
 		low = cpu.ram.readAddr(cpu.PC)
 		high = cpu.ram.readAddr(cpu.PC)
 		imm = (high << 8) + low
-		logger.info("LD IY, {:04X}".format(imm))
 		cpu.IY = imm
+		logger.info("LD IY, {:04X}".format(imm))
 
 	@staticmethod
 	def ldir(cpu, opcode, logger):
-		logger.info("LDIR")
 		''' (DE) <- (HL), DE = DE + 1, HL = HL + 1, BC F = BC - 1'''
 		while True:
 			hl_mem = cpu.ram.readAddr(cpu.HL)
@@ -426,6 +425,7 @@ class Opcodes(object):
 		cpu.NFlag = Bits.reset()
 		cpu.HFlag = Bits.reset()
 		cpu.PVFlag = Bits.reset()
+		logger.info("LDIR")
 
 	@staticmethod
 	def ldnn_a(cpu, opcode, logger):
@@ -433,14 +433,13 @@ class Opcodes(object):
 		high = cpu.ram.readAddr(cpu.PC)
 		low = cpu.ram.readAddr(cpu.PC)
 		addr = (high << 8) + low
-		logger.info("LD ({:04X}), A".format(addr))
 		cpu.ram.storeAddr(addr, cpu.A)
+		logger.info("LD ({:04X}), A".format(addr))
 
 	@staticmethod
 	def dec_mem_at_iy(cpu, opcode, logger):
 		''' DEC (IY+d) '''
 		displacement = cpu.ram.readAddr(cpu.PC)
-		logger.info("DEC (IY+{:2X})".format(displacement))
 		addr = cpu.IY + displacement
 		value = cpu.ram.readAddr(addr)
 		new_value = value - 1
@@ -451,23 +450,24 @@ class Opcodes(object):
 		cpu.ZFlag = Bits.isZero(new_value)
 		cpu.PVFlag = True if value == 0x80 else False
 		cpu.HFlag = Bits.halfCarrySub(value, new_value)
+		logger.info("DEC (IY+{:2X})".format(displacement))
 
 	@staticmethod
 	def bit_set(cpu, opcode, logger):
 		index = (opcode >> 8) & 255
-		logger.info("SET 1,(IY+{:02X})".format(index))
 		val = cpu.ram.readAddr(cpu.IY+index)
 		val |= (1 << 1)
 		cpu.ram.storeAddr(cpu.IY+index, val)
+		logger.info("SET 1,(IY+{:02X})".format(index))
 
 	@staticmethod
 	def bit_res(cpu, opcode, logger):
 		index = (opcode >> 8) & 255
 		bit = (opcode >> 3) & 7
-		logger.info("RES {}, (IY+{:02X})".format(bit, index))
 		val = cpu.ram.readAddr(cpu.IY+index)
 		val = Bits.setNthBit(val, bit, 0)
 		cpu.ram.storeAddr(cpu.IY+index, val)
+		logger.info("RES {}, (IY+{:02X})".format(bit, index))
 
 	@staticmethod
 	def bit_bit(cpu, opcode, logger):
@@ -699,7 +699,6 @@ class Opcodes(object):
 		index = (opcode & 7)
 		old = cpu.A
 		cpu.A = old + cpu.regs[index]
-		logger.info("ADD A, {}".format(IndexToReg.translate8bit(index)))
 
 		cpu.SFlag = Bits.isNegative(cpu.A)
 		cpu.ZFlag = Bits.isZero(cpu.A)
@@ -707,6 +706,8 @@ class Opcodes(object):
 		cpu.PVFlag = Bits.overflow(old, cpu.A)
 		cpu.NFlag = Bits.reset()
 		cpu.CFlag = Bits.carryFlag(cpu.A)
+
+		logger.info("ADD A, {}".format(IndexToReg.translate8bit(index)))
 
 	@staticmethod
 	def add_r_n(cpu, opcode, logger):
