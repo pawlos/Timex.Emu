@@ -782,6 +782,8 @@ class Opcodes(object):
 		else:
 			cpu.SP = value 
 
+		cpu.m_cycles = 6
+		cpu.t_states = 20
 		logger.info("LD {},({:0X})".format(IndexToReg.translate16bit(reg), addr))
 
 	@staticmethod
