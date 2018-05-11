@@ -414,6 +414,7 @@ class Opcodes(object):
 	@staticmethod
 	def ldir(cpu, opcode, logger):
 		''' (DE) <- (HL), DE = DE + 1, HL = HL + 1, BC F = BC - 1'''
+		wasZero = cpu.BC == 0
 		while True:
 			hl_mem = cpu.ram.readAddr(cpu.HL)
 			cpu.ram.storeAddr(cpu.DE, hl_mem)
@@ -425,6 +426,9 @@ class Opcodes(object):
 		cpu.NFlag = Bits.reset()
 		cpu.HFlag = Bits.reset()
 		cpu.PVFlag = Bits.reset()
+
+		cpu.m_cycles = 4 if wasZero else 5
+		cpu.t_states = 16 if wasZero else 21
 		logger.info("LDIR")
 
 	@staticmethod
