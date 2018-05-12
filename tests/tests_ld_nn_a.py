@@ -24,3 +24,15 @@ class tests_ld_nn_a(unittest.TestCase):
 		self.assertTrue(cpu.ZFlag)
 		self.assertFalse(cpu.PVFlag)
 		self.assertTrue(cpu.SFlag)
+
+	def test_ld_nn_takes_4_m_cycles(self):
+		cpu = CPU(FakeRom('\x32\x31\x41'))
+		cpu.A = 0xD7
+		cpu.readOp()
+		self.assertEqual(4, cpu.m_cycles)
+
+	def test_ld_nn_takes_13_t_states(self):
+		cpu = CPU(FakeRom('\x32\x31\x41'))
+		cpu.A = 0xD7
+		cpu.readOp()
+		self.assertEqual(13, cpu.t_states)
