@@ -462,10 +462,14 @@ class Opcodes(object):
 	@staticmethod
 	def bit_set(cpu, opcode, logger):
 		index = (opcode >> 8) & 255
+		bit = (opcode >> 3) & 7
 		val = cpu.ram.readAddr(cpu.IY+index)
-		val |= (1 << 1)
+		val |= (1 << bit)
 		cpu.ram.storeAddr(cpu.IY+index, val)
-		logger.info("SET 1,(IY+{:02X})".format(index))
+
+		cpu.m_cycles = 6
+		cpu.t_states = 23
+		logger.info("SET {},(IY+{:02X})".format(bit, index))
 
 	@staticmethod
 	def bit_res(cpu, opcode, logger):
