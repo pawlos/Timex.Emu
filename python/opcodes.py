@@ -478,6 +478,9 @@ class Opcodes(object):
 		val = cpu.ram.readAddr(cpu.IY+index)
 		val = Bits.setNthBit(val, bit, 0)
 		cpu.ram.storeAddr(cpu.IY+index, val)
+
+		cpu.m_cycles = 6
+		cpu.t_states = 23
 		logger.info("RES {}, (IY+{:02X})".format(bit, index))
 
 	@staticmethod

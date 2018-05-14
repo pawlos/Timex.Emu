@@ -47,3 +47,19 @@ class tests_bit(unittest.TestCase):
 		cpu.IY = 0x2000
 		cpu.readOp()
 		self.assertEquals(23, cpu.t_states)
+
+	def test_bit_IY_plus_30_takes_6_m_cycles(self):
+		ram = FakeRam([None]*0x2032)
+		ram.storeAddr(0x2030, 0b00001111)
+		cpu = CPU(FakeRom('\xfd\xcb\x30\x8e'), ram)
+		cpu.IY = 0x2000
+		cpu.readOp()
+		self.assertEquals(6, cpu.m_cycles)
+
+	def test_bit_IY_plus_30_takes_23_t_states(self):
+		ram = FakeRam([None]*0x2032)
+		ram.storeAddr(0x2030, 0b00001111)
+		cpu = CPU(FakeRom('\xfd\xcb\x30\x8e'), ram)
+		cpu.IY = 0x2000
+		cpu.readOp()
+		self.assertEquals(23, cpu.t_states)
