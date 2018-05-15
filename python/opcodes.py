@@ -489,6 +489,9 @@ class Opcodes(object):
 		bit = (opcode >> 3) & 7
 		cpu.ZFlag = cpu.ram.readAddr(cpu.IY+index) & (1 << bit) != 0
 		cpu.HFlag = Bits.reset()
+
+		cpu.m_cycles = 5
+		cpu.t_states = 20
 		logger.info("BIT {:X}, (IY+{:02X})".format(bit, index))
 
 	@staticmethod
