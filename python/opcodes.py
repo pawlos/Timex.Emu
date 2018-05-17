@@ -518,6 +518,8 @@ class Opcodes(object):
 		regInd = opcode & 7
 		d = cpu.ram.readAddr(cpu.PC)
 		cpu.ram.storeAddr(cpu.IY + d, cpu.regs[regInd])
+		cpu.m_cycles = 5
+		cpu.t_states = 19
 		logger.info("LD (IY+{:02X}), {}".format(d, IndexToReg.translate8bit(regInd)))
 
 	@staticmethod
