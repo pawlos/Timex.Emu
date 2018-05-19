@@ -60,3 +60,17 @@ class tests_ld_hl_addr(unittest.TestCase):
 		cpu.HL = 0x2000
 		cpu.readOp()
 		self.assertEqual(0x00, ram.readAddr(0x2000))
+
+	def test_ld_hl_L_takes_2_m_cycles(self):
+		ram = FakeRam([None]*0x2001)
+		cpu = CPU(FakeRom('\x75'), ram)
+		cpu.HL = 0x2000
+		cpu.readOp()
+		self.assertEqual(2, cpu.m_cycles)
+
+	def test_ld_hl_L_takes_7_t_states(self):
+		ram = FakeRam([None]*0x2001)
+		cpu = CPU(FakeRom('\x75'), ram)
+		cpu.HL = 0x2000
+		cpu.readOp()
+		self.assertEqual(7, cpu.t_states)

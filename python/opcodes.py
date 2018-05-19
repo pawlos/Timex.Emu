@@ -526,6 +526,8 @@ class Opcodes(object):
 	def ldhlr(cpu, opcode, logger):
 		regInd = opcode & 7
 		cpu.ram.storeAddr(cpu.HL, cpu.regs[regInd])
+		cpu.m_cycles = 2
+		cpu.t_states = 7
 		logger.info("LD (HL), {}".format(IndexToReg.translate8bit(regInd)))
 
 	@staticmethod
