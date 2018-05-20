@@ -558,7 +558,8 @@ class Opcodes(object):
 		cpu.HFlag = Bits.halfCarrySub(cpu.A, value)
 
 		cpu.A = value
-
+		cpu.m_cycles = 4
+		cpu.t_states = 15
 		logger.info("ADD A, (IY+{:02X})".format(d))
 
 	@staticmethod
