@@ -25,3 +25,17 @@ class tests_sub(unittest.TestCase):
 		cpu.readOp();
 		self.assertEqual(0x50, cpu.A)
 
+	def test_sub_r_takes_1_m_cycles(self):
+		cpu = CPU(FakeRom('\x90'))
+		cpu.A = 0x52
+		cpu.B = 0x02
+		cpu.readOp();
+		self.assertEqual(1, cpu.m_cycles)
+
+	def test_sub_r_takes_4_t_states(self):
+		cpu = CPU(FakeRom('\x90'))
+		cpu.A = 0x52
+		cpu.B = 0x02
+		cpu.readOp();
+		self.assertEqual(4, cpu.t_states)
+

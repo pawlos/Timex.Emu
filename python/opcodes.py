@@ -613,6 +613,8 @@ class Opcodes(object):
 		cpu.PVFlag = Bits.overflow(old_A, cpu.A)
 		cpu.CFlag = Bits.carryFlag(cpu.A)
 
+		cpu.m_cycles = 1
+		cpu.t_states = 4
 		logger.info("SUB {}".format(IndexToReg.translate8bit(index)))
 
 	@staticmethod
