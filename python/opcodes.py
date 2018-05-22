@@ -643,6 +643,8 @@ class Opcodes(object):
 		cpu.NFlag = Bits.reset()
 		cpu.CFlag = Bits.reset()
 
+		cpu.m_cycles = 2
+		cpu.t_states = 7
 		logger.info("AND {:02X}".format(n))
 
 	@staticmethod
