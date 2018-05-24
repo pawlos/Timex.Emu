@@ -47,3 +47,23 @@ class tests_pop(unittest.TestCase):
 		
 		cpu.readOp()
 		self.assertEqual(0x3355, cpu.AF)
+
+	def test_pop_bc_takes_3_m_cycles(self):
+		ram = FakeRam([None]*0x1100)
+		ram.storeAddr(0x1000, 0x55)
+		ram.storeAddr(0x1001, 0x33)
+		cpu = CPU(FakeRom('\xc1'), ram)
+		cpu.SP = 0x1000
+		
+		cpu.readOp()
+		self.assertEqual(3, cpu.m_cycles)
+
+	def test_pop_bc_takes_7_t_states(self):
+		ram = FakeRam([None]*0x1100)
+		ram.storeAddr(0x1000, 0x55)
+		ram.storeAddr(0x1001, 0x33)
+		cpu = CPU(FakeRom('\xc1'), ram)
+		cpu.SP = 0x1000
+		
+		cpu.readOp()
+		self.assertEqual(7, cpu.t_states)

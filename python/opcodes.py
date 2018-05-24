@@ -711,6 +711,8 @@ class Opcodes(object):
 			cpu.AF = val
 			reg = "AF"
 
+		cpu.m_cycles = 3
+		cpu.t_states = 7
 		logger.info("POP {}".format(reg))
 
 	@staticmethod
