@@ -1261,6 +1261,9 @@ class Opcodes(object):
 		cpu.SFlag = Bits.isNegative(new_val)
 		cpu.NFlag = Bits.reset()
 		cpu.PVFlag = Bits.halfCarrySub(old_val, new_val)
+
+		cpu.m_cycles = 3
+		cpu.t_states = 11
 		logger.info("INC (HL)")
 
 	@staticmethod
