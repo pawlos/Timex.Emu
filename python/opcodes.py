@@ -1350,4 +1350,6 @@ class Opcodes(object):
 		cpu.ZFlag = Bits.isZero(cpu.A)
 		cpu.NFlag = Bits.reset()
 
+		cpu.m_cycles = 1
+		cpu.t_states = 4
 		logger.info("ADC A, {}".format(IndexToReg.translate8bit(reg_idx)))
