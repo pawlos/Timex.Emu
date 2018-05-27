@@ -1147,6 +1147,8 @@ class Opcodes(object):
 	@staticmethod
 	def hlt(cpu, opcode, logger):
 		logger.Info("HALT")
+		cpu.m_cycles = 1
+		cpu.t_states = 4
 		while True:
 			pass
 
