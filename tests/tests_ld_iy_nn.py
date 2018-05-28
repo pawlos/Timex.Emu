@@ -32,3 +32,17 @@ class tests_ld_iy_nn(unittest.TestCase):
 		cpu.IY = 0x1111
 		cpu.readOp()
 		self.assertEqual(0x77, cpu.ram.readAddr(0x1112))
+
+	def test_ld_iy_d_n_takes_5_m_cycle(self):
+		ram = FakeRam([None]*0x2000)
+		cpu = CPU(FakeRom('\xFD\x36\x01\x77'))
+		cpu.IY = 0x1111
+		cpu.readOp()
+		self.assertEqual(5, cpu.m_cycles)
+
+	def test_ld_iy_d_n_takes_19_t_states(self):
+		ram = FakeRam([None]*0x2000)
+		cpu = CPU(FakeRom('\xFD\x36\x01\x77'))
+		cpu.IY = 0x1111
+		cpu.readOp()
+		self.assertEqual(19, cpu.t_states)

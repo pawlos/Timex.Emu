@@ -721,6 +721,7 @@ class Opcodes(object):
 		d = cpu.ram.readAddr(cpu.PC)
 		n = cpu.ram.readAddr(cpu.PC)
 		cpu.ram.storeAddr(cpu.IY + d, n)
+		cpu.m_cycles, cpu.t_states = 5, 19
 		logger.info("LD (IY+{:02X}),{:02X}".format(d, n))
 
 	@staticmethod
