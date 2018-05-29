@@ -8,19 +8,15 @@ class Opcodes(object):
 	@staticmethod
 	def disableInterrupts(cpu, opcode, logger):
 		"""DI"""
-		cpu.iff1 = 0x00
-		cpu.iff2 = 0x00
-		cpu.m_cycles = 1
-		cpu.t_states = 4
+		cpu.iff1, cpu.iff2 = 0x00, 0x00
+		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("DI")
 
 	@staticmethod
 	def enableInterrupts(cpu, opcode, logger):
 		''' EI '''
-		cpu.iff1 = 0x01
-		cpu.iff2 = 0x01
-		cpu.m_cycles = 1
-		cpu.t_states = 4
+		cpu.iff1, cpu.iff2 = 0x01, 0x01
+		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("EI")
 
 	@staticmethod
@@ -35,8 +31,7 @@ class Opcodes(object):
 		cpu.HFlag = Bits.reset()
 		cpu.SFlag = Bits.signInTwosComp(cpu.A)
 		cpu.PVFlag = Bits.paritySet(cpu.A)
-		cpu.m_cycles = 1
-		cpu.t_states = 4
+		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("XOR A")
 
 	@staticmethod
@@ -55,8 +50,7 @@ class Opcodes(object):
 		elif regInd == 3:
 			cpu.SP = value
 
-		cpu.m_cycles = 2
-		cpu.t_states = 10
+		cpu.m_cycles, cpu.t_states = 2, 10
 		logger.info("LD {}, {:04X}".format(IndexToReg.translate16bit(regInd),value))
 
 	@staticmethod
@@ -65,8 +59,7 @@ class Opcodes(object):
 		regInd     = (opcode >> 3) & 7
 		cpu.regs[regInd] = cpu.regs[regIndPrim]
 
-		cpu.m_cycles = 1
-		cpu.t_states = 4
+		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("LD {}, {}".format(IndexToReg.translate8bit(regInd), IndexToReg.translate8bit(regIndPrim)))
 
 	@staticmethod
@@ -75,8 +68,7 @@ class Opcodes(object):
 		value = cpu.ram.readAddr(cpu.PC)
 		cpu.regs[regInd] = value
 
-		cpu.m_cycles = 2
-		cpu.t_states = 7
+		cpu.m_cycles, cpu.t_states = 2, 7
 		logger.info("LD {}, {:02X}".format(IndexToReg.translate8bit(regInd), value))
 
 	@staticmethod
@@ -85,37 +77,32 @@ class Opcodes(object):
 		hiValue = cpu.ram.readAddr(cpu.PC)
 		value = (hiValue << 8) + loValue
 		cpu.PC = value
-		cpu.m_cycles = 3
-		cpu.t_states = 10
+		cpu.m_cycles, cpu.t_states = 3, 10
 		logger.info("JP {0:04X}".format(value))
 
 	@staticmethod
 	def out(cpu, opcode, logger):
 		value = cpu.ram.readAddr(cpu.PC)
 		cpu.io.writeTo(value, cpu.A)
-		cpu.m_cycles = 3
-		cpu.t_states = 11
+		cpu.m_cycles, cpu.t_states = 3, 11
 		logger.info("OUT ({:02X}), A".format(value))
 
 	@staticmethod
 	def ldExt(cpu, opcode, logger):
 		cpu.I = cpu.A
-		cpu.m_cycles = 3
-		cpu.t_states = 9
+		cpu.m_cycles, cpu.t_states = 3, 9
 		logger.info("LD I, A")
 
 	@staticmethod
 	def nop(cpu, opcode, logger):
-		cpu.m_cycles = 1
-		cpu.t_states = 4
+		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("DEFB")
 
 	@staticmethod
 	def ld_addr(cpu, opcode, logger):
 		value = cpu.ram.readAddr(cpu.PC)
 		cpu.ram.storeAddr(cpu.HL, value)
-		cpu.m_cycles = 3
-		cpu.t_states = 10
+		cpu.m_cycles, cpu.t_states = 3, 10
 		logger.info("LD (HL), {:02X}".format(value))
 
 	@staticmethod
@@ -131,8 +118,7 @@ class Opcodes(object):
 		elif regInd == 3:
 			cpu.SP = cpu.SP - 1
 
-		cpu.m_cycles = 1
-		cpu.t_states = 6
+		cpu.m_cycles, cpu.t_states = 1, 6
 		logger.info("DEC {}".format(IndexToReg.translate16bit(regInd)))
 
 	@staticmethod
@@ -147,8 +133,7 @@ class Opcodes(object):
 		cpu.HFlag = Bits.halfCarrySub(cpu.A, value)
 		cpu.SFlag = Bits.signFlag(value)
 		cpu.PVFlag = Bits.overflow(cpu.A, value)
-		cpu.m_cycles = 1
-		cpu.t_states = 4
+		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("CP {}".format(IndexToReg.translate8bit(regInd)))
 
 	@staticmethod
@@ -160,11 +145,9 @@ class Opcodes(object):
 
 		if not no_jump:
 			cpu.PC = pc + jumpOffset+1
-			cpu.m_cycles = 1
-			cpu.t_states = 5
+			cpu.m_cycles, cpu.t_states = 1, 5
 
-		cpu.m_cycles = 2
-		cpu.t_states = 7
+		cpu.m_cycles, cpu.t_states = 2, 7
 		logger.info("JR NZ, {0:04X}".format(pc+jumpOffset+1))
 
 	@staticmethod
@@ -176,11 +159,9 @@ class Opcodes(object):
 
 		if not no_jump:
 			cpu.PC = pc + jumpOffset+1
-			cpu.m_cycles = 1
-			cpu.t_states = 5
+			cpu.m_cycles, cpu.t_states = 1, 5
 
-		cpu.m_cycles = 2
-		cpu.t_states = 7
+		cpu.m_cycles, cpu.t_states  = 2, 7
 		logger.info("JR NC, {0:04X}".format(pc+jumpOffset+1))
 
 	@staticmethod
@@ -194,8 +175,7 @@ class Opcodes(object):
 		cpu.SFlag = Bits.signInTwosComp(cpu.A)
 		cpu.PVFlag = Bits.paritySet(cpu.A)
 
-		cpu.m_cycles = 1
-		cpu.t_states = 4
+		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("AND A")
 
 	@staticmethod
@@ -223,8 +203,7 @@ class Opcodes(object):
 		cpu.NFlag = Bits.set()
 		cpu.CFlag = Bits.borrow(cpu.HL, bits=16)
 
-		cpu.m_cycles = 4
-		cpu.t_states = 15
+		cpu.m_cycles, cpu.t_states = 4, 15
 		logger.info("SBC HL, {}".format(IndexToReg.translate16bit(regInd)))
 
 	@staticmethod
@@ -247,8 +226,7 @@ class Opcodes(object):
 		cpu.CFlag = Bits.carryFlag16(oldHL, cpu.HL)
 		cpu.HFlag = Bits.carryFlag16(oldHL, cpu.HL, bits=11)
 		#S, Z, P/V - not affected
-		cpu.m_cycles = 3
-		cpu.t_states = 11
+		cpu.m_cycles, cpu.t_states = 3, 11
 		logger.info("ADD HL, {}".format(IndexToReg.translate16bit(regInd)))
 
 	@staticmethod
@@ -264,8 +242,7 @@ class Opcodes(object):
 		elif regInd == 3:
 			cpu.SP = cpu.SP + 1
 
-		cpu.m_cycles = 1
-		cpu.t_states = 6
+		cpu.m_cycles, cpu.t_states = 1, 6
 		logger.info("INC {0}".format(IndexToReg.translate16bit(regInd)))
 
 	@staticmethod
@@ -277,11 +254,9 @@ class Opcodes(object):
 
 		if not no_jump:
 			cpu.PC = jumpTo
-			cpu.m_cycles = 1
-			cpu.t_states = 5
+			cpu.m_cycles, cpu.t_states = 1, 5
 
-		cpu.m_cycles = 2
-		cpu.t_states = 7
+		cpu.m_cycles, cpu.t_states = 2, 7
 		logger.info("JR Z, {:04X}".format(jumpTo))
 
 	@staticmethod
@@ -299,8 +274,7 @@ class Opcodes(object):
 		cpu.DEPrim = tempDE
 		cpu.HLPrim = tempHL
 
-		cpu.m_cycles = 1
-		cpu.t_states = 4
+		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("EXX")
 
 	@staticmethod
@@ -322,8 +296,7 @@ class Opcodes(object):
 
 		cpu.ram.storeAddr(nn + 1, value >> 8)
 		cpu.ram.storeAddr(nn, value & 0xFF)
-		cpu.m_cycles = 6
-		cpu.t_states = 20
+		cpu.m_cycles, cpu.t_states = 6, 20
 		logger.info("LD ({:04X}), {}".format(nn, IndexToReg.translate16bit(regInd)))
 
 	@staticmethod
@@ -334,8 +307,7 @@ class Opcodes(object):
 		cpu.ram.storeAddr(nn+1, cpu.H)
 		cpu.ram.storeAddr(nn, cpu.L)
 
-		cpu.m_cycles = 5
-		cpu.t_states = 16
+		cpu.m_cycles, cpu.t_states = 5, 16
 		logger.info("LD ({:04X}), HL".format(nn))
 
 	@staticmethod
@@ -350,8 +322,7 @@ class Opcodes(object):
 		cpu.PVFlag = True if oldValue == 0x7f else False
 		cpu.SFlag = Bits.isNegative(Bits.twos_comp(cpu.regs[index]))
 
-		cpu.m_cycles = 1
-		cpu.t_states = 4
+		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("INC {}".format(IndexToReg.translate8bit(index)))
 
 	@staticmethod
@@ -360,8 +331,7 @@ class Opcodes(object):
 		cpu.DE = cpu.HL
 		cpu.HL = oldValue
 
-		cpu.m_cycles = 1
-		cpu.t_states = 4
+		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("EX DE, HL")
 
 	@staticmethod
@@ -378,8 +348,7 @@ class Opcodes(object):
 				cpu.PVFlag = Bits.reset()
 				break
 
-		cpu.m_cycles = 4 if isZero else 5
-		cpu.t_states = 16 if isZero else 21
+		cpu.m_cycles, cpu.t_states = 4 if isZero else 5, 16 if isZero else 21
 
 		logger.info("LDDR")
 
@@ -427,8 +396,7 @@ class Opcodes(object):
 		cpu.HFlag = Bits.reset()
 		cpu.PVFlag = Bits.reset()
 
-		cpu.m_cycles = 4 if wasZero else 5
-		cpu.t_states = 16 if wasZero else 21
+		cpu.m_cycles, cpu.t_states = 4 if wasZero else 5, 16 if wasZero else 21
 		logger.info("LDIR")
 
 	@staticmethod
@@ -439,8 +407,7 @@ class Opcodes(object):
 		addr = (high << 8) + low
 		cpu.ram.storeAddr(addr, cpu.A)
 
-		cpu.m_cycles = 4
-		cpu.t_states = 13
+		cpu.m_cycles, cpu.t_states = 4, 13
 		logger.info("LD ({:04X}), A".format(addr))
 
 	@staticmethod
@@ -467,8 +434,7 @@ class Opcodes(object):
 		val |= (1 << bit)
 		cpu.ram.storeAddr(cpu.IY+index, val)
 
-		cpu.m_cycles = 6
-		cpu.t_states = 23
+		cpu.m_cycles, cpu.t_states = 6, 23
 		logger.info("SET {},(IY+{:02X})".format(bit, index))
 
 	@staticmethod
@@ -479,8 +445,7 @@ class Opcodes(object):
 		val = Bits.setNthBit(val, bit, 0)
 		cpu.ram.storeAddr(cpu.IY+index, val)
 
-		cpu.m_cycles = 6
-		cpu.t_states = 23
+		cpu.m_cycles, cpu.t_states = 6, 23
 		logger.info("RES {}, (IY+{:02X})".format(bit, index))
 
 	@staticmethod
@@ -490,8 +455,7 @@ class Opcodes(object):
 		cpu.ZFlag = cpu.ram.readAddr(cpu.IY+index) & (1 << bit) != 0
 		cpu.HFlag = Bits.reset()
 
-		cpu.m_cycles = 5
-		cpu.t_states = 20
+		cpu.m_cycles, cpu.t_states = 5, 20
 		logger.info("BIT {:X}, (IY+{:02X})".format(bit, index))
 
 	@staticmethod
@@ -508,8 +472,7 @@ class Opcodes(object):
 		cpu.SP = cpu.SP - 2
 		cpu.PC = addr
 
-		cpu.m_cycles = 5
-		cpu.t_states = 17
+		cpu.m_cycles, cpu.t_states = 5, 17
 		logger.info("CALL {:04X}".format(addr)) 
 
 	@staticmethod
@@ -518,16 +481,14 @@ class Opcodes(object):
 		regInd = opcode & 7
 		d = cpu.ram.readAddr(cpu.PC)
 		cpu.ram.storeAddr(cpu.IY + d, cpu.regs[regInd])
-		cpu.m_cycles = 5
-		cpu.t_states = 19
+		cpu.m_cycles, cpu.t_states = 5, 19
 		logger.info("LD (IY+{:02X}), {}".format(d, IndexToReg.translate8bit(regInd)))
 
 	@staticmethod
 	def ldhlr(cpu, opcode, logger):
 		regInd = opcode & 7
 		cpu.ram.storeAddr(cpu.HL, cpu.regs[regInd])
-		cpu.m_cycles = 2
-		cpu.t_states = 7
+		cpu.m_cycles, cpu.t_states = 2, 7
 		logger.info("LD (HL), {}".format(IndexToReg.translate8bit(regInd)))
 
 	@staticmethod
@@ -541,8 +502,7 @@ class Opcodes(object):
 			cpu.t_states = 5
 			cpu.PC = pc
 
-		cpu.m_cycles = 2
-		cpu.t_states = 8
+		cpu.m_cycles, cpu.t_states = 2, 8
 		logger.info("DJNZ {:04X}".format(pc))
 
 	@staticmethod
@@ -558,8 +518,7 @@ class Opcodes(object):
 		cpu.HFlag = Bits.halfCarrySub(cpu.A, value)
 
 		cpu.A = value
-		cpu.m_cycles = 4
-		cpu.t_states = 15
+		cpu.m_cycles, cpu.t_states = 4, 15
 		logger.info("ADD A, (IY+{:02X})".format(d))
 
 	@staticmethod
@@ -613,8 +572,7 @@ class Opcodes(object):
 		cpu.PVFlag = Bits.overflow(old_A, cpu.A)
 		cpu.CFlag = Bits.carryFlag(cpu.A)
 
-		cpu.m_cycles = 1
-		cpu.t_states = 4
+		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("SUB {}".format(IndexToReg.translate8bit(index)))
 
 	@staticmethod
@@ -625,8 +583,7 @@ class Opcodes(object):
 		cpu.HFlag = Bits.reset()
 		cpu.NFlag = Bits.reset()
 
-		cpu.m_cycles = 1
-		cpu.t_states = 4
+		cpu.m_cycles, cpu.t_states = 1, 4
 
 		logger.info("RRCA")
 
@@ -643,8 +600,7 @@ class Opcodes(object):
 		cpu.NFlag = Bits.reset()
 		cpu.CFlag = Bits.reset()
 
-		cpu.m_cycles = 2
-		cpu.t_states = 7
+		cpu.m_cycles, cpu.t_states = 2, 7
 		logger.info("AND {:02X}".format(n))
 
 	@staticmethod
@@ -660,8 +616,7 @@ class Opcodes(object):
 		cpu.NFlag = Bits.reset()
 		cpu.CFlag = Bits.reset()
 
-		cpu.m_cycles = 2
-		cpu.t_states = 7
+		cpu.m_cycles, cpu.t_states = 2, 7
 		logger.info("OR {:02X}".format(n))
 
 	@staticmethod
@@ -672,8 +627,7 @@ class Opcodes(object):
 		cpu.SP += 2
 		cpu.PC = addr
 
-		cpu.m_cycles = 3
-		cpu.t_states = 10
+		cpu.m_cycles, cpu.t_states = 3, 10
 		logger.info("RET")
 
 	@staticmethod
@@ -686,8 +640,7 @@ class Opcodes(object):
 		rst_jumps = {0:0x00, 1:0x08, 2:0x10, 3:0x18, 4:0x20, 5:0x28, 6:0x30, 7:0x38}
 
 		cpu.PC = rst_jumps[index]
-		cpu.m_cycles = 3
-		cpu.t_states = 11
+		cpu.m_cycles, cpu.t_states = 3, 11
 		logger.info("RST {:02X}".format(rst_jumps[index]))
 
 	@staticmethod
@@ -711,8 +664,7 @@ class Opcodes(object):
 			cpu.AF = val
 			reg = "AF"
 
-		cpu.m_cycles = 3
-		cpu.t_states = 7
+		cpu.m_cycles, cpu.t_states = 3, 7
 		logger.info("POP {}".format(reg))
 
 	@staticmethod
@@ -790,8 +742,7 @@ class Opcodes(object):
 		jumpOffset = Bits.twos_comp(cpu.ram.readAddr(pc))
 		
 		cpu.PC = pc + jumpOffset + 1
-		cpu.m_cycles = 3
-		cpu.t_states = 12
+		cpu.m_cycles, cpu.t_states = 3, 12
 		logger.info("JR {0:x}".format(jumpOffset))
 
 	@staticmethod
@@ -813,8 +764,7 @@ class Opcodes(object):
 		else:
 			cpu.SP = value 
 
-		cpu.m_cycles = 6
-		cpu.t_states = 20
+		cpu.m_cycles, cpu.t_states = 6, 20
 		logger.info("LD {},({:0X})".format(IndexToReg.translate16bit(reg), addr))
 
 	@staticmethod
@@ -822,8 +772,7 @@ class Opcodes(object):
 		value = cpu.ram.readAddr(cpu.BC)
 		cpu.A = value
 
-		cpu.m_cycles = 2
-		cpu.t_states = 7
+		cpu.m_cycles, cpu.t_states = 2, 7
 		logger.info("LD A, (BC)")
 
 	@staticmethod
@@ -831,8 +780,7 @@ class Opcodes(object):
 		value = cpu.ram.readAddr(cpu.DE)
 		cpu.A = value
 
-		cpu.m_cycles = 2
-		cpu.t_states = 7
+		cpu.m_cycles, cpu.t_states = 2, 7
 		logger.info("LD A, (DE)")
 
 	@staticmethod
@@ -846,8 +794,7 @@ class Opcodes(object):
 	@staticmethod
 	def ld_bc_a(cpu, opcode, logger):
 		cpu.ram.storeAddr(cpu.BC, cpu.A)
-		cpu.m_cycles = 2
-		cpu.t_states = 7
+		cpu.m_cycles, cpu.t_states = 2, 7
 		logger.info("LD (BC), A")
 
 	@staticmethod
@@ -860,8 +807,7 @@ class Opcodes(object):
 		cflag = (cpu.A >> 7) & 1
 		cpu.A = Bits.setNthBit((cpu.A << 1), 0, cpu.CFlag)
 		cpu.CFlag = Bits.set() if cflag == 1 else Bits.reset()
-		cpu.m_cycles = 1
-		cpu.t_states = 4
+		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("LRA")
 
 	@staticmethod
@@ -871,8 +817,7 @@ class Opcodes(object):
 		cpu.CFlag = Bits.set() if cflag == 1 else Bits.reset()
 		cpu.HFlag = Bits.reset()
 		cpu.NFlag = Bits.reset()
-		cpu.m_cycles = 1
-		cpu.t_states = 4
+		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("RRA")
 
 	@staticmethod
@@ -889,8 +834,7 @@ class Opcodes(object):
 		cpu.HFlag = Bits.reset()
 		cpu.NFlag = Bits.reset()
 		cpu.PVFlag = Bits.paritySet(cpu.A)
-		cpu.m_cycles = 5
-		cpu.t_states = 18
+		cpu.m_cycles, cpu.t_states = 5, 18
 		logger.info("RLD")
 
 	@staticmethod
@@ -907,8 +851,7 @@ class Opcodes(object):
 		cpu.HFlag = Bits.reset()
 		cpu.NFlag = Bits.reset()
 		cpu.PVFlag = Bits.paritySet(cpu.A)
-		cpu.m_cycles = 5
-		cpu.t_states = 18
+		cpu.m_cycles, cpu.t_states = 5, 18
 		logger.info("RRD")
 
 	@staticmethod
@@ -1074,11 +1017,9 @@ class Opcodes(object):
 			cpu.ram.storeAddr(cpu.SP - 2, (pc & 255))
 			cpu.SP = cpu.SP - 2
 			cpu.PC = addr
-			cpu.m_cycles = 2
-			cpu.t_states = 7
+			cpu.m_cycles, cpu.t_states = 2, 7
 
-		cpu.m_cycles = 3
-		cpu.t_states = 10
+		cpu.m_cycles, cpu.t_states = 3, 10
 		logger.info("CALL {}, {:04X}".format(flag, addr))
 
 	@staticmethod
@@ -1093,8 +1034,7 @@ class Opcodes(object):
 		cpu.PVFlag = Bits.halfCarrySub(old_val, cpu.regs[reg_index])
 		cpu.HFlag = Bits.halfCarrySub(old_val, cpu.regs[reg_index])
 
-		cpu.m_cycles = 1
-		cpu.t_states = 4
+		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("DEC {}".format(IndexToReg.translate8bit(reg_index)))
 
 	@staticmethod
@@ -1132,8 +1072,7 @@ class Opcodes(object):
 	@staticmethod
 	def ccf(cpu, opcode, logger):
 		cpu.CFlag = cpu.CFlag == False
-		cpu.m_cycles = 1
-		cpu.t_states = 4
+		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("CCF")
 
 	@staticmethod
@@ -1141,15 +1080,13 @@ class Opcodes(object):
 		cpu.CFlag = Bits.set()
 		cpu.NFlag = Bits.reset()
 		cpu.HFlag = Bits.reset();
-		cpu.m_cycles = 1
-		cpu.t_states = 4
+		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("SCF")
 
 	@staticmethod
 	def hlt(cpu, opcode, logger):
 		logger.Info("HALT")
-		cpu.m_cycles = 1
-		cpu.t_states = 4
+		cpu.m_cycles, cpu.t_states = 1, 4
 		while True:
 			pass
 
@@ -1175,8 +1112,7 @@ class Opcodes(object):
 								   Bits.twos_comp(cpu.HL, bits=16))
 		cpu.NFlag = Bits.reset()
 		cpu.CFlag = Bits.set() if Bits.getNthBit(old, 15) == 1 and Bits.getNthBit(cpu.HL, 15) == 0 else Bits.reset()
-		cpu.m_cycles = 4
-		cpu.t_states = 15
+		cpu.m_cycles, cpu.t_states = 4, 15
 		logger.info("ADC HL, {}".format(IndexToReg.translate16bit(r)))
 
 	@staticmethod
@@ -1203,8 +1139,7 @@ class Opcodes(object):
 		cpu.HFlag = Bits.carryFlagAdd16(old, cpu.IX)
 		cpu.CFlag = Bits.overflow(Bits.twos_comp(cpu.IX, bits=16), Bits.twos_comp(old, bits=16))
 		
-		cpu.m_cycles = 4
-		cpu.t_states = 15
+		cpu.m_cycles, cpu.t_states = 4, 15
 		logger.info("ADD IX, {}".format(reg))
 
 	@staticmethod
@@ -1230,29 +1165,25 @@ class Opcodes(object):
 		cpu.NFlag = Bits.reset()
 		cpu.HFlag = Bits.carryFlagAdd16(old, cpu.IY)
 		cpu.CFlag = Bits.overflow(Bits.twos_comp(cpu.IY, bits=16), Bits.twos_comp(old, bits=16))
-		cpu.m_cycles = 4
-		cpu.t_states = 15
+		cpu.m_cycles, cpu.t_states = 4, 15
 		logger.info("ADD IY, {}".format(reg))
 
 	@staticmethod
 	def jp_hl(cpu, opcode, logger):
 		cpu.PC = cpu.HL
-		cpu.m_cycles = 1
-		cpu.t_states = 4
+		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("JP HL")
 
 	@staticmethod
 	def jp_ix(cpu, opcode, logger):
 		cpu.PC = cpu.IX
-		cpu.m_cycles = 2
-		cpu.t_states = 8
+		cpu.m_cycles, cpu.t_states = 2, 8
 		logger.info("JP IX")
 
 	@staticmethod
 	def jp_iy(cpu, opcode, logger):
 		cpu.PC = cpu.IY
-		cpu.m_cycles = 2
-		cpu.t_states = 8
+		cpu.m_cycles, cpu.t_states = 2, 8
 		logger.info("JP IY")
 
 	@staticmethod
@@ -1265,8 +1196,7 @@ class Opcodes(object):
 		cpu.NFlag = Bits.reset()
 		cpu.PVFlag = Bits.halfCarrySub(old_val, new_val)
 
-		cpu.m_cycles = 3
-		cpu.t_states = 11
+		cpu.m_cycles, cpu.t_states = 3, 11
 		logger.info("INC (HL)")
 
 	@staticmethod
@@ -1283,8 +1213,7 @@ class Opcodes(object):
 	def portIn(cpu, opcode, logger):
 		cpu.A = cpu.io.readFrom(cpu.C)
 
-		cpu.m_cycles = 3
-		cpu.t_states = 12
+		cpu.m_cycles, cpu.t_states = 3, 12
 		logger.info("IN A, (C)")
 
 	@staticmethod
@@ -1324,11 +1253,9 @@ class Opcodes(object):
 			addr = (high << 8) + low
 			cpu.SP += 2
 			cpu.PC = addr
-			cpu.m_cycles = 2
-			cpu.t_states = 6
+			cpu.m_cycles, cpu.t_states = 2, 6
 
-		cpu.m_cycles = 1
-		cpu.t_states = 5
+		cpu.m_cycles, cpu.t_states = 1, 5
 		logger.info("RET {}".format(cond_name))
 
 	@staticmethod
@@ -1339,8 +1266,7 @@ class Opcodes(object):
 		cpu.CFlag = Bits.set() if last_bit == 1 else Bits.reset()
 		cpu.regs[reg_idx] = (old_val >> 1)
 
-		cpu.m_cycles = 2
-		cpu.t_states = 8
+		cpu.m_cycles, cpu.t_states = 2, 8
 		logger.info("SRL {}".format(IndexToReg.translate8bit(reg_idx)))
 
 	@staticmethod
@@ -1353,6 +1279,5 @@ class Opcodes(object):
 		cpu.ZFlag = Bits.isZero(cpu.A)
 		cpu.NFlag = Bits.reset()
 
-		cpu.m_cycles = 1
-		cpu.t_states = 4
+		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("ADC A, {}".format(IndexToReg.translate8bit(reg_idx)))
