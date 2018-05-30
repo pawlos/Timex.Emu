@@ -19,3 +19,27 @@ class tests_jpc(unittest.TestCase):
 		cpu.CFlag = False
 		cpu.readOp()
 		self.assertEqual(0x02, cpu.PC)
+
+	def test_jp_c_does_take_2_m_cycles_if_condition_is_not_met(self):
+		cpu = CPU(FakeRom('\x38\x00'))
+		cpu.CFlag = False
+		cpu.readOp()
+		self.assertEqual(2, cpu.m_cycles)
+
+	def test_jp_c_does_take_7_t_states_if_condition_is_not_met(self):
+		cpu = CPU(FakeRom('\x38\x00'))
+		cpu.CFlag = False
+		cpu.readOp()
+		self.assertEqual(7, cpu.t_states)
+
+	def test_jp_c_does_take_3_m_cycles_if_condition_is_met(self):
+		cpu = CPU(FakeRom('\x38\x00'))
+		cpu.CFlag = True
+		cpu.readOp()
+		self.assertEqual(3, cpu.m_cycles)
+
+	def test_jp_c_does_take_12_t_states_if_condition_is_met(self):
+		cpu = CPU(FakeRom('\x38\x00'))
+		cpu.CFlag = True
+		cpu.readOp()
+		self.assertEqual(12, cpu.t_states)

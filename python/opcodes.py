@@ -1207,6 +1207,8 @@ class Opcodes(object):
 		pc = pc + jumpOffset
 		if not no_jump:
 			cpu.PC = pc
+			cpu.m_cycles, cpu.t_states = 1, 5
+		cpu.m_cycles, cpu.t_states = 2, 7
 		logger.info("JP C {0:04X}".format(pc))
 
 	@staticmethod
