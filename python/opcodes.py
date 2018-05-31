@@ -1067,6 +1067,7 @@ class Opcodes(object):
 		cpu.A = new
 		cpu.HFlag = Bits.set()
 		cpu.NFlag = Bits.set()
+		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("CPL")
 
 	@staticmethod
