@@ -357,9 +357,10 @@ class Opcodes(object):
 		low = cpu.ram.readAddr(cpu.PC)
 		high = cpu.ram.readAddr(cpu.PC)
 		addr = (high << 8) + low
-		logger.info("LD HL, ({:04X})".format(addr))
 		cpu.L = cpu.ram.readAddr(addr)
 		cpu.H = cpu.ram.readAddr(addr+1)
+		cpu.m_cycles, cpu.t_states = 5, 16
+		logger.info("LD HL, ({:04X})".format(addr))
 
 	@staticmethod
 	def ld_sp_hl(cpu, opcode, logger):

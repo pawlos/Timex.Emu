@@ -27,3 +27,17 @@ class tests_ld_hl_addr(unittest.TestCase):
 		self.assertTrue(cpu.HFlag)
 		self.assertFalse(cpu.NFlag)
 		self.assertTrue(cpu.SFlag)
+
+	def test_ld_hl_takes_5_m_cycles(self):
+		cpu = CPU(FakeRom('\x2a\x45\x45'))
+		cpu.ram.storeAddr(0x4545, 0x37)
+		cpu.ram.storeAddr(0x4546, 0xa1)
+		cpu.readOp()
+		self.assertEqual(5, cpu.m_cycles)
+
+	def test_ld_hl_takes_16_t_states(self):
+		cpu = CPU(FakeRom('\x2a\x45\x45'))
+		cpu.ram.storeAddr(0x4545, 0x37)
+		cpu.ram.storeAddr(0x4546, 0xa1)
+		cpu.readOp()
+		self.assertEqual(16, cpu.t_states)
