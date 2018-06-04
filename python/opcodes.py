@@ -365,6 +365,7 @@ class Opcodes(object):
 	@staticmethod
 	def ld_sp_hl(cpu, opcode, logger):
 		cpu.SP = cpu.HL
+		cpu.m_cycles, cpu.t_states = 1, 6
 		logger.info("LD SP, HL")
 
 	@staticmethod
