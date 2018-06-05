@@ -36,3 +36,13 @@ class tests_im(unittest.TestCase):
 		self.assertTrue(cpu.PVFlag)
 		self.assertTrue(cpu.HFlag)
 		self.assertTrue(cpu.NFlag)
+
+	def test_im1_takes_2_m_cycles(self):
+		cpu = CPU(FakeRom('\xed\x56'))
+		cpu.readOp()
+		self.assertEqual(2, cpu.m_cycles)
+
+	def test_im1_takes_8_t_states(self):
+		cpu = CPU(FakeRom('\xed\x56'))
+		cpu.readOp()
+		self.assertEqual(8, cpu.t_states)
