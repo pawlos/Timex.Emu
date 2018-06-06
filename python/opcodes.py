@@ -906,6 +906,8 @@ class Opcodes(object):
 	@staticmethod
 	def im2(cpu, opcode, logger):
 		cpu.interruptMode = 2
+
+		cpu.m_cycles, cpu.t_states = 2, 8
 		logger.info("IM 2")
 
 	@staticmethod
