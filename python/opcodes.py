@@ -913,6 +913,8 @@ class Opcodes(object):
 	@staticmethod
 	def im0(cpu, opcode, logger):
 		cpu.interruptMode = 0
+
+		cpu.m_cycles, cpu.t_states = 2, 8
 		logger.info("IM 0")
 
 	@staticmethod
