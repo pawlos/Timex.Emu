@@ -901,6 +901,8 @@ class Opcodes(object):
 		cpu.HFlag = Bits.reset()
 		cpu.PVFlag = cpu.iff2
 		cpu.NFlag = Bits.reset()
+
+		cpu.m_cycles, cpu.t_states = 2, 9
 		logger.info("LD A, R")
 
 	@staticmethod
