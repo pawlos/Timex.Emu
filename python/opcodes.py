@@ -890,6 +890,7 @@ class Opcodes(object):
 	@staticmethod
 	def ldra(cpu, opcode, logger):
 		cpu.R = cpu.A
+		cpu.m_cycles, cpu.t_states = 2, 9
 		logger.info("LD R, A")
 
 	@staticmethod
