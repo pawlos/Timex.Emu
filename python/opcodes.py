@@ -875,6 +875,8 @@ class Opcodes(object):
 		index = (opcode >> 3 ) & 7
 		d = cpu.ram.readAddr(cpu.PC)
 		cpu.regs[index] = cpu.ram.readAddr(cpu.IY + d)
+
+		cpu.m_cycles, cpu.t_states = 5, 19
 		logger.info("LD {}, (IY+{:02X})".format(IndexToReg.translate8bit(index), d))
 
 	@staticmethod
