@@ -887,6 +887,8 @@ class Opcodes(object):
 		low_val = cpu.ram.readAddr(addr)
 		high_val = cpu.ram.readAddr(addr+1)
 		cpu.IX = (high_val << 8) + low_val
+
+		cpu.m_cycles, cpu.t_states = 6, 20
 		logger.info("LD IX, ({:04X})".format(addr))
 
 	@staticmethod
