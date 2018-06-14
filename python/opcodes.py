@@ -868,6 +868,7 @@ class Opcodes(object):
 		cpu.PVFlag = old == 0x80	
 		cpu.CFlag = Bits.isZero(old)
 		cpu.HFlag = Bits.halfCarrySub(0x0, old)
+		cpu.m_cycles, cpu.t_states = 2, 8
 		logger.info("NEG")
 
 	@staticmethod
