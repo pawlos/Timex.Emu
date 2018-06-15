@@ -9,13 +9,13 @@ class tests_nop(unittest.TestCase):
 	def test_nop_does_not_change_hl(self):
 		cpu = CPU(FakeRom('\x00'))
 		cpu.HL = 0x9999
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0x9999, cpu.HL)
 
 	def test_nop_does_not_change_de(self):
 		cpu = CPU(FakeRom('\x00'))
 		cpu.DE = 0x8999
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0x8999, cpu.DE)
 
 	def test_nop_does_not_change_bc(self):

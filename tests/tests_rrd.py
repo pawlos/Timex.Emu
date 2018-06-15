@@ -12,7 +12,7 @@ class tests_rrd(unittest.TestCase):
 		cpu = CPU(FakeRom('\xed\x67'), ram)
 		cpu.A = 0b10000100
 		cpu.HL = 0x5000
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0b10000000, cpu.A)
 		self.assertEqual(0b01000010, cpu.ram.readAddr(cpu.HL))
 
@@ -22,7 +22,7 @@ class tests_rrd(unittest.TestCase):
 		cpu = CPU(FakeRom('\xed\x67'), ram)
 		cpu.A = 0b10000100
 		cpu.HL = 0x5000
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(5, cpu.m_cycles)
 
 	def test_rrd_does_take_18_t_states(self):
@@ -31,5 +31,5 @@ class tests_rrd(unittest.TestCase):
 		cpu = CPU(FakeRom('\xed\x67'), ram)
 		cpu.A = 0b10000100
 		cpu.HL = 0x5000
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(18, cpu.t_states)

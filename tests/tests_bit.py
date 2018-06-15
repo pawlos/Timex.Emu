@@ -13,7 +13,7 @@ class tests_bit(unittest.TestCase):
 		cpu = CPU(FakeRom('\xfd\xcb\x04\x76'), ram)
 		cpu.ZFlag = Bits.reset()
 		cpu.IY = 0x2000
-		cpu.readOp();
+		cpu.readOp()
 		self.assertTrue(cpu.ZFlag)
 
 	def test_bit_IY_plus_1_set_correctly_the_value(self):
@@ -70,7 +70,7 @@ class tests_bit(unittest.TestCase):
 		cpu = CPU(FakeRom('\xfd\xcb\x04\x76'), ram)
 		cpu.ZFlag = Bits.reset()
 		cpu.IY = 0x2000
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEquals(5, cpu.m_cycles)
 
 	def test_bit_IY_plus_4_takes_20_t_states(self):
@@ -79,5 +79,5 @@ class tests_bit(unittest.TestCase):
 		cpu = CPU(FakeRom('\xfd\xcb\x04\x76'), ram)
 		cpu.ZFlag = Bits.reset()
 		cpu.IY = 0x2000
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEquals(20, cpu.t_states)

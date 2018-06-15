@@ -10,5 +10,5 @@ class tests_ld_a_nn(unittest.TestCase):
 		ram = FakeRam([0x00]*0x8833)
 		ram.storeAddr(0x8832, 0x04)
 		cpu = CPU(FakeRom('\x3a\x32\x88'), ram)
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0x4, cpu.A)

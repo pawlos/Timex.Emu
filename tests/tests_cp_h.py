@@ -37,7 +37,7 @@ class tests_cp_h(unittest.TestCase):
 		cpu = CPU(FakeRom('\xbc'))
 		cpu.A = 3
 		cpu.H = 0xff
-		cpu.readOp();
+		cpu.readOp()
 		self.assertTrue(cpu.CFlag)
 
 	def test_cp_H_sets_HF(self):

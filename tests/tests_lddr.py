@@ -17,7 +17,7 @@ class tests_lddr(unittest.TestCase):
 		cpu.ram.storeAddr(0x2225, 0xc5)
 		cpu.ram.storeAddr(0x2224, 0x59)
 		cpu.ram.storeAddr(0x2223, 0x66)
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0x1111, cpu.HL)
 		self.assertEqual(0x2222, cpu.DE)
 		self.assertEqual(0x0000, cpu.BC)
@@ -46,7 +46,7 @@ class tests_lddr(unittest.TestCase):
 		cpu.ram.storeAddr(0x2225, 0xc5)
 		cpu.ram.storeAddr(0x2224, 0x59)
 		cpu.ram.storeAddr(0x2223, 0x66)
-		cpu.readOp();	
+		cpu.readOp()
 		self.assertFalse(cpu.HFlag)
 		self.assertFalse(cpu.NFlag)
 		self.assertFalse(cpu.PVFlag)

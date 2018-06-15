@@ -11,6 +11,6 @@ class tests_dec(unittest.TestCase):
 		ram.storeAddr(0x10f, 0xDD)
 		cpu = CPU(FakeRom('\xfd\x35\x0f'), ram)
 		cpu.IY = 0x100
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0xDC, ram.readAddr(cpu.IY+15))
 

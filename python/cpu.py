@@ -62,14 +62,15 @@ class CPU(object):
 
 	@property
 	def L(self):
-		return self.regs[L];
+		return self.regs[L]
+
 	@L.setter
 	def L(self, value):
 		self.regs[L] = Bits.limitTo8Bits(value)
 
 	@property
 	def R(self):
-		return self.r;
+		return self.r
 
 	@R.setter
 	def R(self, value):

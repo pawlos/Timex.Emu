@@ -16,7 +16,7 @@ class tests_and_a(unittest.TestCase):
 		cpu = CPU(FakeRom('\xa7'))
 		cpu.A = 0x12
 		cpu.HFlag = False
-		cpu.readOp();
+		cpu.readOp()
 		self.assertTrue(cpu.HFlag)
 
 	def test_and_a_resets_n_and_c_flag(self):

@@ -122,7 +122,7 @@ class tests_inc(unittest.TestCase):
 
 	def test_inc_r_does_reset_Z_flag_when_result_is_non_zero(self):
 		cpu = CPU(FakeRom('\x04'))
-		cpu.B = 0;
+		cpu.B = 0
 		cpu.ZFlag = True
 		cpu.readOp()
 		self.assertFalse(cpu.ZFlag)

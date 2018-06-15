@@ -10,7 +10,7 @@ class tests_sbc(unittest.TestCase):
 		cpu = CPU(FakeRom('\xed\x62'))
 		cpu.HL = 0x9999
 		cpu.CFlag = False
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0x0, cpu.HL)
 
 	def test_sbc_hl_sp_result_is_crrect_if_c_flag_is_reset(self):
@@ -18,7 +18,7 @@ class tests_sbc(unittest.TestCase):
 		cpu.HL = 0x9999
 		cpu.SP = 0x1111
 		cpu.CFlag = False
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0x8888, cpu.HL)
 
 	def test_sbc_hl_de_result_is_correct_if_c_flag_is_set(self):
@@ -26,7 +26,7 @@ class tests_sbc(unittest.TestCase):
 		cpu.HL = 0x9999
 		cpu.DE = 0x1111
 		cpu.CFlag = True
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0x8887, cpu.HL)
 
 	def test_sbc_hl_bc_result_is_crrect_if_c_flag_is_reset(self):
@@ -34,7 +34,7 @@ class tests_sbc(unittest.TestCase):
 		cpu.HL = 0x9999
 		cpu.BC = 0x1111
 		cpu.CFlag = False
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0x8888, cpu.HL)
 
 	def test_sbc_hl_de_sets_n_flag(self):

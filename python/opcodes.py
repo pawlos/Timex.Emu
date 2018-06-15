@@ -1098,7 +1098,7 @@ class Opcodes(object):
 	def scf(cpu, opcode, logger):
 		cpu.CFlag = Bits.set()
 		cpu.NFlag = Bits.reset()
-		cpu.HFlag = Bits.reset();
+		cpu.HFlag = Bits.reset()
 		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("SCF")
 
@@ -1137,7 +1137,7 @@ class Opcodes(object):
 	@staticmethod
 	def add_ix_rr(cpu, opcode, logger):
 		r = (opcode >> 4) & 3
-		val = 0;
+		val = 0
 		reg = ""
 		if r == 0:
 			val = cpu.BC
@@ -1164,7 +1164,7 @@ class Opcodes(object):
 	@staticmethod
 	def add_iy_rr(cpu, opcode, logger):
 		r = (opcode >> 4) & 3
-		val = 0;
+		val = 0
 		reg = ""
 		if r == 0:
 			val = cpu.BC

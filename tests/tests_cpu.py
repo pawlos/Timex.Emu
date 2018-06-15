@@ -69,12 +69,12 @@ class tests_cpu(unittest.TestCase):
 
 	def test_ix_set_get(self):
 		cpu = CPU(FakeRom(''))
-		cpu.IX = 0x1223;
+		cpu.IX = 0x1223
 		self.assertEqual(0x1223, cpu.IX)
 
 	def test_iy_set_get(self):
 		cpu = CPU(FakeRom(''))
-		cpu.IY = 0x3456;
+		cpu.IY = 0x3456
 		self.assertEqual(0x3456, cpu.IY)
 
 def suite():

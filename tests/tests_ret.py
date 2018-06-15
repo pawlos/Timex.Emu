@@ -14,7 +14,7 @@ class tests_ret(unittest.TestCase):
 		cpu = CPU(FakeRom('\x00'*0x3535+'\xc9'), ram)
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0x18B5, cpu.PC)
 		self.assertEqual(0x4002, cpu.SP)
 
@@ -27,7 +27,7 @@ class tests_ret(unittest.TestCase):
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.ZFlag = Bits.reset()
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0x18B5, cpu.PC)
 		self.assertEqual(0x4002, cpu.SP)
 
@@ -40,7 +40,7 @@ class tests_ret(unittest.TestCase):
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.ZFlag = Bits.set()
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0x3536, cpu.PC)
 		self.assertEqual(0x4000, cpu.SP)
 
@@ -52,7 +52,7 @@ class tests_ret(unittest.TestCase):
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.ZFlag = Bits.set()
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0x18B5, cpu.PC)
 		self.assertEqual(0x4002, cpu.SP)
 
@@ -64,7 +64,7 @@ class tests_ret(unittest.TestCase):
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.ZFlag = Bits.reset()
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0x3536, cpu.PC)
 		self.assertEqual(0x4000, cpu.SP)
 
@@ -76,7 +76,7 @@ class tests_ret(unittest.TestCase):
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.CFlag = Bits.reset()
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0x18b5, cpu.PC)
 		self.assertEqual(0x4002, cpu.SP)
 
@@ -88,7 +88,7 @@ class tests_ret(unittest.TestCase):
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.CFlag = Bits.set()
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0x18b5, cpu.PC)
 		self.assertEqual(0x4002, cpu.SP)
 
@@ -100,7 +100,7 @@ class tests_ret(unittest.TestCase):
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.PVFlag = Bits.reset()
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0x18b5, cpu.PC)
 		self.assertEqual(0x4002, cpu.SP)
 
@@ -112,7 +112,7 @@ class tests_ret(unittest.TestCase):
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.PVFlag = Bits.set()
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0x18b5, cpu.PC)
 		self.assertEqual(0x4002, cpu.SP)
 
@@ -124,7 +124,7 @@ class tests_ret(unittest.TestCase):
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.SFlag = Bits.reset()
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0x18b5, cpu.PC)
 		self.assertEqual(0x4002, cpu.SP)
 
@@ -136,7 +136,7 @@ class tests_ret(unittest.TestCase):
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.SFlag = Bits.set()
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0x18b5, cpu.PC)
 		self.assertEqual(0x4002, cpu.SP)
 
@@ -147,7 +147,7 @@ class tests_ret(unittest.TestCase):
 		cpu = CPU(FakeRom('\x00'*0x3535+'\xc9'), ram)
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(3, cpu.m_cycles)
 
 	def test_ret_takes_10_t_states(self):
@@ -157,7 +157,7 @@ class tests_ret(unittest.TestCase):
 		cpu = CPU(FakeRom('\x00'*0x3535+'\xc9'), ram)
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(10, cpu.t_states)
 
 	def test_ret_cc_does_takes_3_m_cycles_if_cc_is_true(self):
@@ -168,7 +168,7 @@ class tests_ret(unittest.TestCase):
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.SFlag = Bits.reset()
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(3, cpu.m_cycles)
 
 	def test_ret_cc_does_takes_1_m_cycles_if_cc_is_false(self):
@@ -179,7 +179,7 @@ class tests_ret(unittest.TestCase):
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.SFlag = Bits.set()
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(1, cpu.m_cycles)
 
 	def test_ret_cc_does_takes_11_t_states_if_cc_is_true(self):
@@ -190,7 +190,7 @@ class tests_ret(unittest.TestCase):
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.SFlag = Bits.reset()
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(11, cpu.t_states)
 
 	def test_ret_cc_does_takes_5_t_states_if_cc_is_false(self):
@@ -201,5 +201,5 @@ class tests_ret(unittest.TestCase):
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.SFlag = Bits.set()
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(5, cpu.t_states)

@@ -11,5 +11,5 @@ class tests_ld_bc_a(unittest.TestCase):
 		cpu = CPU(FakeRom('\x02'), ram)
 		cpu.A = 0x7a
 		cpu.BC = 0x1212
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0x7a, cpu.ram.readAddr(cpu.BC))

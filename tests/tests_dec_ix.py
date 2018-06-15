@@ -11,7 +11,7 @@ class tests_dec(unittest.TestCase):
 		ram.storeAddr(0x105, 0xDD)
 		cpu = CPU(FakeRom('\xdd\x35\x05'), ram)
 		cpu.IX = 0x100
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0xDC, ram.readAddr(cpu.IX+5))
 
 	def test_dec_ix_takes_6_m_cycles(self):
@@ -19,7 +19,7 @@ class tests_dec(unittest.TestCase):
 		ram.storeAddr(0x105, 0xDD)
 		cpu = CPU(FakeRom('\xdd\x35\x05'), ram)
 		cpu.IX = 0x100
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(6, cpu.m_cycles)
 
 	def test_dec_ix_takes_23_t_states(self):
@@ -27,5 +27,5 @@ class tests_dec(unittest.TestCase):
 		ram.storeAddr(0x105, 0xDD)
 		cpu = CPU(FakeRom('\xdd\x35\x05'), ram)
 		cpu.IX = 0x100
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(23, cpu.t_states)

@@ -11,5 +11,5 @@ class test_ld_de_a(unittest.TestCase):
 		cpu = CPU(FakeRom('\x12'), ram)
 		cpu.A = 0xA0
 		cpu.DE = 0x1128
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0xA0, cpu.ram.readAddr(cpu.DE))

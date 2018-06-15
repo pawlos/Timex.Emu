@@ -17,7 +17,7 @@ class tests_ldir(unittest.TestCase):
 		cpu.ram.storeAddr(0x2222, 0x66)
 		cpu.ram.storeAddr(0x2223, 0x59)
 		cpu.ram.storeAddr(0x2224, 0xc5)
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0x1114, cpu.HL)
 		self.assertEqual(0x2225, cpu.DE)
 		self.assertEqual(0x0000, cpu.BC)
@@ -41,7 +41,7 @@ class tests_ldir(unittest.TestCase):
 		cpu.ram.storeAddr(0x2222, 0x66)
 		cpu.ram.storeAddr(0x2223, 0x59)
 		cpu.ram.storeAddr(0x2224, 0xc5)
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(5, cpu.m_cycles)
 
 	def test_ldir_for_bc_equal_to_zero_takes_4_m_cycles(self):
@@ -55,7 +55,7 @@ class tests_ldir(unittest.TestCase):
 		cpu.ram.storeAddr(0x2222, 0x66)
 		cpu.ram.storeAddr(0x2223, 0x59)
 		cpu.ram.storeAddr(0x2224, 0xc5)
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(4, cpu.m_cycles)
 
 	def test_ldir_for_bc_not_equal_to_zero_takes_21_t_states(self):
@@ -69,7 +69,7 @@ class tests_ldir(unittest.TestCase):
 		cpu.ram.storeAddr(0x2222, 0x66)
 		cpu.ram.storeAddr(0x2223, 0x59)
 		cpu.ram.storeAddr(0x2224, 0xc5)
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(21, cpu.t_states)
 
 	def test_ldir_for_bc_equal_to_zero_takes_16_t_states(self):
@@ -83,5 +83,5 @@ class tests_ldir(unittest.TestCase):
 		cpu.ram.storeAddr(0x2222, 0x66)
 		cpu.ram.storeAddr(0x2223, 0x59)
 		cpu.ram.storeAddr(0x2224, 0xc5)
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(16, cpu.t_states)

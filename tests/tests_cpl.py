@@ -9,13 +9,13 @@ class tests_cpl(unittest.TestCase):
 	def test_cpl_inverts_a(self):
 		cpu = CPU(FakeRom('\x2f'), FakeRam())
 		cpu.A = 0b10110100
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0b01001011, cpu.A)
 
 	def test_cpl_takes_1_m_cycles(self):
 		cpu = CPU(FakeRom('\x2f'), FakeRam())
 		cpu.A = 0b10110100
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(1, cpu.m_cycles)
 
 	def test_cpl_takes_4_t_states(self):

@@ -11,14 +11,14 @@ class tests_dec_mem(unittest.TestCase):
 		cpu = CPU(FakeRom('\xfd\x35\x00'), ram)
 		cpu.IY = 0x500
 		cpu.CFlag = True
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(True, cpu.CFlag)
 
 	def test_dec_mem_iy_result_is_decreased_by_one(self):
 		ram = FakeRam([0x0]*0x500+[0x01])
 		cpu = CPU(FakeRom('\xfd\x35\x00'), ram)
 		cpu.IY = 0x500
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0x00, ram.readAddr(0x500))
 
 	def test_dec_mem_iy_sets_n_flag(self):

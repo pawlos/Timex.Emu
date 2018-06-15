@@ -30,42 +30,42 @@ class tests_or_a(unittest.TestCase):
 		cpu = CPU(FakeRom('\xb3'))
 		cpu.A = 0x00
 		cpu.E = 0x00
-		cpu.readOp();
+		cpu.readOp()
 		self.assertTrue(cpu.ZFlag)
 
 	def test_or_a_b_perform_or_operation_value_is_correct(self):
 		cpu = CPU(FakeRom('\xb0'))
 		cpu.A = 0x01
 		cpu.B = 0x04
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0x05, cpu.A)
 
 	def test_or_a_c_perform_or_operation_value_is_correct(self):
 		cpu = CPU(FakeRom('\xb1'))
 		cpu.A = 0x01
 		cpu.C = 0x04
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0x05, cpu.A)
 
 	def test_or_a_d_perform_or_operation_value_is_correct(self):
 		cpu = CPU(FakeRom('\xb2'))
 		cpu.A = 0x01
 		cpu.D = 0x04
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0x05, cpu.A)
 
 	def test_or_a_e_perform_or_operation_value_is_correct(self):
 		cpu = CPU(FakeRom('\xb3'))
 		cpu.A = 0x01
 		cpu.E = 0x04
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0x05, cpu.A)
 
 	def test_or_a_h_perform_or_operation_value_is_correct(self):
 		cpu = CPU(FakeRom('\xb4'))
 		cpu.A = 0x01
 		cpu.H = 0x04
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0x05, cpu.A)
 
 
@@ -73,7 +73,7 @@ class tests_or_a(unittest.TestCase):
 		cpu = CPU(FakeRom('\xb5'))
 		cpu.A = 0x01
 		cpu.L = 0x04
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0x05, cpu.A)
 
 
@@ -86,7 +86,7 @@ class tests_or_a(unittest.TestCase):
 		cpu.E = 0x08
 		cpu.H = 0x0a
 		cpu.L = 0x10
-		cpu.readOp();
+		cpu.readOp()
 		self.assertEqual(0x00, cpu.A)
 
 	def test_or_n_takes_2_m_cycles(self):
