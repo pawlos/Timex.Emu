@@ -314,7 +314,7 @@ class Opcodes(object):
 	def inc8(cpu, opcode, logger):
 		index = ( opcode >> 3 ) & 7
 		oldValue =  cpu.regs[index]
-		cpu.regs[index] = Bits.limitTo8Bits(cpu.regs[index] + 1)
+		cpu.regs[index] = Bits.limitTo8bits(cpu.regs[index] + 1)
 
 		cpu.NFlag = Bits.reset()
 		cpu.ZFlag = Bits.isZero(cpu.regs[index])
