@@ -46,3 +46,13 @@ class tests_ld_iy_nn(unittest.TestCase):
 		cpu.IY = 0x1111
 		cpu.readOp()
 		self.assertEqual(19, cpu.t_states)
+
+	def test_ld_iy_nn_takes_4_m_cycles(self):
+		cpu = CPU(FakeRom('\xFD\x21\x33\x77'))
+		cpu.readOp()
+		self.assertEqual(4, cpu.m_cycles)
+
+	def test_ld_iy_nn_takes_14_t_states(self):
+		cpu = CPU(FakeRom('\xFD\x21\x33\x77'))
+		cpu.readOp()
+		self.assertEqual(14, cpu.t_states)

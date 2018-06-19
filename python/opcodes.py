@@ -382,6 +382,7 @@ class Opcodes(object):
 		high = cpu.ram.readAddr(cpu.PC)
 		imm = (high << 8) + low
 		cpu.IY = imm
+		cpu.m_cycles, cpu.t_states = 4, 14
 		logger.info("LD IY, {:04X}".format(imm))
 
 	@staticmethod
