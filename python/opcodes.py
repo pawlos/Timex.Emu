@@ -933,6 +933,7 @@ class Opcodes(object):
 		high = cpu.ram.readAddr(cpu.SP)
 		cpu.SP = cpu.SP + 1
 		cpu.IX = (high << 8) + low
+		cpu.m_cycles, cpu.t_states = 4, 14
 		logger.info("POP IX")
 
 	@staticmethod
