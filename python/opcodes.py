@@ -981,6 +981,7 @@ class Opcodes(object):
 		if taken:
 			cpu.PC = addr
 
+		cpu.m_cycles, cpu.t_states = 3, 10
 		logger.info("JP {} {:04X}".format(flag, addr))
 
 	@staticmethod

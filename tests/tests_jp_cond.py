@@ -54,3 +54,15 @@ class tests_jp_cond(unittest.TestCase):
 		cpu.SFlag = True
 		cpu.readOp()
 		self.assertEqual(0x1520, cpu.PC)
+
+	def test_jp_s_takes_3_m_cycles(self):
+		cpu = CPU(FakeRom('\xFA\x20\x15'))
+		cpu.SFlag = True
+		cpu.readOp()
+		self.assertEqual(3, cpu.m_cycles)
+
+	def test_jp_po_takes_10_t_states(self):
+		cpu = CPU(FakeRom('\xea\x20\x15'))
+		cpu.PVFlag = True
+		cpu.readOp()
+		self.assertEqual(10, cpu.t_states)
