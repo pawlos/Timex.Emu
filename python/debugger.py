@@ -64,6 +64,7 @@ class Debugger(object):
 		print "c - continue"
 		print "t - print timing info (m-cycles, t-states)"
 		print "? - this help"
+		print "exit - stop the program"
 
 	def state(self, flag, flag_bit, flag_name):
 		return flag_name if Bits.getNthBit(flag,flag_bit) == True else flag_name.lower()
@@ -118,6 +119,8 @@ class Debugger(object):
 				self.attachDetachLogger(cpu)
 			elif "?" == input:
 				print self.help()
+			elif "exit" == input:
+				sys.exit()
 			else:
 				print "unknown command"
 				print self.help()
