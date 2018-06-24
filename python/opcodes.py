@@ -805,6 +805,7 @@ class Opcodes(object):
 	@staticmethod
 	def ld_de_a(cpu, opcode, logger):
 		cpu.ram.storeAddr(cpu.DE, cpu.A)
+		cpu.m_cycles, cpu.t_states = 2, 7
 		logger.info("LD (DE), A")
 
 	@staticmethod
