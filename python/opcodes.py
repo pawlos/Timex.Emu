@@ -794,6 +794,7 @@ class Opcodes(object):
 		high = cpu.ram.readAddr(cpu.PC)
 		addr = (high << 8) + low
 		cpu.A = cpu.ram.readAddr(addr)
+		cpu.m_cycles, cpu.t_states = 4, 13
 		logger.info("LD A, ({:04X})".format(addr))
 
 	@staticmethod
