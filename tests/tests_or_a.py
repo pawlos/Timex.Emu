@@ -100,3 +100,17 @@ class tests_or_a(unittest.TestCase):
 		cpu.A = 0x12
 		cpu.readOp()
 		self.assertEqual(7, cpu.t_states)
+
+	def test_or_a_b_takes_1_m_cycles(self):
+		cpu = CPU(FakeRom('\xb0'))
+		cpu.A = 0x01
+		cpu.B = 0x04
+		cpu.readOp()
+		self.assertEqual(1, cpu.m_cycles)
+
+	def test_or_a_b_takes_4_t_states(self):
+		cpu = CPU(FakeRom('\xb0'))
+		cpu.A = 0x01
+		cpu.B = 0x04
+		cpu.readOp()
+		self.assertEqual(4, cpu.t_states)
