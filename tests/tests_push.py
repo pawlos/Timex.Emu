@@ -46,3 +46,21 @@ class tests_push(unittest.TestCase):
 		cpu.readOp()
 		self.assertEqual(0x22, ram.readAddr(0x1006))
 		self.assertEqual(0x33, ram.readAddr(0x1005))
+
+	def test_push_takes_3_m_cycles(self):
+		ram = FakeRam([None]*0x1100)
+		cpu = CPU(FakeRom('\xF5'), ram)
+		cpu.AF = 0x2233
+		cpu.SP = 0x1007
+		
+		cpu.readOp()
+		self.assertEqual(3, cpu.m_cycles)
+
+	def test_push_takes_11_t_states(self):
+		ram = FakeRam([None]*0x1100)
+		cpu = CPU(FakeRom('\xF5'), ram)
+		cpu.AF = 0x2233
+		cpu.SP = 0x1007
+		
+		cpu.readOp()
+		self.assertEqual(11, cpu.t_states)	

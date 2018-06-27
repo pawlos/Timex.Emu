@@ -503,8 +503,7 @@ class Opcodes(object):
 		cpu.B = cpu.B - 1
 		pc = pc + Bits.twos_comp(e) + 1
 		if cpu.B != 0:
-			cpu.m_cycles = 1
-			cpu.t_states = 5
+			cpu.m_cycles,cpu.t_states = 1, 5
 			cpu.PC = pc
 
 		cpu.m_cycles, cpu.t_states = 2, 8
@@ -561,6 +560,7 @@ class Opcodes(object):
 		cpu.ram.storeAddr(cpu.SP-1, value >> 8)
 		cpu.ram.storeAddr(cpu.SP-2, value & 255)
 		cpu.SP -= 2
+		cpu.m_cycles, cpu.t_states = 3, 11
 		logger.info("PUSH {}".format(reg))
 
 	@staticmethod
