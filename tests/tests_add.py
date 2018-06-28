@@ -204,3 +204,17 @@ class tests_add(unittest.TestCase):
 		cpu = CPU(FakeRom('\x09'))
 		cpu.readOp()
 		self.assertEqual(11, cpu.t_states)
+
+	def test_add_A_B_takes_1_m_cycle(self):
+		cpu = CPU(FakeRom('\x80'))
+		cpu.A = 0x12
+		cpu.B = 0x40
+		cpu.readOp()
+		self.assertEqual(1, cpu.m_cycles)
+
+	def test_add_A_B_takes_4_t_states(self):
+		cpu = CPU(FakeRom('\x80'))
+		cpu.A = 0x12
+		cpu.B = 0x40
+		cpu.readOp()
+		self.assertEqual(4, cpu.t_states)

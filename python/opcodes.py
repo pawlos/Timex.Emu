@@ -695,6 +695,7 @@ class Opcodes(object):
 		cpu.NFlag = Bits.reset()
 		cpu.CFlag = Bits.carryFlag(cpu.A)
 
+		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("ADD A, {}".format(IndexToReg.translate8bit(index)))
 
 	@staticmethod
