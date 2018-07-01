@@ -63,3 +63,19 @@ class tests_ld_r_hl(unittest.TestCase):
 		cpu.HL = 0x25AF
 		cpu.readOp()
 		self.assertEqual(0x39, cpu.A)
+
+	def test_ld_b_hl_takes_2_m_cycles(self):
+		ram = FakeRam([None]*0x2600)
+		ram.storeAddr(0x25af, 0x39)
+		cpu = CPU(FakeRom('\x46'), ram)
+		cpu.HL = 0x25AF
+		cpu.readOp()
+		self.assertEqual(2, cpu.m_cycles)
+
+	def test_ld_b_hl_takes_7_t_states(self):
+		ram = FakeRam([None]*0x2600)
+		ram.storeAddr(0x25af, 0x39)
+		cpu = CPU(FakeRom('\x46'), ram)
+		cpu.HL = 0x25AF
+		cpu.readOp()
+		self.assertEqual(7, cpu.t_states)

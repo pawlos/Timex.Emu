@@ -728,6 +728,7 @@ class Opcodes(object):
 
 		cpu.regs[index] = value
 
+		cpu.m_cycles, cpu.t_states = 2, 7
 		logger.info("LD {}, (HL)".format(IndexToReg.translate8bit(index)))
 
 	@staticmethod
