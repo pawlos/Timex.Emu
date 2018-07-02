@@ -285,6 +285,7 @@ class CPU(object):
 			0x04 : Opcodes.inc8,
 			0x05 : Opcodes.dec8b,
 			0x06 : Opcodes.ld8n,
+			0x07 : Opcodes.rlca,
 			0x09 : Opcodes.add16,
 			0x0a : Opcodes.ld_a_bc,
 			0x0b : Opcodes.dec16b,

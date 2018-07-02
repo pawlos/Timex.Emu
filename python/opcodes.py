@@ -593,6 +593,15 @@ class Opcodes(object):
 		logger.info("RRCA")
 
 	@staticmethod
+	def rlca(cpu, opcode, logger):
+		cflag = cpu.A & (1 << 7)
+		cpu.A = (cpu.A << 1) | (cflag >> 7)
+		cpu.CFlag = Bits.set() if cflag != 0 else Bits.reset()
+
+		cpu.m_cycles, cpu.t_states = 1, 4
+		logger.info("RLCA")
+
+	@staticmethod
 	def and_n(cpu, opcode, logger):
 		n = cpu.ram.readAddr(cpu.PC)
 		old = cpu.A
