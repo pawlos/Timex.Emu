@@ -335,6 +335,13 @@ class Opcodes(object):
 		logger.info("EX DE, HL")
 
 	@staticmethod
+	def ex_af_afprim(cpu, opcode, logger):
+		cpu.AF, cpu.AFPrim = cpu.AFPrim, cpu.AF
+		cpu.m_cycles, cpu.t_states = 1, 4
+
+		logger.info("EX AF, AF'")
+
+	@staticmethod
 	def lddr(cpu, opcode, logger):
 		isZero = cpu.BC == 0
 		while True:

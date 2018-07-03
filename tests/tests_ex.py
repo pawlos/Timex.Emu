@@ -22,3 +22,21 @@ class tests_ex(unittest.TestCase):
 		cpu = CPU(FakeRom('\xeb'))
 		cpu.readOp()
 		self.assertEqual(4, cpu.t_states)
+
+	def test_ex_af_afprim_exchanges_correctly(self):
+		cpu = CPU(FakeRom('\x08'))
+		cpu.AF = 0x11
+		cpu.AFPrim = 0x22
+		cpu.readOp()
+		self.assertEqual(0x22, cpu.AF)
+		self.assertEqual(0x11, cpu.AFPrim)
+
+	def test_ex_af_afprim_takes_1_m_cycles(self):
+		cpu = CPU(FakeRom('\x08'))
+		cpu.readOp()
+		self.assertEqual(1, cpu.m_cycles)
+
+	def test_ex_af_afprim_takes_4_t_states(self):
+		cpu = CPU(FakeRom('\x08'))
+		cpu.readOp()
+		self.assertEqual(4, cpu.t_states)

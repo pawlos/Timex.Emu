@@ -185,13 +185,30 @@ class CPU(object):
 		self.regsPri[C] = value & 0xFF
 
 	@property
+	def AF(self):
+		return (self.regs[A] << 8) + self.regs[F]
+	
+	@AF.setter
+	def AF(self, value):
+		self.regs[A] = value >> 8
+		self.regs[F] = Bits.limitTo8bits(value) 
+
+	@property
+	def AFPrim(self):
+		return (self.regsPri[A] << 8) + self.regsPri[F]
+	
+	@AFPrim.setter
+	def AFPrim(self, value):
+		self.regsPri[A] = value >> 8
+		self.regsPri[F] = Bits.limitTo8bits(value) 
+
+	@property
 	def SP(self):
 		return self.sp
 
 	@SP.setter
 	def SP(self, value):
 		self.sp = Bits.limitTo16bits(value)
-
 
 	@property
 	def I(self):
@@ -267,9 +284,7 @@ class CPU(object):
 		self.interruptMode = 0
 
 		self.regs = [0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0x00,0x00] #B,C,D,E,H,L,none,A, F
-		self.regsPri = [0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0x00] #B',C',D',E',H',L',none,A'
-		self.fls = [0x00]
-		self.flsPri = [0x00] #flags'
+		self.regsPri = [0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0x00,0x00] #B',C',D',E',H',L',none,A',F'
 		self.tstates = 0
 		self.mcycles = 0
 		
@@ -286,6 +301,7 @@ class CPU(object):
 			0x05 : Opcodes.dec8b,
 			0x06 : Opcodes.ld8n,
 			0x07 : Opcodes.rlca,
+			0x08 : Opcodes.ex_af_afprim,
 			0x09 : Opcodes.add16,
 			0x0a : Opcodes.ld_a_bc,
 			0x0b : Opcodes.dec16b,
