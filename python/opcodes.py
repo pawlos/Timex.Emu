@@ -1328,3 +1328,17 @@ class Opcodes(object):
 
 		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("ADC A, {}".format(IndexToReg.translate8bit(reg_idx)))
+
+	@staticmethod
+	def add_a_hl(cpu, opcode, logger):
+		oldA = cpu.A
+		value = cpu.A + cpu.ram.readAddr(cpu.HL)
+		cpu.A = value
+
+		cpu.SFlag = Bits.isNegative(cpu.A)
+		cpu.ZFlag = Bits.isZero(cpu.A)
+		cpu.NFlag = Bits.reset()
+		cpu.CFlag = Bits.carryFlag(value)
+
+		cpu.m_cycles, cpu.t_states = 2, 7
+		logger.info("ADD A, (HL)")

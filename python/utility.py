@@ -1,5 +1,3 @@
-
-
 class Bits(object):
 	@staticmethod
 	def set():
@@ -58,7 +56,6 @@ class Bits(object):
 	@staticmethod
 	def carryFlag(val, bits = 8):
 		return val >= (1 << bits) or Bits.twos_comp(val, bits) < 0
-	
 
 	@staticmethod
 	def isNegative(val):

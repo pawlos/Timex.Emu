@@ -195,6 +195,48 @@ class tests_add(unittest.TestCase):
 		cpu.readOp()
 		self.assertEqual(0xA2, cpu.A)
 
+	def test_add_a_hl_correctly_adds_value_from_address(self):
+		cpu = CPU(FakeRom('\x86'))
+		cpu.HL = 0x0
+		cpu.A = 0x14
+		cpu.readOp()
+		self.assertEqual(0x9a, cpu.A)
+
+	def test_add_a_hl_correctly_sets_z_flag_if_result_is_zero(self):
+		cpu = CPU(FakeRom('\x86\xA0'))
+		cpu.HL = 0x1
+		cpu.A = 0x60
+		cpu.readOp()
+		self.assertTrue(cpu.ZFlag)
+
+	def test_add_a_hl_correctly_sets_s_flag_if_result_is_negative(self):
+		cpu = CPU(FakeRom('\x86\xA0'))
+		cpu.HL = 0x1
+		cpu.A = 0x50
+		cpu.readOp()
+		self.assertTrue(cpu.SFlag)
+
+	def test_add_a_hl_correctly_sets_c_flag_if_result_is_overflow(self):
+		cpu = CPU(FakeRom('\x86\xA0'))
+		cpu.HL = 0x1
+		cpu.A = 0x61
+		cpu.readOp()
+		self.assertTrue(cpu.CFlag)
+
+	def test_add_a_hl_takes_2_m_cycles(self):
+		cpu = CPU(FakeRom('\x86\xA0'))
+		cpu.HL = 0x1
+		cpu.A = 0x61
+		cpu.readOp()
+		self.assertEqual(2, cpu.m_cycles)
+
+	def test_add_a_hl_takes_7_t_states(self):
+		cpu = CPU(FakeRom('\x86\xA0'))
+		cpu.HL = 0x1
+		cpu.A = 0x61
+		cpu.readOp()
+		self.assertEqual(7, cpu.t_states)
+
 	def test_add_hl_takes_3_m_cycles(self):
 		cpu = CPU(FakeRom('\x09'))
 		cpu.readOp()

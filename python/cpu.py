@@ -426,6 +426,7 @@ class CPU(object):
 			0x83 : Opcodes.add_r,
 			0x84 : Opcodes.add_r,
 			0x85 : Opcodes.add_r,
+			0x86 : Opcodes.add_a_hl,
 			0x87 : Opcodes.add_r,
 			0x88 : Opcodes.adc_r,
 			0x89 : Opcodes.adc_r,
