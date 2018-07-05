@@ -1,5 +1,4 @@
 import unittest
-import unittest
 from cpu import CPU
 from opcodes import Opcodes
 from fakes import *
