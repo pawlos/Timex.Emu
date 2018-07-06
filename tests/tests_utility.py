@@ -15,3 +15,6 @@ class tests_utils(unittest.TestCase):
 
 	def test_bits_getNthBit_returns_1_for_N_equals_2_and_value_14(self):
 		self.assertEquals(1, Bits.getNthBit(14, 2))
+
+	def test_bits_setNthBit_correctly_set_the_but(self):
+		self.assertEquals(32,Bits.setNthBit(0, 5, 1))
