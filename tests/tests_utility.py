@@ -18,3 +18,9 @@ class tests_utils(unittest.TestCase):
 
 	def test_bits_setNthBit_correctly_set_the_but(self):
 		self.assertEquals(32,Bits.setNthBit(0, 5, 1))
+
+	def test_bits_is_zero_returns_true_when_value_is_zero(self):
+		self.assertTrue(Bits.isZero(0))
+
+	def test_bits_is_zero_returns_false_when_value_is_non_zero(self):
+		self.assertFalse(Bits.isZero(1))
