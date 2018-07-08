@@ -24,3 +24,6 @@ class tests_utils(unittest.TestCase):
 
 	def test_bits_isZero_returns_false_when_value_is_non_zero(self):
 		self.assertFalse(Bits.isZero(1))
+
+	def test_bits_isEvenParity_returns_true_when_valus_has_even_number_of_1s(self):
+		self.assertTrue(Bits.isEvenParity(3))

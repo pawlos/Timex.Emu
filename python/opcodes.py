@@ -30,7 +30,7 @@ class Opcodes(object):
 		cpu.NFlag = Bits.reset()
 		cpu.HFlag = Bits.reset()
 		cpu.SFlag = Bits.signInTwosComp(cpu.A)
-		cpu.PVFlag = Bits.paritySet(cpu.A)
+		cpu.PVFlag = Bits.isEvenParity(cpu.A)
 		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("XOR A")
 
@@ -173,7 +173,7 @@ class Opcodes(object):
 		cpu.NFlag = Bits.reset()
 		cpu.ZFlag = Bits.isZero(cpu.A)
 		cpu.SFlag = Bits.signInTwosComp(cpu.A)
-		cpu.PVFlag = Bits.paritySet(cpu.A)
+		cpu.PVFlag = Bits.isEvenParity(cpu.A)
 
 		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("AND A")
@@ -757,7 +757,7 @@ class Opcodes(object):
 		cpu.NFlag = Bits.reset()
 		cpu.ZFlag = Bits.isZero(cpu.A)
 		cpu.SFlag = Bits.isNegative(cpu.A)
-		cpu.PVFlag = Bits.paritySet(cpu.A)
+		cpu.PVFlag = Bits.isEvenParity(cpu.A)
 
 		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("OR {}".format(IndexToReg.translate8bit(regInd)))
@@ -861,7 +861,7 @@ class Opcodes(object):
 		cpu.SFlag = Bits.isNegative(cpu.A)
 		cpu.HFlag = Bits.reset()
 		cpu.NFlag = Bits.reset()
-		cpu.PVFlag = Bits.paritySet(cpu.A)
+		cpu.PVFlag = Bits.isEvenParity(cpu.A)
 		cpu.m_cycles, cpu.t_states = 5, 18
 		logger.info("RLD")
 
@@ -878,7 +878,7 @@ class Opcodes(object):
 		cpu.SFlag = Bits.isNegative(cpu.A)
 		cpu.HFlag = Bits.reset()
 		cpu.NFlag = Bits.reset()
-		cpu.PVFlag = Bits.paritySet(cpu.A)
+		cpu.PVFlag = Bits.isEvenParity(cpu.A)
 		cpu.m_cycles, cpu.t_states = 5, 18
 		logger.info("RRD")
 

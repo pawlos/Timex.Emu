@@ -50,7 +50,7 @@ class Bits(object):
 		return val == 0
 
 	@staticmethod
-	def paritySet(val):
+	def isEvenParity(val):
 		return Bits.count(val) % 2 == 0
 
 	@staticmethod
