@@ -79,7 +79,7 @@ class Bits(object):
 		return True if (oldValue & _1ToBits != 0) and (newValue & _1ToBits == 0) else False 
 
 	@staticmethod
-	def limitTo16bits(value):
+	def limitTo16Bits(value):
 		return value & 0xFFFF
 
 	@staticmethod

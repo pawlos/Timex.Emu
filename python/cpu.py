@@ -131,7 +131,7 @@ class CPU(object):
 
 	@HL.setter
 	def HL(self, value):
-		value = Bits.limitTo16bits(value)
+		value = Bits.limitTo16Bits(value)
 		self.regs[H] = value >> 8
 		self.regs[L] = Bits.limitTo8Bits(value)
 
@@ -141,7 +141,7 @@ class CPU(object):
 
 	@HLPrim.setter
 	def HLPrim(self, value):
-		value = Bits.limitTo16bits(value)
+		value = Bits.limitTo16Bits(value)
 		self.regsPri[H] = value >> 8
 		self.regsPri[L] = Bits.limitTo8Bits(value)
 
@@ -151,7 +151,7 @@ class CPU(object):
 
 	@DE.setter
 	def DE(self, value):
-		value = Bits.limitTo16bits(value)
+		value = Bits.limitTo16Bits(value)
 		self.regs[D] = value >> 8
 		self.regs[E] = Bits.limitTo8Bits(value)
 
@@ -161,7 +161,7 @@ class CPU(object):
 
 	@DEPrim.setter
 	def DEPrim(self, value):
-		value = Bits.limitTo16bits(value)
+		value = Bits.limitTo16Bits(value)
 		self.regsPri[D] = value >> 8
 		self.regsPri[E] = Bits.limitTo8Bits(value)
 
@@ -171,7 +171,7 @@ class CPU(object):
 
 	@BC.setter
 	def BC(self, value):
-		value = Bits.limitTo16bits(value)
+		value = Bits.limitTo16Bits(value)
 		self.regs[B] = value >> 8
 		self.regs[C] = Bits.limitTo8Bits(value)
 
@@ -181,7 +181,7 @@ class CPU(object):
 
 	@BCPrim.setter
 	def BCPrim(self, value):
-		value = Bits.limitTo16bits(value)
+		value = Bits.limitTo16Bits(value)
 		self.regsPri[B] = value >> 8
 		self.regsPri[C] = Bits.limitTo8Bits(value)
 
@@ -191,6 +191,7 @@ class CPU(object):
 	
 	@AF.setter
 	def AF(self, value):
+		value = Bits.limitTo16Bits(value)
 		self.regs[A] = value >> 8
 		self.regs[F] = Bits.limitTo8Bits(value) 
 
@@ -200,6 +201,7 @@ class CPU(object):
 	
 	@AFPrim.setter
 	def AFPrim(self, value):
+		value = Bits.limitTo16Bits(value)
 		self.regsPri[A] = value >> 8
 		self.regsPri[F] = Bits.limitTo8Bits(value) 
 
@@ -209,7 +211,7 @@ class CPU(object):
 
 	@SP.setter
 	def SP(self, value):
-		self.sp = Bits.limitTo16bits(value)
+		self.sp = Bits.limitTo16Bits(value)
 
 	@property
 	def I(self):
@@ -225,7 +227,7 @@ class CPU(object):
 
 	@IX.setter
 	def IX(self, value):
-		self.ix = Bits.limitTo16bits(value)
+		self.ix = Bits.limitTo16Bits(value)
 
 	@property
 	def IY(self):
@@ -233,7 +235,7 @@ class CPU(object):
 
 	@IY.setter
 	def IY(self, value):
-		self.iy = Bits.limitTo16bits(value)
+		self.iy = Bits.limitTo16Bits(value)
 
 	@property
 	def PC(self):
@@ -243,7 +245,7 @@ class CPU(object):
 
 	@PC.setter
 	def PC(self, value):
-		self.pc = Bits.limitTo16bits(value)
+		self.pc = Bits.limitTo16Bits(value)
 
 	@property
 	def t_states(self):
