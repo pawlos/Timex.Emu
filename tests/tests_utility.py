@@ -27,3 +27,7 @@ class tests_utils(unittest.TestCase):
 
 	def test_bits_isEvenParity_returns_true_when_valus_has_even_number_of_1s(self):
 		self.assertTrue(Bits.isEvenParity(3))
+
+	def test_bits_limitTo8Bits_correctly_limits_value_to_8_bits(self):
+		value = 0b1101010010
+		self.assertEquals(0b1010010, Bits.limitTo8Bits(value))

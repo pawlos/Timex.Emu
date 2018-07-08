@@ -83,7 +83,7 @@ class Bits(object):
 		return value & 0xFFFF
 
 	@staticmethod
-	def limitTo8bits(value):
+	def limitTo8Bits(value):
 		return value & 0xFF
 
 

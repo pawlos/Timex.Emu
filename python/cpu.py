@@ -14,28 +14,28 @@ class CPU(object):
 		return self.regs[A]
 	@A.setter
 	def A(self, value):
-		self.regs[A] = Bits.limitTo8bits(value)
+		self.regs[A] = Bits.limitTo8Bits(value)
 
 	@property
 	def F(self):
 		return self.regs[F]
 	@F.setter
 	def F(self, value):
-		self.regs[F] = Bits.limitTo8bits(value)
+		self.regs[F] = Bits.limitTo8Bits(value)
 
 	@property
 	def B(self):
 		return self.regs[B]
 	@B.setter
 	def B(self, value):
-		self.regs[B] = Bits.limitTo8bits(value)
+		self.regs[B] = Bits.limitTo8Bits(value)
 
 	@property
 	def C(self):
 		return self.regs[C]
 	@C.setter
 	def C(self, value):
-		self.regs[C] = Bits.limitTo8bits(value)
+		self.regs[C] = Bits.limitTo8Bits(value)
 
 	@property
 	def D(self):
@@ -43,7 +43,7 @@ class CPU(object):
 
 	@D.setter
 	def D(self, value):
-		self.regs[D] = Bits.limitTo8bits(value)
+		self.regs[D] = Bits.limitTo8Bits(value)
 
 	@property
 	def E(self):
@@ -51,14 +51,15 @@ class CPU(object):
 
 	@E.setter
 	def E(self, value):
-		self.regs[E] = Bits.limitTo8bits(value)
+		self.regs[E] = Bits.limitTo8Bits(value)
 
 	@property
 	def H(self):
 		return self.regs[H]
+
 	@H.setter
 	def H(self, value):
-		self.regs[H] = Bits.limitTo8bits(value)
+		self.regs[H] = Bits.limitTo8Bits(value)
 
 	@property
 	def L(self):
@@ -66,7 +67,7 @@ class CPU(object):
 
 	@L.setter
 	def L(self, value):
-		self.regs[L] = Bits.limitTo8bits(value)
+		self.regs[L] = Bits.limitTo8Bits(value)
 
 	@property
 	def R(self):
@@ -74,7 +75,7 @@ class CPU(object):
 
 	@R.setter
 	def R(self, value):
-		self.r= value
+		self.r= Bits.limitTo8Bits(value)
 
 	@property
 	def ZFlag(self):
@@ -132,7 +133,7 @@ class CPU(object):
 	def HL(self, value):
 		value = Bits.limitTo16bits(value)
 		self.regs[H] = value >> 8
-		self.regs[L] = value & 0xFF
+		self.regs[L] = Bits.limitTo8Bits(value)
 
 	@property
 	def HLPrim(self):
@@ -142,7 +143,7 @@ class CPU(object):
 	def HLPrim(self, value):
 		value = Bits.limitTo16bits(value)
 		self.regsPri[H] = value >> 8
-		self.regsPri[L] = value & 0xFF
+		self.regsPri[L] = Bits.limitTo8Bits(value)
 
 	@property
 	def DE(self):
@@ -152,7 +153,7 @@ class CPU(object):
 	def DE(self, value):
 		value = Bits.limitTo16bits(value)
 		self.regs[D] = value >> 8
-		self.regs[E] = value & 0xFF
+		self.regs[E] = Bits.limitTo8Bits(value)
 
 	@property
 	def DEPrim(self):
@@ -162,7 +163,7 @@ class CPU(object):
 	def DEPrim(self, value):
 		value = Bits.limitTo16bits(value)
 		self.regsPri[D] = value >> 8
-		self.regsPri[E] = value & 0xFF
+		self.regsPri[E] = Bits.limitTo8Bits(value)
 
 	@property
 	def BC(self):
@@ -172,7 +173,7 @@ class CPU(object):
 	def BC(self, value):
 		value = Bits.limitTo16bits(value)
 		self.regs[B] = value >> 8
-		self.regs[C] = value & 0xFF
+		self.regs[C] = Bits.limitTo8Bits(value)
 
 	@property
 	def BCPrim(self):
@@ -182,7 +183,7 @@ class CPU(object):
 	def BCPrim(self, value):
 		value = Bits.limitTo16bits(value)
 		self.regsPri[B] = value >> 8
-		self.regsPri[C] = value & 0xFF
+		self.regsPri[C] = Bits.limitTo8Bits(value)
 
 	@property
 	def AF(self):
@@ -191,7 +192,7 @@ class CPU(object):
 	@AF.setter
 	def AF(self, value):
 		self.regs[A] = value >> 8
-		self.regs[F] = Bits.limitTo8bits(value) 
+		self.regs[F] = Bits.limitTo8Bits(value) 
 
 	@property
 	def AFPrim(self):
@@ -200,7 +201,7 @@ class CPU(object):
 	@AFPrim.setter
 	def AFPrim(self, value):
 		self.regsPri[A] = value >> 8
-		self.regsPri[F] = Bits.limitTo8bits(value) 
+		self.regsPri[F] = Bits.limitTo8Bits(value) 
 
 	@property
 	def SP(self):
@@ -216,7 +217,7 @@ class CPU(object):
 
 	@I.setter
 	def I(self, value):
-		self.i = Bits.limitTo8bits(value)
+		self.i = Bits.limitTo8Bits(value)
 
 	@property
 	def IX(self):
