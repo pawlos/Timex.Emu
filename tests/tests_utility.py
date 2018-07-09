@@ -31,3 +31,15 @@ class tests_utils(unittest.TestCase):
 	def test_bits_limitTo8Bits_correctly_limits_value_to_8_bits(self):
 		value = 0b1101010010
 		self.assertEquals(0b1010010, Bits.limitTo8Bits(value))
+
+	def test_bits_isNegative_returns_true_if_value_is_over_80h(self):
+		self.assertTrue(Bits.isNegative(0x81))
+
+	def test_bits_isNegative_returns_false_if_value_is_below_80h(self):
+		self.assertFalse(Bits.isNegative(0x20))
+
+	def test_bits_isNegative_returns_true_for_16bit_if_value_is_over_8000h(self):
+		self.assertTrue(Bits.isNegative(0x8000, bits=16))
+
+	def test_bits_isNegative_returns_false_for_16bit_if_value_is_below_8000h(self):
+		self.assertFalse(Bits.isNegative(0x2000, bits=16))

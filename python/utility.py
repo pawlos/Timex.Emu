@@ -58,8 +58,8 @@ class Bits(object):
 		return val >= (1 << bits) or Bits.twos_comp(val, bits) < 0
 
 	@staticmethod
-	def isNegative(val):
-		return True if Bits.twos_comp(val) < 0 else False
+	def isNegative(val, bits = 8):
+		return True if Bits.twos_comp(val, bits) < 0 else False
 
 	@staticmethod
 	def signInTwosComp(val, bits = 8):
