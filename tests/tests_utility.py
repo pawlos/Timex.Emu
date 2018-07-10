@@ -1,6 +1,6 @@
 import unittest
 
-from utility import Bits
+from utility import Bits, IndexToReg
 
 class tests_utils(unittest.TestCase):
 
@@ -43,3 +43,9 @@ class tests_utils(unittest.TestCase):
 
 	def test_bits_isNegative_returns_false_for_16bit_if_value_is_below_8000h(self):
 		self.assertFalse(Bits.isNegative(0x2000, bits=16))
+
+	def test_IndexToReg_translate8Bit_returns_B_for_0(self):
+		self.assertEquals("B", IndexToReg.translate8Bit(0))
+
+	def test_IndexToReg_trasnalte8Bit_returns_C_for_1(self):
+		self.assertEquals("C", IndexToReg.translate8Bit(1))

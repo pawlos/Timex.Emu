@@ -100,7 +100,7 @@ class IndexToReg(object):
 			return "SP"
 
 	@staticmethod
-	def translate8bit(ind):
+	def translate8Bit(ind):
 		if ind == 0:
 			return "B"
 		if ind == 1:
