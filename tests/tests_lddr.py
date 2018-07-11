@@ -11,12 +11,12 @@ class tests_lddr(unittest.TestCase):
 		cpu.HL = 0x1114
 		cpu.DE = 0x2225
 		cpu.BC = 0x03
-		cpu.ram.storeAddr(0x1114, 0xA5)
-		cpu.ram.storeAddr(0x1113, 0x36)
-		cpu.ram.storeAddr(0x1112, 0x88)
-		cpu.ram.storeAddr(0x2225, 0xc5)
-		cpu.ram.storeAddr(0x2224, 0x59)
-		cpu.ram.storeAddr(0x2223, 0x66)
+		cpu.ram[0x1114] = 0xA5
+		cpu.ram[0x1113] = 0x36
+		cpu.ram[0x1112] = 0x88
+		cpu.ram[0x2225] = 0xc5
+		cpu.ram[0x2224] = 0x59
+		cpu.ram[0x2223] = 0x66
 		cpu.readOp()
 		self.assertEqual(0x1111, cpu.HL)
 		self.assertEqual(0x2222, cpu.DE)
@@ -40,12 +40,12 @@ class tests_lddr(unittest.TestCase):
 		cpu.PVFlag = True
 		cpu.SFlag = False
 		cpu.ZFlag = True
-		cpu.ram.storeAddr(0x1114, 0xA5)
-		cpu.ram.storeAddr(0x1113, 0x36)
-		cpu.ram.storeAddr(0x1112, 0x88)
-		cpu.ram.storeAddr(0x2225, 0xc5)
-		cpu.ram.storeAddr(0x2224, 0x59)
-		cpu.ram.storeAddr(0x2223, 0x66)
+		cpu.ram[0x1114] = 0xA5
+		cpu.ram[0x1113] = 0x36
+		cpu.ram[0x1112] = 0x88
+		cpu.ram[0x2225] = 0xc5
+		cpu.ram[0x2224] = 0x59
+		cpu.ram[0x2223] = 0x66
 		cpu.readOp()
 		self.assertFalse(cpu.HFlag)
 		self.assertFalse(cpu.NFlag)

@@ -29,48 +29,48 @@ class tests_ld_rr_nn(unittest.TestCase):
 
 	def test_ld_BC_addr_nn_correctly_loads_value_to_BC(self):
 		ram = FakeRam([None]*0x2132)
-		ram.storeAddr(0x2130, 0x65)
-		ram.storeAddr(0x2131, 0x78)
+		ram[0x2130] = 0x65
+		ram[0x2131] = 0x78
 		cpu = CPU(FakeRom('\xED\x4b\x30\x21'),ram)
 		cpu.readOp()
 		self.assertEqual(0x7865, cpu.BC)
 
 	def test_ld_DE_addr_nn_correctly_loads_value_to_DE(self):
 		ram = FakeRam([None]*0x2132)
-		ram.storeAddr(0x2130, 0x65)
-		ram.storeAddr(0x2131, 0x78)
+		ram[0x2130] = 0x65
+		ram[0x2131] = 0x78
 		cpu = CPU(FakeRom('\xED\x5b\x30\x21'),ram)
 		cpu.readOp()
 		self.assertEqual(0x7865, cpu.DE)
 
 	def test_ld_HL_addr_nn_correctly_loads_value_to_HL(self):
 		ram = FakeRam([None]*0x2132)
-		ram.storeAddr(0x2130, 0x65)
-		ram.storeAddr(0x2131, 0x78)
+		ram[0x2130] = 0x65
+		ram[0x2131] = 0x78
 		cpu = CPU(FakeRom('\xED\x6b\x30\x21'),ram)
 		cpu.readOp()
 		self.assertEqual(0x7865, cpu.HL)
 
 	def test_ld_SP_addr_nn_correctly_loads_value_to_SP(self):
 		ram = FakeRam([None]*0x2132)
-		ram.storeAddr(0x2130, 0x65)
-		ram.storeAddr(0x2131, 0x78)
+		ram[0x2130] = 0x65
+		ram[0x2131] = 0x78
 		cpu = CPU(FakeRom('\xED\x7b\x30\x21'),ram)
 		cpu.readOp()
 		self.assertEqual(0x7865, cpu.SP)
 
 	def test_ld_BC_addr_nn_takes_6_m_cycles(self):
 		ram = FakeRam([None]*0x2132)
-		ram.storeAddr(0x2130, 0x65)
-		ram.storeAddr(0x2131, 0x78)
+		ram[0x2130] = 0x65
+		ram[0x2131] = 0x78
 		cpu = CPU(FakeRom('\xED\x4b\x30\x21'),ram)
 		cpu.readOp()
 		self.assertEqual(6, cpu.m_cycles)
 
 	def test_ld_BC_addr_nn_takes_20_t_states(self):
 		ram = FakeRam([None]*0x2132)
-		ram.storeAddr(0x2130, 0x65)
-		ram.storeAddr(0x2131, 0x78)
+		ram[0x2130] = 0x65
+		ram[0x2131] = 0x78
 		cpu = CPU(FakeRom('\xED\x4b\x30\x21'),ram)
 		cpu.readOp()
 		self.assertEqual(20, cpu.t_states)

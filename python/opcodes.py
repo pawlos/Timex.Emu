@@ -101,7 +101,7 @@ class Opcodes(object):
 	@staticmethod
 	def ld_addr(cpu, opcode, logger):
 		value = cpu.ram[cpu.PC]
-		cpu.ram.storeAddr(cpu.HL, value)
+		cpu.ram[cpu.HL] = value
 		cpu.m_cycles, cpu.t_states = 3, 10
 		logger.info("LD (HL), {:02X}".format(value))
 
@@ -294,8 +294,8 @@ class Opcodes(object):
 		elif regInd == 3:
 			value = cpu.SP
 
-		cpu.ram.storeAddr(nn + 1, value >> 8)
-		cpu.ram.storeAddr(nn, value & 0xFF)
+		cpu.ram[nn + 1] = value >> 8
+		cpu.ram[nn] = value & 0xFF
 		cpu.m_cycles, cpu.t_states = 6, 20
 		logger.info("LD ({:04X}), {}".format(nn, IndexToReg.translate16bit(regInd)))
 
@@ -304,8 +304,8 @@ class Opcodes(object):
 		high = cpu.ram[cpu.PC]
 		low = cpu.ram[cpu.PC]
 		nn = (high << 8) + low
-		cpu.ram.storeAddr(nn+1, cpu.H)
-		cpu.ram.storeAddr(nn, cpu.L)
+		cpu.ram[nn+1] = cpu.H
+		cpu.ram[nn] = cpu.L
 
 		cpu.m_cycles, cpu.t_states = 5, 16
 		logger.info("LD ({:04X}), HL".format(nn))
@@ -345,7 +345,7 @@ class Opcodes(object):
 	def lddr(cpu, opcode, logger):
 		isZero = cpu.BC == 0
 		while True:
-			cpu.ram.storeAddr(cpu.DE, cpu.ram[cpu.HL])
+			cpu.ram[cpu.DE] = cpu.ram[cpu.HL]
 			cpu.HL = cpu.HL - 1
 			cpu.DE = cpu.DE - 1
 			cpu.BC = cpu.BC - 1
@@ -398,7 +398,7 @@ class Opcodes(object):
 		wasZero = cpu.BC == 0
 		while True:
 			hl_mem = cpu.ram[cpu.HL]
-			cpu.ram.storeAddr(cpu.DE, hl_mem)
+			cpu.ram[cpu.DE] = hl_mem
 			cpu.HL = cpu.HL + 1
 			cpu.DE = cpu.DE + 1
 			cpu.BC = cpu.BC - 1
@@ -417,7 +417,7 @@ class Opcodes(object):
 		high = cpu.ram[cpu.PC]
 		low = cpu.ram[cpu.PC]
 		addr = (high << 8) + low
-		cpu.ram.storeAddr(addr, cpu.A)
+		cpu.ram[addr] = cpu.A
 
 		cpu.m_cycles, cpu.t_states = 4, 13
 		logger.info("LD ({:04X}), A".format(addr))
@@ -429,7 +429,7 @@ class Opcodes(object):
 		addr = cpu.IY + displacement
 		value = cpu.ram[addr]
 		new_value = value - 1
-		cpu.ram.storeAddr(addr, new_value)
+		cpu.ram[addr] = new_value
 
 		cpu.NFlag = Bits.set()
 		cpu.SFlag = Bits.isNegative(new_value)
@@ -444,7 +444,7 @@ class Opcodes(object):
 		bit = (opcode >> 3) & 7
 		val = cpu.ram[cpu.IY+index]
 		val |= (1 << bit)
-		cpu.ram.storeAddr(cpu.IY+index, val)
+		cpu.ram[cpu.IY+index] = val
 
 		cpu.m_cycles, cpu.t_states = 6, 23
 		logger.info("SET {},(IY+{:02X})".format(bit, index))
@@ -455,7 +455,7 @@ class Opcodes(object):
 		bit = (opcode >> 3) & 7
 		val = cpu.ram[cpu.IY+index]
 		val = Bits.setNthBit(val, bit, 0)
-		cpu.ram.storeAddr(cpu.IY+index, val)
+		cpu.ram[cpu.IY+index] = val
 
 		cpu.m_cycles, cpu.t_states = 6, 23
 		logger.info("RES {}, (IY+{:02X})".format(bit, index))
@@ -479,8 +479,8 @@ class Opcodes(object):
 		addr_hi = cpu.ram[pc]
 		addr = (addr_hi << 8) + addr_lo
 		pc += 1
-		cpu.ram.storeAddr(cpu.SP - 1, pc >> 8)
-		cpu.ram.storeAddr(cpu.SP - 2, (pc & 255))
+		cpu.ram[cpu.SP - 1] = pc >> 8
+		cpu.ram[cpu.SP - 2] = (pc & 255)
 		cpu.SP = cpu.SP - 2
 		cpu.PC = addr
 
@@ -492,14 +492,14 @@ class Opcodes(object):
 		''' LD (IY+d),r '''
 		regInd = opcode & 7
 		d = cpu.ram[cpu.PC]
-		cpu.ram.storeAddr(cpu.IY + d, cpu.regs[regInd])
+		cpu.ram[cpu.IY + d] = cpu.regs[regInd]
 		cpu.m_cycles, cpu.t_states = 5, 19
 		logger.info("LD (IY+{:02X}), {}".format(d, IndexToReg.translate8Bit(regInd)))
 
 	@staticmethod
 	def ldhlr(cpu, opcode, logger):
 		regInd = opcode & 7
-		cpu.ram.storeAddr(cpu.HL, cpu.regs[regInd])
+		cpu.ram[cpu.HL] = cpu.regs[regInd]
 		cpu.m_cycles, cpu.t_states = 2, 7
 		logger.info("LD (HL), {}".format(IndexToReg.translate8Bit(regInd)))
 
@@ -564,8 +564,8 @@ class Opcodes(object):
 			reg = "AF"
 			value = cpu.AF
 
-		cpu.ram.storeAddr(cpu.SP-1, value >> 8)
-		cpu.ram.storeAddr(cpu.SP-2, value & 255)
+		cpu.ram[cpu.SP-1] = value >> 8
+		cpu.ram[cpu.SP-2] = value & 255
 		cpu.SP -= 2
 		cpu.m_cycles, cpu.t_states = 3, 11
 		logger.info("PUSH {}".format(reg))
@@ -655,8 +655,8 @@ class Opcodes(object):
 	def rst(cpu, opcode, logger):
 		index = (opcode >> 3) & 7
 		pc = cpu.PC
-		cpu.ram.storeAddr(cpu.SP - 1, pc >> 8)
-		cpu.ram.storeAddr(cpu.SP - 2, pc & 8)
+		cpu.ram[cpu.SP - 1] = pc >> 8
+		cpu.ram[cpu.SP - 2] = pc & 8
 		cpu.SP -= 2
 		rst_jumps = {0:0x00, 1:0x08, 2:0x10, 3:0x18, 4:0x20, 5:0x28, 6:0x30, 7:0x38}
 
@@ -693,7 +693,7 @@ class Opcodes(object):
 		''' LD (IY+d),n '''
 		d = cpu.ram[cpu.PC]
 		n = cpu.ram[cpu.PC]
-		cpu.ram.storeAddr(cpu.IY + d, n)
+		cpu.ram[cpu.IY + d] = n
 		cpu.m_cycles, cpu.t_states = 5, 19
 		logger.info("LD (IY+{:02X}),{:02X}".format(d, n))
 
@@ -820,13 +820,13 @@ class Opcodes(object):
 
 	@staticmethod
 	def ld_bc_a(cpu, opcode, logger):
-		cpu.ram.storeAddr(cpu.BC, cpu.A)
+		cpu.ram[cpu.BC] = cpu.A
 		cpu.m_cycles, cpu.t_states = 2, 7
 		logger.info("LD (BC), A")
 
 	@staticmethod
 	def ld_de_a(cpu, opcode, logger):
-		cpu.ram.storeAddr(cpu.DE, cpu.A)
+		cpu.ram[cpu.DE] = cpu.A
 		cpu.m_cycles, cpu.t_states = 2, 7
 		logger.info("LD (DE), A")
 
@@ -856,7 +856,7 @@ class Opcodes(object):
 		high_hl = (mem_hl & 0xF0) >> 4
 		cpu.A = ((cpu.A & 0xF0) | high_hl)
 		mem_hl = (mem_hl << 4) | low_a
-		cpu.ram.storeAddr(cpu.HL, mem_hl)
+		cpu.ram[cpu.HL] = mem_hl
 		cpu.ZFlag = Bits.isZero(cpu.A)
 		cpu.SFlag = Bits.isNegative(cpu.A)
 		cpu.HFlag = Bits.reset()
@@ -873,7 +873,7 @@ class Opcodes(object):
 		high_hl = (mem_hl & 0xF0) >> 4
 		cpu.A = (cpu.A & 0xF0) | low_hl
 		mem_hl = (low_a << 4) | high_hl
-		cpu.ram.storeAddr(cpu.HL, mem_hl)
+		cpu.ram[cpu.HL] = mem_hl
 		cpu.ZFlag = Bits.isZero(cpu.A)
 		cpu.SFlag = Bits.isNegative(cpu.A)
 		cpu.HFlag = Bits.reset()
@@ -1055,8 +1055,8 @@ class Opcodes(object):
 			taken = True
 
 		if taken:
-			cpu.ram.storeAddr(cpu.SP - 1, pc >> 8)
-			cpu.ram.storeAddr(cpu.SP - 2, (pc & 255))
+			cpu.ram[cpu.SP - 1] = pc >> 8
+			cpu.ram[cpu.SP - 2] = (pc & 255)
 			cpu.SP = cpu.SP - 2
 			cpu.PC = addr
 			cpu.m_cycles, cpu.t_states = 2, 7
@@ -1083,7 +1083,7 @@ class Opcodes(object):
 	def dec_at_hl(cpu, opcode, logger):
 		old_val = cpu.ram[cpu.HL]
 		new_val = old_val - 1
-		cpu.ram.storeAddr(cpu.HL, new_val)
+		cpu.ram[cpu.HL] = new_val
 		cpu.ZFlag = Bits.isZero(new_val)
 		cpu.SFlag = Bits.isNegative(new_val)
 		cpu.NFlag = Bits.set()
@@ -1096,7 +1096,7 @@ class Opcodes(object):
 		d = cpu.ram[cpu.PC]
 		old_val = cpu.ram[cpu.IX+d]
 		new_val = old_val - 1
-		cpu.ram.storeAddr(cpu.IX+d, new_val)
+		cpu.ram[cpu.IX+d] = new_val
 		cpu.ZFlag = Bits.isZero(new_val)
 		cpu.SFlag = Bits.isNegative(new_val)
 		cpu.NFlag = Bits.set()
@@ -1235,7 +1235,7 @@ class Opcodes(object):
 	def inc_at_hl(cpu, opcode, logger):
 		old_val = cpu.ram[cpu.HL]
 		new_val = old_val + 1
-		cpu.ram.storeAddr(cpu.HL, new_val)
+		cpu.ram[cpu.HL] = new_val
 		cpu.ZFlag = Bits.isZero(new_val)
 		cpu.SFlag = Bits.isNegative(new_val)
 		cpu.NFlag = Bits.reset()

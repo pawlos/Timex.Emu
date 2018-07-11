@@ -8,7 +8,7 @@ class tests_ld_a_bc(unittest.TestCase):
 
 	def test_ld_a_bc_loads_corect_value(self):
 		ram = FakeRam([0x00]*0x5000)
-		ram.storeAddr(0x4747, 0x12)
+		ram[0x4747] = 0x12
 		cpu = CPU(FakeRom('\x0a'), ram)
 		cpu.BC = 0x4747
 		cpu.readOp()
@@ -16,7 +16,7 @@ class tests_ld_a_bc(unittest.TestCase):
 
 	def test_ld_a_bc_takes_2_m_cycles(self):
 		ram = FakeRam([0x00]*0x5000)
-		ram.storeAddr(0x4747, 0x12)
+		ram[0x4747] = 0x12
 		cpu = CPU(FakeRom('\x0a'), ram)
 		cpu.BC = 0x4747
 		cpu.readOp()
@@ -24,7 +24,7 @@ class tests_ld_a_bc(unittest.TestCase):
 
 	def test_ld_a_bc_takes_7_t_states(self):
 		ram = FakeRam([0x00]*0x5000)
-		ram.storeAddr(0x4747, 0x12)
+		ram[0x4747] = 0x12
 		cpu = CPU(FakeRom('\x0a'), ram)
 		cpu.BC = 0x4747
 		cpu.readOp()

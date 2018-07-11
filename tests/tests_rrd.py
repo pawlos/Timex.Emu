@@ -8,7 +8,7 @@ class tests_rrd(unittest.TestCase):
 
 	def test_rrd_does_modify_value_correctly(self):
 		ram = FakeRam([0x00]*0x5001)
-		ram.storeAddr(0x5000, 0b00100000)
+		ram[0x5000] = 0b00100000
 		cpu = CPU(FakeRom('\xed\x67'), ram)
 		cpu.A = 0b10000100
 		cpu.HL = 0x5000
@@ -18,7 +18,7 @@ class tests_rrd(unittest.TestCase):
 
 	def test_rrd_does_take_5_m_cycles(self):
 		ram = FakeRam([0x00]*0x5001)
-		ram.storeAddr(0x5000, 0b00100000)
+		ram[0x5000] = 0b00100000
 		cpu = CPU(FakeRom('\xed\x67'), ram)
 		cpu.A = 0b10000100
 		cpu.HL = 0x5000
@@ -27,7 +27,7 @@ class tests_rrd(unittest.TestCase):
 
 	def test_rrd_does_take_18_t_states(self):
 		ram = FakeRam([0x00]*0x5001)
-		ram.storeAddr(0x5000, 0b00100000)
+		ram[0x5000] = 0b00100000
 		cpu = CPU(FakeRom('\xed\x67'), ram)
 		cpu.A = 0b10000100
 		cpu.HL = 0x5000

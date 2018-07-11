@@ -1,4 +1,5 @@
 import struct
+from utility import Bits
 
 class FakeRom(object):
 	
@@ -19,8 +20,8 @@ class FakeRam(object):
 	def load(self, rom):
 		self.ram = [rom.readMemory(x) for x in range(len(rom))] + self.ram[len(rom):]
 
-	def storeAddr(self, addr, value):
-		self.ram[addr] = value & 0xFF
+	def __setitem__(self, addr, value):
+		self.ram[addr] = Bits.limitTo8Bits(value)
 
 	def __getitem__(self, addr):
 		return self.ram[addr]

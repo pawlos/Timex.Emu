@@ -60,7 +60,7 @@ class tests_add_iy(unittest.TestCase):
 
 	def test_add_iy_a_sets_correct_value(self):
 		ram = FakeRam([None]*0x110)
-		ram.storeAddr(0x109, 0x11)
+		ram[0x109] = 0x11
 		cpu = CPU(FakeRom('\xfd\x86\x09'), ram)
 		cpu.IY = 0x100
 		cpu.A = 0x11
@@ -83,7 +83,7 @@ class tests_add_iy(unittest.TestCase):
 
 	def test_add_iy_a_takes_4_m_cycles(self):
 		ram = FakeRam([None]*0x110)
-		ram.storeAddr(0x109, 0x11)
+		ram[0x109] = 0x11
 		cpu = CPU(FakeRom('\xfd\x86\x09'), ram)
 		cpu.IY = 0x100
 		cpu.A = 0x11
@@ -92,7 +92,7 @@ class tests_add_iy(unittest.TestCase):
 
 	def test_add_iy_a_takes_15_t_states(self):
 		ram = FakeRam([None]*0x110)
-		ram.storeAddr(0x109, 0x11)
+		ram[0x109] = 0x11
 		cpu = CPU(FakeRom('\xfd\x86\x09'), ram)
 		cpu.IY = 0x100
 		cpu.A = 0x11

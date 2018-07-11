@@ -8,7 +8,7 @@ class tests_dec(unittest.TestCase):
 
 	def test_dec_hl_sets_correct_value_is_set(self):
 		ram = FakeRam([None]*0x200)
-		ram.storeAddr(0x100, 0xDD)
+		ram[0x100] = 0xDD
 		cpu = CPU(FakeRom('\x35'), ram)
 		cpu.HL = 0x100
 		cpu.readOp()
@@ -16,7 +16,7 @@ class tests_dec(unittest.TestCase):
 
 	def test_dec_hl_takes_3_m_cycles(self):
 		ram = FakeRam([None]*0x200)
-		ram.storeAddr(0x100, 0xDD)
+		ram[0x100] = 0xDD
 		cpu = CPU(FakeRom('\x35'), ram)
 		cpu.HL = 0x100
 		cpu.readOp()
@@ -24,7 +24,7 @@ class tests_dec(unittest.TestCase):
 
 	def test_dec_hl_takes_11_t_states(self):
 		ram = FakeRam([None]*0x200)
-		ram.storeAddr(0x100, 0xDD)
+		ram[0x100] = 0xDD
 		cpu = CPU(FakeRom('\x35'), ram)
 		cpu.HL = 0x100
 		cpu.readOp()
