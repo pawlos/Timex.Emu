@@ -22,13 +22,13 @@ class tests_ldir(unittest.TestCase):
 		self.assertEqual(0x2225, cpu.DE)
 		self.assertEqual(0x0000, cpu.BC)
 
-		self.assertEqual(0x88, cpu.ram.readAddr(0x1111))
-		self.assertEqual(0x36, cpu.ram.readAddr(0x1112))
-		self.assertEqual(0xa5, cpu.ram.readAddr(0x1113))
+		self.assertEqual(0x88, cpu.ram[0x1111])
+		self.assertEqual(0x36, cpu.ram[0x1112])
+		self.assertEqual(0xa5, cpu.ram[0x1113])
 
-		self.assertEqual(0x88, cpu.ram.readAddr(0x2222))
-		self.assertEqual(0x36, cpu.ram.readAddr(0x2223))
-		self.assertEqual(0xa5, cpu.ram.readAddr(0x2224))
+		self.assertEqual(0x88, cpu.ram[0x2222])
+		self.assertEqual(0x36, cpu.ram[0x2223])
+		self.assertEqual(0xa5, cpu.ram[0x2224])
 
 	def test_ldir_for_bc_not_equal_to_zero_takes_5_m_cycles(self):
 		cpu = CPU(FakeRom('\xed\xb0'))

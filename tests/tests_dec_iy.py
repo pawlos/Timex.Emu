@@ -12,5 +12,5 @@ class tests_dec(unittest.TestCase):
 		cpu = CPU(FakeRom('\xfd\x35\x0f'), ram)
 		cpu.IY = 0x100
 		cpu.readOp()
-		self.assertEqual(0xDC, ram.readAddr(cpu.IY+15))
+		self.assertEqual(0xDC, ram[cpu.IY+15])
 

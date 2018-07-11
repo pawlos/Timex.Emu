@@ -13,7 +13,7 @@ class tests_ld_iy_r(unittest.TestCase):
 		cpu.IY = 0x25AF
 		cpu.L = 0x39
 		cpu.readOp()
-		self.assertEqual(0x39, ram.readAddr(0x25bf))
+		self.assertEqual(0x39, ram[0x25bf])
 
 	def test_ld_iy_d_l_takes_5_m_cycles(self):
 		ram = FakeRam([None]*0x2600)

@@ -17,8 +17,8 @@ class tests_call(unittest.TestCase):
 		cpu.readOp()
 
 		self.assertEqual(0x2135, cpu.PC)
-		self.assertEqual(0x1A, cpu.ram.readAddr(0x3001))
-		self.assertEqual(0x4A, cpu.ram.readAddr(0x3000))
+		self.assertEqual(0x1A, cpu.ram[0x3001])
+		self.assertEqual(0x4A, cpu.ram[0x3000])
 
 
 	def test_call_takes_5_m_cycles(self):

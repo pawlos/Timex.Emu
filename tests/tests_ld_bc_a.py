@@ -12,4 +12,4 @@ class tests_ld_bc_a(unittest.TestCase):
 		cpu.A = 0x7a
 		cpu.BC = 0x1212
 		cpu.readOp()
-		self.assertEqual(0x7a, cpu.ram.readAddr(cpu.BC))
+		self.assertEqual(0x7a, cpu.ram[cpu.BC])

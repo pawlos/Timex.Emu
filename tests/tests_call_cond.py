@@ -19,8 +19,8 @@ class tests_call_cond(unittest.TestCase):
 		cpu.readOp()
 
 		self.assertEqual(0x2135, cpu.PC)
-		self.assertEqual(0x1A, cpu.ram.readAddr(0x3001))
-		self.assertEqual(0x4A, cpu.ram.readAddr(0x3000))
+		self.assertEqual(0x1A, cpu.ram[0x3001])
+		self.assertEqual(0x4A, cpu.ram[0x3000])
 
 	def test_call_c_does_not_jumps_if_CFlag_is_set(self):
 		ram = FakeRam([None]*0x3002)
@@ -96,8 +96,8 @@ class tests_call_cond(unittest.TestCase):
 		cpu.readOp()
 
 		self.assertEqual(0x2135, cpu.PC)
-		self.assertEqual(0x1A, cpu.ram.readAddr(0x3001))
-		self.assertEqual(0x4A, cpu.ram.readAddr(0x3000))
+		self.assertEqual(0x1A, cpu.ram[0x3001])
+		self.assertEqual(0x4A, cpu.ram[0x3000])
 
 	def test_call_z_jumps_if_ZFlag_is_set(self):
 		ram = FakeRam([None]*0x3002)
@@ -110,8 +110,8 @@ class tests_call_cond(unittest.TestCase):
 		cpu.readOp()
 
 		self.assertEqual(0x2135, cpu.PC)
-		self.assertEqual(0x1A, cpu.ram.readAddr(0x3001))
-		self.assertEqual(0x4A, cpu.ram.readAddr(0x3000))
+		self.assertEqual(0x1A, cpu.ram[0x3001])
+		self.assertEqual(0x4A, cpu.ram[0x3000])
 
 	def test_call_c_jumps_if_CFlag_is_set(self):
 		ram = FakeRam([None]*0x3002)
@@ -124,8 +124,8 @@ class tests_call_cond(unittest.TestCase):
 		cpu.readOp()
 
 		self.assertEqual(0x2135, cpu.PC)
-		self.assertEqual(0x1A, cpu.ram.readAddr(0x3001))
-		self.assertEqual(0x4A, cpu.ram.readAddr(0x3000))
+		self.assertEqual(0x1A, cpu.ram[0x3001])
+		self.assertEqual(0x4A, cpu.ram[0x3000])
 
 
 	def test_call_cc_takes_5_m_cycles_if_condition_is_true(self):

@@ -12,7 +12,7 @@ class test_ld_de_a(unittest.TestCase):
 		cpu.A = 0xA0
 		cpu.DE = 0x1128
 		cpu.readOp()
-		self.assertEqual(0xA0, cpu.ram.readAddr(cpu.DE))
+		self.assertEqual(0xA0, cpu.ram[cpu.DE])
 
 	def test_ld_de_a_takes_2_m_cycles(self):
 		ram = FakeRam([0x00]*0x1130)

@@ -19,11 +19,11 @@ class FakeRam(object):
 	def load(self, rom):
 		self.ram = [rom.readMemory(x) for x in range(len(rom))] + self.ram[len(rom):]
 
-	def readAddr(self, addr):
-		return self.ram[addr]
-
 	def storeAddr(self, addr, value):
 		self.ram[addr] = value & 0xFF
+
+	def __getitem__(self, addr):
+		return self.ram[addr]
 
 
 class FakeCpu(object):

@@ -11,7 +11,7 @@ class tests_ld_nn_a(unittest.TestCase):
 		cpu = CPU(FakeRom('\x32\x31\x41'))
 		cpu.A = 0xD7
 		cpu.readOp()
-		self.assertEqual(0xD7, cpu.ram.readAddr(0x3141))
+		self.assertEqual(0xD7, cpu.ram[0x3141])
 
 	def test_ld_nn_a_does_not_affect_flags(self):
 		cpu = CPU(FakeRom('\x32\xb2\x29'))

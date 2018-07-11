@@ -11,5 +11,5 @@ class RAM(object):
 	def storeAddr(self, addr, value):
 		self.ram[addr] = (value & 0xFF)
 
-	def readAddr(self, addr):
+	def __getitem__(self, addr):
 		return self.ram[addr]

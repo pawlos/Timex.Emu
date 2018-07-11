@@ -587,19 +587,19 @@ class CPU(object):
 	def readOp(self):
 		self.prev_pc = self.PC
 		pc = self.prev_pc
-		opcode = self.ram.readAddr(pc)
+		opcode = self.ram[pc]
 		self.dispatch(opcode, pc)
 
 	def twoBytesOpcodes(self, cpu, opcode, logger):
 		pc = self.PC
-		secondOpByte = self.ram.readAddr(pc)
+		secondOpByte = self.ram[pc]
 		fullOpcode = (opcode << 8) + secondOpByte
 		self.dispatch(fullOpcode, pc)
 
 	def fourBytesOpcodes(self, cpu, opcode, logger):
 		pc = self.PC
-		thirdbyte = cpu.ram.readAddr(pc)
-		fourthbyte = cpu.ram.readAddr(cpu.PC)
+		thirdbyte = cpu.ram[pc]
+		fourthbyte = cpu.ram[cpu.PC]
 		fullOpcode = (opcode << 16) + (thirdbyte << 8) + fourthbyte
 		self.dispatch(fullOpcode, pc)
 

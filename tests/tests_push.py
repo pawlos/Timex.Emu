@@ -14,8 +14,8 @@ class tests_push(unittest.TestCase):
 		cpu.SP = 0x1007
 		
 		cpu.readOp()
-		self.assertEqual(0x22, ram.readAddr(0x1006))
-		self.assertEqual(0x33, ram.readAddr(0x1005))
+		self.assertEqual(0x22, ram[0x1006])
+		self.assertEqual(0x33, ram[0x1005])
 
 	def test_push_correctly_stores_hl_on_stack(self):
 		ram = FakeRam([None]*0x1100)
@@ -24,8 +24,8 @@ class tests_push(unittest.TestCase):
 		cpu.SP = 0x1007
 		
 		cpu.readOp()
-		self.assertEqual(0x22, ram.readAddr(0x1006))
-		self.assertEqual(0x33, ram.readAddr(0x1005))
+		self.assertEqual(0x22, ram[0x1006])
+		self.assertEqual(0x33, ram[0x1005])
 
 	def test_push_correctly_stores_bc_on_stack(self):
 		ram = FakeRam([None]*0x1100)
@@ -34,8 +34,8 @@ class tests_push(unittest.TestCase):
 		cpu.SP = 0x1007
 		
 		cpu.readOp()
-		self.assertEqual(0x22, ram.readAddr(0x1006))
-		self.assertEqual(0x33, ram.readAddr(0x1005))
+		self.assertEqual(0x22, ram[0x1006])
+		self.assertEqual(0x33, ram[0x1005])
 
 	def test_push_correctly_stores_de_on_stack(self):
 		ram = FakeRam([None]*0x1100)
@@ -44,8 +44,8 @@ class tests_push(unittest.TestCase):
 		cpu.SP = 0x1007
 		
 		cpu.readOp()
-		self.assertEqual(0x22, ram.readAddr(0x1006))
-		self.assertEqual(0x33, ram.readAddr(0x1005))
+		self.assertEqual(0x22, ram[0x1006])
+		self.assertEqual(0x33, ram[0x1005])
 
 	def test_push_takes_3_m_cycles(self):
 		ram = FakeRam([None]*0x1100)

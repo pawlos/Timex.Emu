@@ -12,7 +12,7 @@ class tests_dec(unittest.TestCase):
 		cpu = CPU(FakeRom('\xdd\x35\x05'), ram)
 		cpu.IX = 0x100
 		cpu.readOp()
-		self.assertEqual(0xDC, ram.readAddr(cpu.IX+5))
+		self.assertEqual(0xDC, ram[cpu.IX+5])
 
 	def test_dec_ix_takes_6_m_cycles(self):
 		ram = FakeRam([None]*0x200)

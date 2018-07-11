@@ -22,13 +22,13 @@ class tests_lddr(unittest.TestCase):
 		self.assertEqual(0x2222, cpu.DE)
 		self.assertEqual(0x0000, cpu.BC)
 
-		self.assertEqual(0xA5, cpu.ram.readAddr(0x1114))
-		self.assertEqual(0x36, cpu.ram.readAddr(0x1113))
-		self.assertEqual(0x88, cpu.ram.readAddr(0x1112))
+		self.assertEqual(0xA5, cpu.ram[0x1114])
+		self.assertEqual(0x36, cpu.ram[0x1113])
+		self.assertEqual(0x88, cpu.ram[0x1112])
 
-		self.assertEqual(0xA5, cpu.ram.readAddr(0x2225))
-		self.assertEqual(0x36, cpu.ram.readAddr(0x2224))
-		self.assertEqual(0x88, cpu.ram.readAddr(0x2223))
+		self.assertEqual(0xA5, cpu.ram[0x2225])
+		self.assertEqual(0x36, cpu.ram[0x2224])
+		self.assertEqual(0x88, cpu.ram[0x2223])
 
 	def test_lddr_does_set_flags_correctly(self):
 		cpu = CPU(FakeRom('\xed\xb8'))

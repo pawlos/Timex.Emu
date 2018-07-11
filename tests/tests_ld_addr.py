@@ -9,7 +9,7 @@ class test_ld_addr(unittest.TestCase):
 		cpu = CPU(FakeRom('\x36\x22'), ram)	
 		cpu.HL = 0x2222
 		cpu.readOp()
-		self.assertEqual(0x22, ram.readAddr(0x2222))
+		self.assertEqual(0x22, ram[0x2222])
 
 	def test_ld_addr_hl_takes_3_m_cycles(self):
 		ram = FakeRam([None]*0x2223)

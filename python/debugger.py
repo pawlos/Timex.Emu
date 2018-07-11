@@ -92,7 +92,7 @@ class Debugger(object):
 				print "Rom value at: 0x{:04X} is 0x{:02X}".format(addr, cpu.rom.readMemory(addr))
 			elif "pram " in input:
 				addr = self.getAddr(input)
-				print "Ram value at: 0x{:04X} is 0x{:02X}".format(addr, cpu.ram.readAddr(addr))
+				print "Ram value at: 0x{:04X} is 0x{:02X}".format(addr, cpu.ram[addr])
 			elif "bl" == input:
 				print "List of breakpoints:"
 				self.printBreakpoints()

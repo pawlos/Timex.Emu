@@ -14,7 +14,7 @@ class tests_rrd(unittest.TestCase):
 		cpu.HL = 0x5000
 		cpu.readOp()
 		self.assertEqual(0b10000000, cpu.A)
-		self.assertEqual(0b01000010, cpu.ram.readAddr(cpu.HL))
+		self.assertEqual(0b01000010, cpu.ram[cpu.HL])
 
 	def test_rrd_does_take_5_m_cycles(self):
 		ram = FakeRam([0x00]*0x5001)

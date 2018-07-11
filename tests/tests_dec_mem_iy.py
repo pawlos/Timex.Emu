@@ -19,7 +19,7 @@ class tests_dec_mem(unittest.TestCase):
 		cpu = CPU(FakeRom('\xfd\x35\x00'), ram)
 		cpu.IY = 0x500
 		cpu.readOp()
-		self.assertEqual(0x00, ram.readAddr(0x500))
+		self.assertEqual(0x00, ram[0x500])
 
 	def test_dec_mem_iy_sets_n_flag(self):
 		ram = FakeRam([0x0]*0x500+[0x01])
