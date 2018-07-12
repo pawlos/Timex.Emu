@@ -1,8 +1,7 @@
 #Z80 ROM
-import struct
 
 class ROM(object):
-	def __init__(self, logger = None):
+	def __init__(self):
 		f = open('../rom/tc2048.rom','rb')
 		self.rom = bytearray(f.read())
 		if len(self.rom) != 16384:

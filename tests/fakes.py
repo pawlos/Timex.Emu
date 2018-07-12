@@ -1,6 +1,3 @@
-import struct
-from utility import Bits
-
 class FakeRom(object):
 	
 	def __init__(self, romdata):
