@@ -1,5 +1,6 @@
 import unittest
 from cpu import CPU
+from ram import RAM
 from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
@@ -7,7 +8,8 @@ from loggers import Logger
 class tests_dec_mem(unittest.TestCase):
 
 	def test_dec_mem_iy_result_doesnt_affect_c_flag(self):
-		ram = FakeRam([0x0]*0x500+[0x01])
+		ram = RAM()#[0x0]*0x500+[0x01])
+		ram[0x500] = 0x1
 		cpu = CPU(FakeRom('\xfd\x35\x00'), ram)
 		cpu.IY = 0x500
 		cpu.CFlag = True
@@ -15,14 +17,16 @@ class tests_dec_mem(unittest.TestCase):
 		self.assertEqual(True, cpu.CFlag)
 
 	def test_dec_mem_iy_result_is_decreased_by_one(self):
-		ram = FakeRam([0x0]*0x500+[0x01])
+		ram = RAM()#[0x0]*0x500+[0x01])
+		ram[0x500] = 0x1
 		cpu = CPU(FakeRom('\xfd\x35\x00'), ram)
 		cpu.IY = 0x500
 		cpu.readOp()
 		self.assertEqual(0x00, ram[0x500])
 
 	def test_dec_mem_iy_sets_n_flag(self):
-		ram = FakeRam([0x0]*0x500+[0x01])
+		ram = RAM()#[0x0]*0x500+[0x01])
+		ram[0x501] = 0x1
 		cpu = CPU(FakeRom('\xfd\x35\x00'), ram)
 		cpu.IY = 0x500
 		cpu.NFlag = False
@@ -30,7 +34,8 @@ class tests_dec_mem(unittest.TestCase):
 		self.assertTrue(cpu.NFlag)
 
 	def test_dec_mem_iy_that_results_zero_sets_z_flag(self):
-		ram = FakeRam([0x0]*0x500+[0x01])
+		ram = RAM()
+		ram[0x500] = 0x1
 		cpu = CPU(FakeRom('\xfd\x35\x00'), ram)
 		cpu.IY = 0x500
 		cpu.ZFlag = False
@@ -38,7 +43,8 @@ class tests_dec_mem(unittest.TestCase):
 		self.assertTrue(cpu.ZFlag)
 
 	def test_dec_mem_iy_that_results_non_zero_resets_z_flag(self):
-		ram = FakeRam([0x0]*0x500+[0x02])
+		ram = RAM()
+		ram[0x500] = 0x2
 		cpu = CPU(FakeRom('\xfd\x35\x00'), ram)
 		cpu.IY = 0x500
 		cpu.CFlag = True
@@ -47,7 +53,8 @@ class tests_dec_mem(unittest.TestCase):
 		self.assertFalse(cpu.ZFlag)
 
 	def test_dec_mem_iy_that_results_in_borrow_sets_h_flag(self):
-		ram = FakeRam([0x0]*0x500+[0x00])
+		ram = RAM()
+		ram[0x500] = 0x0
 		cpu = CPU(FakeRom('\xfd\x35\x00'), ram)
 		cpu.IY = 0x500
 		cpu.CFlag = True
@@ -56,7 +63,8 @@ class tests_dec_mem(unittest.TestCase):
 		self.assertTrue(cpu.HFlag)
 
 	def test_dec_mem_iy_that_does_not_generate_carry_on_12bit_resets_h_flag(self):
-		ram = FakeRam([0x0]*0x500+[0x01])
+		ram = RAM()
+		ram[0x500] = 0x1
 		cpu = CPU(FakeRom('\xfd\x35\x00'), ram)
 		cpu.IY = 0x500
 		cpu.HFlag = True
@@ -65,7 +73,8 @@ class tests_dec_mem(unittest.TestCase):
 
 
 	def test_dec_mem_iy_that_results_in_value_less_than_zero_set_s_flag(self):
-		ram = FakeRam([0x0]*0x500+[0x00])
+		ram = RAM()
+		ram[0x500] = 0x0
 		cpu = CPU(FakeRom('\xfd\x35\x00'), ram)
 		cpu.IY = 0x500
 		cpu.SFLag = False
@@ -73,7 +82,8 @@ class tests_dec_mem(unittest.TestCase):
 		self.assertTrue(cpu.SFlag)
 
 	def test_dec_mem_iy_that_results_in_value_greater_than_zero_resets_s_flag(self):
-		ram = FakeRam([0x0]*0x500+[0x01])
+		ram = RAM()
+		ram[0x500] = 0x1
 		cpu = CPU(FakeRom('\xfd\x35\x00'), ram)
 		cpu.IY = 0x500
 		cpu.SFLag = True
@@ -81,7 +91,8 @@ class tests_dec_mem(unittest.TestCase):
 		self.assertFalse(cpu.SFlag)
 
 	def test_dec_mem_iy_that_overflows_sets_pv_flag(self):
-		ram = FakeRam([0x0]*0x500+[0x80])
+		ram = RAM()
+		ram[0x500] = 0x80
 		cpu = CPU(FakeRom('\xfd\x35\x00'), ram)
 		cpu.IY = 0x500
 		cpu.PVFlag = False
@@ -89,7 +100,8 @@ class tests_dec_mem(unittest.TestCase):
 		self.assertTrue(cpu.PVFlag)
 
 	def test_dec_mem_iy_that_does_not_overflows_resets_pv_flag(self):
-		ram = FakeRam([0x0]*0x500+[0x01])
+		ram = RAM()
+		ram[0x500] = 0x1
 		cpu = CPU(FakeRom('\xfd\x35\x00'), ram)
 		cpu.IY = 0x500
 		cpu.PVFlag = True

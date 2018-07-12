@@ -8,7 +8,7 @@ from loggers import Logger
 class tests_in(unittest.TestCase):
 
 	def test_in_from_port_specified_in_c_puts_value_of_reg_A(self):
-		cpu = CPU(FakeRom('\xed\x78'), FakeRam())
+		cpu = CPU(FakeRom('\xed\x78'))
 		cpu.C = 0x44
 		cpu.io.writeTo(cpu.C, 0xAA)
 		

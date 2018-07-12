@@ -1,5 +1,6 @@
 import unittest
 from cpu import CPU
+from ram import RAM
 from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
@@ -59,7 +60,7 @@ class tests_add_iy(unittest.TestCase):
 		self.assertTrue(cpu.HFlag)
 
 	def test_add_iy_a_sets_correct_value(self):
-		ram = FakeRam([None]*0x110)
+		ram = RAM()
 		ram[0x109] = 0x11
 		cpu = CPU(FakeRom('\xfd\x86\x09'), ram)
 		cpu.IY = 0x100
@@ -82,7 +83,7 @@ class tests_add_iy(unittest.TestCase):
 		self.assertEqual(15, cpu.t_states)
 
 	def test_add_iy_a_takes_4_m_cycles(self):
-		ram = FakeRam([None]*0x110)
+		ram = RAM()
 		ram[0x109] = 0x11
 		cpu = CPU(FakeRom('\xfd\x86\x09'), ram)
 		cpu.IY = 0x100
@@ -91,7 +92,7 @@ class tests_add_iy(unittest.TestCase):
 		self.assertEqual(4, cpu.m_cycles)
 
 	def test_add_iy_a_takes_15_t_states(self):
-		ram = FakeRam([None]*0x110)
+		ram = RAM()
 		ram[0x109] = 0x11
 		cpu = CPU(FakeRom('\xfd\x86\x09'), ram)
 		cpu.IY = 0x100

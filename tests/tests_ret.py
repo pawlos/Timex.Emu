@@ -1,5 +1,6 @@
 import unittest
 from cpu import CPU
+from ram import RAM
 from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
@@ -8,7 +9,7 @@ from utility import Bits
 class tests_ret(unittest.TestCase):
 
 	def test_ret_does_sets_PC_correctly(self):
-		ram = FakeRam([None]*0x8000)
+		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
 		cpu = CPU(FakeRom('\x00'*0x3535+'\xc9'), ram)
@@ -20,7 +21,7 @@ class tests_ret(unittest.TestCase):
 
 
 	def test_ret_nz_does_sets_PC_correctly_if_Zflag_is_reset(self):
-		ram = FakeRam([None]*0x8000)
+		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
 		cpu = CPU(FakeRom('\x00'*0x3535+'\xc0'), ram)
@@ -33,7 +34,7 @@ class tests_ret(unittest.TestCase):
 
 
 	def test_ret_nz_does_sets_PC_correctly_if_Zflag_is_set(self):
-		ram = FakeRam([None]*0x8002)
+		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
 		cpu = CPU(FakeRom('\x00'*0x3535+'\xc0'), ram)
@@ -45,7 +46,7 @@ class tests_ret(unittest.TestCase):
 		self.assertEqual(0x4000, cpu.SP)
 
 	def test_ret_z_does_sets_PC_correctly_if_Zflag_is_set(self):
-		ram = FakeRam([None]*0x8002)
+		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
 		cpu = CPU(FakeRom('\x00'*0x3535+'\xc8'), ram)
@@ -57,7 +58,7 @@ class tests_ret(unittest.TestCase):
 		self.assertEqual(0x4002, cpu.SP)
 
 	def test_ret_z_does_sets_PC_correctly_if_Zflag_is_reset(self):
-		ram = FakeRam([None]*0x8002)
+		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
 		cpu = CPU(FakeRom('\x00'*0x3535+'\xc8'), ram)
@@ -69,7 +70,7 @@ class tests_ret(unittest.TestCase):
 		self.assertEqual(0x4000, cpu.SP)
 
 	def test_ret_nc_does_sets_PC_correctly_if_Cflag_is_reset(self):
-		ram = FakeRam([None]*0x8002)
+		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
 		cpu = CPU(FakeRom('\x00'*0x3535+'\xd0'), ram)
@@ -81,7 +82,7 @@ class tests_ret(unittest.TestCase):
 		self.assertEqual(0x4002, cpu.SP)
 
 	def test_ret_c_does_sets_PC_correctly_if_Cflag_is_set(self):
-		ram = FakeRam([None]*0x8002)
+		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
 		cpu = CPU(FakeRom('\x00'*0x3535+'\xd8'), ram)
@@ -93,7 +94,7 @@ class tests_ret(unittest.TestCase):
 		self.assertEqual(0x4002, cpu.SP)
 
 	def test_ret_po_does_sets_PC_correctly_if_PVflag_is_reset(self):
-		ram = FakeRam([None]*0x8002)
+		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
 		cpu = CPU(FakeRom('\x00'*0x3535+'\xe0'), ram)
@@ -105,7 +106,7 @@ class tests_ret(unittest.TestCase):
 		self.assertEqual(0x4002, cpu.SP)
 
 	def test_ret_po_does_sets_PC_correctly_if_PVflag_is_set(self):
-		ram = FakeRam([None]*0x8002)
+		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
 		cpu = CPU(FakeRom('\x00'*0x3535+'\xe8'), ram)
@@ -117,7 +118,7 @@ class tests_ret(unittest.TestCase):
 		self.assertEqual(0x4002, cpu.SP)
 
 	def test_ret_p_does_sets_PC_correctly_if_PVflag_is_reset(self):
-		ram = FakeRam([None]*0x8002)
+		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
 		cpu = CPU(FakeRom('\x00'*0x3535+'\xf0'), ram)
@@ -129,7 +130,7 @@ class tests_ret(unittest.TestCase):
 		self.assertEqual(0x4002, cpu.SP)
 
 	def test_ret_p_does_sets_PC_correctly_if_PVflag_is_set(self):
-		ram = FakeRam([None]*0x8002)
+		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
 		cpu = CPU(FakeRom('\x00'*0x3535+'\xf8'), ram)
@@ -141,7 +142,7 @@ class tests_ret(unittest.TestCase):
 		self.assertEqual(0x4002, cpu.SP)
 
 	def test_ret_takes_3_m_cycles(self):
-		ram = FakeRam([None]*0x8000)
+		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
 		cpu = CPU(FakeRom('\x00'*0x3535+'\xc9'), ram)
@@ -151,7 +152,7 @@ class tests_ret(unittest.TestCase):
 		self.assertEqual(3, cpu.m_cycles)
 
 	def test_ret_takes_10_t_states(self):
-		ram = FakeRam([None]*0x8000)
+		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
 		cpu = CPU(FakeRom('\x00'*0x3535+'\xc9'), ram)
@@ -161,7 +162,7 @@ class tests_ret(unittest.TestCase):
 		self.assertEqual(10, cpu.t_states)
 
 	def test_ret_cc_does_takes_3_m_cycles_if_cc_is_true(self):
-		ram = FakeRam([None]*0x8002)
+		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
 		cpu = CPU(FakeRom('\x00'*0x3535+'\xf0'), ram)
@@ -172,7 +173,7 @@ class tests_ret(unittest.TestCase):
 		self.assertEqual(3, cpu.m_cycles)
 
 	def test_ret_cc_does_takes_1_m_cycles_if_cc_is_false(self):
-		ram = FakeRam([None]*0x8002)
+		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
 		cpu = CPU(FakeRom('\x00'*0x3535+'\xf0'), ram)
@@ -183,7 +184,7 @@ class tests_ret(unittest.TestCase):
 		self.assertEqual(1, cpu.m_cycles)
 
 	def test_ret_cc_does_takes_11_t_states_if_cc_is_true(self):
-		ram = FakeRam([None]*0x8002)
+		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
 		cpu = CPU(FakeRom('\x00'*0x3535+'\xf0'), ram)
@@ -194,7 +195,7 @@ class tests_ret(unittest.TestCase):
 		self.assertEqual(11, cpu.t_states)
 
 	def test_ret_cc_does_takes_5_t_states_if_cc_is_false(self):
-		ram = FakeRam([None]*0x8002)
+		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
 		cpu = CPU(FakeRom('\x00'*0x3535+'\xf0'), ram)

@@ -1,6 +1,7 @@
 import unittest
 
 from cpu import CPU
+from ram import RAM
 from opcodes import Opcodes
 from fakes import *
 from loggers import Logger
@@ -27,21 +28,21 @@ class tests_ld_iy_nn(unittest.TestCase):
 		self.assertTrue(cpu.SFlag)
 
 	def test_ld_iy_d_n_correctly_copies_n_value_to_iy_plus_d(self):
-		ram = FakeRam([None]*0x2000)
+		ram = RAM()
 		cpu = CPU(FakeRom('\xFD\x36\x01\x77'))
 		cpu.IY = 0x1111
 		cpu.readOp()
 		self.assertEqual(0x77, cpu.ram[0x1112])
 
 	def test_ld_iy_d_n_takes_5_m_cycle(self):
-		ram = FakeRam([None]*0x2000)
+		ram = RAM()
 		cpu = CPU(FakeRom('\xFD\x36\x01\x77'))
 		cpu.IY = 0x1111
 		cpu.readOp()
 		self.assertEqual(5, cpu.m_cycles)
 
 	def test_ld_iy_d_n_takes_19_t_states(self):
-		ram = FakeRam([None]*0x2000)
+		ram = RAM()
 		cpu = CPU(FakeRom('\xFD\x36\x01\x77'))
 		cpu.IY = 0x1111
 		cpu.readOp()
