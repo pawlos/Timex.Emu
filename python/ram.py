@@ -7,7 +7,7 @@ class RAM(object):
 		self.ram = [0] * 65536
 
 	def load(self, rom):
-		self.ram = [rom.readMemory(a) for a in range(len(rom))] + self.ram[len(rom):]
+		self.ram = [a for a in rom] + self.ram[len(rom):]
 
 	def __setitem__(self, addr, value):
 		self.ram[addr] = Bits.limitTo8Bits(value)
