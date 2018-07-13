@@ -2,41 +2,41 @@ import unittest
 from cpu import CPU
 from ram import RAM
 from opcodes import Opcodes
-from fakes import *
+from rom import ROM
 from loggers import Logger
 from utility import Bits
 
 class tests_add_iy(unittest.TestCase):
 
 	def test_add_iy_bc_returns_correct_result(self):
-		cpu = CPU(FakeRom('\xfd\x09'))
+		cpu = CPU(ROM('\xfd\x09'))
 		cpu.IY = 0x1001
 		cpu.BC = 0x0bb0
 		cpu.readOp()
 		self.assertEqual(0x1bb1, cpu.IY)
 
 	def test_add_iy_de_returns_correct_result(self):
-		cpu = CPU(FakeRom('\xfd\x19'))
+		cpu = CPU(ROM('\xfd\x19'))
 		cpu.IY = 0x1001
 		cpu.DE = 0x0bb0
 		cpu.readOp()
 		self.assertEqual(0x1bb1, cpu.IY)
 
 	def test_add_iy_iy_returns_correct_result(self):
-		cpu = CPU(FakeRom('\xfd\x29'))
+		cpu = CPU(ROM('\xfd\x29'))
 		cpu.IY = 0x1001
 		cpu.readOp()
 		self.assertEqual(0x2002, cpu.IY)
 
 	def test_add_iy_sp_retursn_correct_result(self):
-		cpu = CPU(FakeRom('\xfd\x39'))
+		cpu = CPU(ROM('\xfd\x39'))
 		cpu.IY = 0x1001
 		cpu.SP = 0x0880
 		cpu.readOp()
 		self.assertEqual(0x1881, cpu.IY)
 
 	def test_add_iy_rr_resets_n_flag(self):
-		cpu = CPU(FakeRom('\xfd\x39'))
+		cpu = CPU(ROM('\xfd\x39'))
 		cpu.IY = 0x1001
 		cpu.SP = 0x0880
 		cpu.NFlag = Bits.set()
@@ -44,7 +44,7 @@ class tests_add_iy(unittest.TestCase):
 		self.assertFalse(cpu.NFlag)
 
 	def test_add_iy_rr_sets_c_flag_is_results_is_too_big(self):
-		cpu = CPU(FakeRom('\xfd\x39'))
+		cpu = CPU(ROM('\xfd\x39'))
 		cpu.IY = 0xFFFF
 		cpu.SP = 0x0001
 		cpu.CFlag = False
@@ -52,7 +52,7 @@ class tests_add_iy(unittest.TestCase):
 		self.assertTrue(cpu.CFlag)
 
 	def test_add_iy_rr_sets_h_flag_if_carry_from_11th_bit(self):
-		cpu = CPU(FakeRom('\xfd\x39'))
+		cpu = CPU(ROM('\xfd\x39'))
 		cpu.IY = 0xFFF
 		cpu.SP = 0x0001
 		cpu.HFlag = False
@@ -62,21 +62,21 @@ class tests_add_iy(unittest.TestCase):
 	def test_add_iy_a_sets_correct_value(self):
 		ram = RAM()
 		ram[0x109] = 0x11
-		cpu = CPU(FakeRom('\xfd\x86\x09'), ram)
+		cpu = CPU(ROM('\xfd\x86\x09'), ram)
 		cpu.IY = 0x100
 		cpu.A = 0x11
 		cpu.readOp()
 		self.assertEqual(0x22, cpu.A)
 
 	def test_add_iy_bc_takes_4_m_cycles(self):
-		cpu = CPU(FakeRom('\xfd\x09'))
+		cpu = CPU(ROM('\xfd\x09'))
 		cpu.IY = 0x1001
 		cpu.BC = 0x0bb0
 		cpu.readOp()
 		self.assertEqual(4, cpu.m_cycles)
 
 	def test_add_iy_bc_takes_15_t_states(self):
-		cpu = CPU(FakeRom('\xfd\x09'))
+		cpu = CPU(ROM('\xfd\x09'))
 		cpu.IY = 0x1001
 		cpu.BC = 0x0bb0
 		cpu.readOp()
@@ -85,7 +85,7 @@ class tests_add_iy(unittest.TestCase):
 	def test_add_iy_a_takes_4_m_cycles(self):
 		ram = RAM()
 		ram[0x109] = 0x11
-		cpu = CPU(FakeRom('\xfd\x86\x09'), ram)
+		cpu = CPU(ROM('\xfd\x86\x09'), ram)
 		cpu.IY = 0x100
 		cpu.A = 0x11
 		cpu.readOp()
@@ -94,7 +94,7 @@ class tests_add_iy(unittest.TestCase):
 	def test_add_iy_a_takes_15_t_states(self):
 		ram = RAM()
 		ram[0x109] = 0x11
-		cpu = CPU(FakeRom('\xfd\x86\x09'), ram)
+		cpu = CPU(ROM('\xfd\x86\x09'), ram)
 		cpu.IY = 0x100
 		cpu.A = 0x11
 		cpu.readOp()

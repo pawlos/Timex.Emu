@@ -3,7 +3,7 @@ import unittest
 from cpu import CPU
 from ram import RAM
 from opcodes import Opcodes
-from fakes import *
+from rom import ROM
 from loggers import Logger
 
 class tests_pop(unittest.TestCase):
@@ -12,7 +12,7 @@ class tests_pop(unittest.TestCase):
 		ram = RAM()
 		ram[0x1000] = 0x55
 		ram[0x1001] = 0x33
-		cpu = CPU(FakeRom('\xe1'), ram)
+		cpu = CPU(ROM('\xe1'), ram)
 		cpu.SP = 0x1000
 		
 		cpu.readOp()
@@ -23,7 +23,7 @@ class tests_pop(unittest.TestCase):
 		ram = RAM()
 		ram[0x1000] = 0x55
 		ram[0x1001] = 0x33
-		cpu = CPU(FakeRom('\xc1'), ram)
+		cpu = CPU(ROM('\xc1'), ram)
 		cpu.SP = 0x1000
 		
 		cpu.readOp()
@@ -33,7 +33,7 @@ class tests_pop(unittest.TestCase):
 		ram = RAM()
 		ram[0x1000] = 0x55
 		ram[0x1001] = 0x33
-		cpu = CPU(FakeRom('\xd1'), ram)
+		cpu = CPU(ROM('\xd1'), ram)
 		cpu.SP = 0x1000
 		
 		cpu.readOp()
@@ -43,7 +43,7 @@ class tests_pop(unittest.TestCase):
 		ram = RAM()
 		ram[0x1000] = 0x55
 		ram[0x1001] = 0x33
-		cpu = CPU(FakeRom('\xf1'), ram)
+		cpu = CPU(ROM('\xf1'), ram)
 		cpu.SP = 0x1000
 		
 		cpu.readOp()
@@ -53,7 +53,7 @@ class tests_pop(unittest.TestCase):
 		ram = RAM()
 		ram[0x1000] = 0x55
 		ram[0x1001] = 0x33
-		cpu = CPU(FakeRom('\xc1'), ram)
+		cpu = CPU(ROM('\xc1'), ram)
 		cpu.SP = 0x1000
 		
 		cpu.readOp()
@@ -63,7 +63,7 @@ class tests_pop(unittest.TestCase):
 		ram = RAM()
 		ram[0x1000] = 0x55
 		ram[0x1001] = 0x33
-		cpu = CPU(FakeRom('\xc1'), ram)
+		cpu = CPU(ROM('\xc1'), ram)
 		cpu.SP = 0x1000
 		
 		cpu.readOp()

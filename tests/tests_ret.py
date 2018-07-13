@@ -2,7 +2,7 @@ import unittest
 from cpu import CPU
 from ram import RAM
 from opcodes import Opcodes
-from fakes import *
+from rom import ROM
 from loggers import Logger
 from utility import Bits
 
@@ -12,7 +12,7 @@ class tests_ret(unittest.TestCase):
 		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
-		cpu = CPU(FakeRom('\x00'*0x3535+'\xc9'), ram)
+		cpu = CPU(ROM('\x00'*0x3535+'\xc9'), ram)
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.readOp()
@@ -24,7 +24,7 @@ class tests_ret(unittest.TestCase):
 		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
-		cpu = CPU(FakeRom('\x00'*0x3535+'\xc0'), ram)
+		cpu = CPU(ROM('\x00'*0x3535+'\xc0'), ram)
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.ZFlag = Bits.reset()
@@ -37,7 +37,7 @@ class tests_ret(unittest.TestCase):
 		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
-		cpu = CPU(FakeRom('\x00'*0x3535+'\xc0'), ram)
+		cpu = CPU(ROM('\x00'*0x3535+'\xc0'), ram)
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.ZFlag = Bits.set()
@@ -49,7 +49,7 @@ class tests_ret(unittest.TestCase):
 		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
-		cpu = CPU(FakeRom('\x00'*0x3535+'\xc8'), ram)
+		cpu = CPU(ROM('\x00'*0x3535+'\xc8'), ram)
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.ZFlag = Bits.set()
@@ -61,7 +61,7 @@ class tests_ret(unittest.TestCase):
 		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
-		cpu = CPU(FakeRom('\x00'*0x3535+'\xc8'), ram)
+		cpu = CPU(ROM('\x00'*0x3535+'\xc8'), ram)
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.ZFlag = Bits.reset()
@@ -73,7 +73,7 @@ class tests_ret(unittest.TestCase):
 		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
-		cpu = CPU(FakeRom('\x00'*0x3535+'\xd0'), ram)
+		cpu = CPU(ROM('\x00'*0x3535+'\xd0'), ram)
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.CFlag = Bits.reset()
@@ -85,7 +85,7 @@ class tests_ret(unittest.TestCase):
 		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
-		cpu = CPU(FakeRom('\x00'*0x3535+'\xd8'), ram)
+		cpu = CPU(ROM('\x00'*0x3535+'\xd8'), ram)
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.CFlag = Bits.set()
@@ -97,7 +97,7 @@ class tests_ret(unittest.TestCase):
 		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
-		cpu = CPU(FakeRom('\x00'*0x3535+'\xe0'), ram)
+		cpu = CPU(ROM('\x00'*0x3535+'\xe0'), ram)
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.PVFlag = Bits.reset()
@@ -109,7 +109,7 @@ class tests_ret(unittest.TestCase):
 		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
-		cpu = CPU(FakeRom('\x00'*0x3535+'\xe8'), ram)
+		cpu = CPU(ROM('\x00'*0x3535+'\xe8'), ram)
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.PVFlag = Bits.set()
@@ -121,7 +121,7 @@ class tests_ret(unittest.TestCase):
 		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
-		cpu = CPU(FakeRom('\x00'*0x3535+'\xf0'), ram)
+		cpu = CPU(ROM('\x00'*0x3535+'\xf0'), ram)
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.SFlag = Bits.reset()
@@ -133,7 +133,7 @@ class tests_ret(unittest.TestCase):
 		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
-		cpu = CPU(FakeRom('\x00'*0x3535+'\xf8'), ram)
+		cpu = CPU(ROM('\x00'*0x3535+'\xf8'), ram)
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.SFlag = Bits.set()
@@ -145,7 +145,7 @@ class tests_ret(unittest.TestCase):
 		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
-		cpu = CPU(FakeRom('\x00'*0x3535+'\xc9'), ram)
+		cpu = CPU(ROM('\x00'*0x3535+'\xc9'), ram)
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.readOp()
@@ -155,7 +155,7 @@ class tests_ret(unittest.TestCase):
 		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
-		cpu = CPU(FakeRom('\x00'*0x3535+'\xc9'), ram)
+		cpu = CPU(ROM('\x00'*0x3535+'\xc9'), ram)
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.readOp()
@@ -165,7 +165,7 @@ class tests_ret(unittest.TestCase):
 		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
-		cpu = CPU(FakeRom('\x00'*0x3535+'\xf0'), ram)
+		cpu = CPU(ROM('\x00'*0x3535+'\xf0'), ram)
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.SFlag = Bits.reset()
@@ -176,7 +176,7 @@ class tests_ret(unittest.TestCase):
 		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
-		cpu = CPU(FakeRom('\x00'*0x3535+'\xf0'), ram)
+		cpu = CPU(ROM('\x00'*0x3535+'\xf0'), ram)
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.SFlag = Bits.set()
@@ -187,7 +187,7 @@ class tests_ret(unittest.TestCase):
 		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
-		cpu = CPU(FakeRom('\x00'*0x3535+'\xf0'), ram)
+		cpu = CPU(ROM('\x00'*0x3535+'\xf0'), ram)
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.SFlag = Bits.reset()
@@ -198,7 +198,7 @@ class tests_ret(unittest.TestCase):
 		ram = RAM()
 		ram[0x4000] = 0xB5
 		ram[0x4001] = 0x18
-		cpu = CPU(FakeRom('\x00'*0x3535+'\xf0'), ram)
+		cpu = CPU(ROM('\x00'*0x3535+'\xf0'), ram)
 		cpu.PC = 0x3535
 		cpu.SP = 0x4000
 		cpu.SFlag = Bits.set()

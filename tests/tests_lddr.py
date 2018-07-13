@@ -1,13 +1,13 @@
 import unittest
 from cpu import CPU
 from opcodes import Opcodes
-from fakes import *
+from rom import ROM
 from loggers import Logger
 
 class tests_lddr(unittest.TestCase):
 
 	def test_lddr(self):
-		cpu = CPU(FakeRom('\xed\xb8'))
+		cpu = CPU(ROM('\xed\xb8'))
 		cpu.HL = 0x1114
 		cpu.DE = 0x2225
 		cpu.BC = 0x03
@@ -31,7 +31,7 @@ class tests_lddr(unittest.TestCase):
 		self.assertEqual(0x88, cpu.ram[0x2223])
 
 	def test_lddr_does_set_flags_correctly(self):
-		cpu = CPU(FakeRom('\xed\xb8'))
+		cpu = CPU(ROM('\xed\xb8'))
 		cpu.HL = 0x1114
 		cpu.DE = 0x2225
 		cpu.BC = 0x03
@@ -54,7 +54,7 @@ class tests_lddr(unittest.TestCase):
 		self.assertTrue(cpu.ZFlag)
 
 	def test_lddr_when_bc_not_zero_takes_5_m_cycles(self):
-		cpu = CPU(FakeRom('\xed\xb8'))
+		cpu = CPU(ROM('\xed\xb8'))
 		cpu.HL = 0x1114
 		cpu.DE = 0x2225
 		cpu.BC = 0x03
@@ -62,7 +62,7 @@ class tests_lddr(unittest.TestCase):
 		self.assertEqual(5, cpu.m_cycles)
 
 	def test_lddr_when_bc_is_zero_takes_4_m_cycles(self):
-		cpu = CPU(FakeRom('\xed\xb8'))
+		cpu = CPU(ROM('\xed\xb8'))
 		cpu.HL = 0x1114
 		cpu.DE = 0x2225
 		cpu.BC = 0x0
@@ -70,7 +70,7 @@ class tests_lddr(unittest.TestCase):
 		self.assertEqual(4, cpu.m_cycles)
 
 	def test_lddr_when_bc_not_zero_takes_21_t_states(self):
-		cpu = CPU(FakeRom('\xed\xb8'))
+		cpu = CPU(ROM('\xed\xb8'))
 		cpu.HL = 0x1114
 		cpu.DE = 0x2225
 		cpu.BC = 0x03
@@ -78,7 +78,7 @@ class tests_lddr(unittest.TestCase):
 		self.assertEqual(21, cpu.t_states)
 
 	def test_lddr_when_bc_is_zero_takes_16_t_states(self):
-		cpu = CPU(FakeRom('\xed\xb8'))
+		cpu = CPU(ROM('\xed\xb8'))
 		cpu.HL = 0x1114
 		cpu.DE = 0x2225
 		cpu.BC = 0x0

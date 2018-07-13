@@ -1,11 +1,16 @@
 #Z80 ROM
+import os
 
 class ROM(object):
-	def __init__(self):
-		f = open('../rom/tc2048.rom','rb')
-		self.rom = bytearray(f.read())
-		if len(self.rom) != 16384:
+
+	def __init__(self, data=None):
+		self.rom = bytearray() if data is None else bytearray(data)
+
+	def loadFrom(self, file):
+		if os.path.getsize(file) != 16384:
 			raise Exception('Wrong rom size. Should be 16K bytes long.')
+		f = open(file,'rb')
+		self.rom = bytearray(f.read())
 
 	def __len__(self):
 		return len(self.rom)

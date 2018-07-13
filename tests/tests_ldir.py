@@ -1,13 +1,13 @@
 import unittest
 from cpu import CPU
 from opcodes import Opcodes
-from fakes import *
+from rom import ROM
 from loggers import Logger
 
 class tests_ldir(unittest.TestCase):
 
 	def test_ldir(self):
-		cpu = CPU(FakeRom('\xed\xb0'))
+		cpu = CPU(ROM('\xed\xb0'))
 		cpu.HL = 0x1111
 		cpu.DE = 0x2222
 		cpu.BC = 0x03
@@ -31,7 +31,7 @@ class tests_ldir(unittest.TestCase):
 		self.assertEqual(0xa5, cpu.ram[0x2224])
 
 	def test_ldir_for_bc_not_equal_to_zero_takes_5_m_cycles(self):
-		cpu = CPU(FakeRom('\xed\xb0'))
+		cpu = CPU(ROM('\xed\xb0'))
 		cpu.HL = 0x1111
 		cpu.DE = 0x2222
 		cpu.BC = 0x03
@@ -45,7 +45,7 @@ class tests_ldir(unittest.TestCase):
 		self.assertEqual(5, cpu.m_cycles)
 
 	def test_ldir_for_bc_equal_to_zero_takes_4_m_cycles(self):
-		cpu = CPU(FakeRom('\xed\xb0'))
+		cpu = CPU(ROM('\xed\xb0'))
 		cpu.HL = 0x1111
 		cpu.DE = 0x2222
 		cpu.BC = 0x0
@@ -59,7 +59,7 @@ class tests_ldir(unittest.TestCase):
 		self.assertEqual(4, cpu.m_cycles)
 
 	def test_ldir_for_bc_not_equal_to_zero_takes_21_t_states(self):
-		cpu = CPU(FakeRom('\xed\xb0'))
+		cpu = CPU(ROM('\xed\xb0'))
 		cpu.HL = 0x1111
 		cpu.DE = 0x2222
 		cpu.BC = 0x03
@@ -73,7 +73,7 @@ class tests_ldir(unittest.TestCase):
 		self.assertEqual(21, cpu.t_states)
 
 	def test_ldir_for_bc_equal_to_zero_takes_16_t_states(self):
-		cpu = CPU(FakeRom('\xed\xb0'))
+		cpu = CPU(ROM('\xed\xb0'))
 		cpu.HL = 0x1111
 		cpu.DE = 0x2222
 		cpu.BC = 0x0

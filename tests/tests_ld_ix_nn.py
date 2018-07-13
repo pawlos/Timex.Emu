@@ -3,7 +3,7 @@ import unittest
 from cpu import CPU
 from ram import RAM
 from opcodes import Opcodes
-from fakes import *
+from rom import ROM
 from loggers import Logger
 
 class tests_ld_ix_nn(unittest.TestCase):
@@ -12,7 +12,7 @@ class tests_ld_ix_nn(unittest.TestCase):
 		ram = RAM()
 		ram[0x6666] = 0x92
 		ram[0x6667] = 0xDA
-		cpu = CPU(FakeRom('\xDD\x2A\x66\x66'), ram)
+		cpu = CPU(ROM('\xDD\x2A\x66\x66'), ram)
 		cpu.readOp()
 		self.assertEqual(0xDA92, cpu.IX)
 
@@ -20,7 +20,7 @@ class tests_ld_ix_nn(unittest.TestCase):
 		ram = RAM()
 		ram[0x6666] = 0x92
 		ram[0x6667] = 0xDA
-		cpu = CPU(FakeRom('\xDD\x2A\x66\x66'), ram)
+		cpu = CPU(ROM('\xDD\x2A\x66\x66'), ram)
 		cpu.readOp()
 		self.assertEqual(6, cpu.m_cycles)
 
@@ -28,6 +28,6 @@ class tests_ld_ix_nn(unittest.TestCase):
 		ram = RAM()
 		ram[0x6666] = 0x92
 		ram[0x6667] = 0xDA
-		cpu = CPU(FakeRom('\xDD\x2A\x66\x66'), ram)
+		cpu = CPU(ROM('\xDD\x2A\x66\x66'), ram)
 		cpu.readOp()
 		self.assertEqual(20, cpu.t_states)

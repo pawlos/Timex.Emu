@@ -1,7 +1,7 @@
 
 import unittest
 from debugger import *
-from fakes import FakeCpu
+from fakes import *
 from regs import *
 
 class tests_debugger(unittest.TestCase):

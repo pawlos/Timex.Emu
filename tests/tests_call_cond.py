@@ -3,7 +3,7 @@ import unittest
 from cpu import CPU
 from ram import RAM
 from opcodes import Opcodes
-from fakes import *
+from rom import ROM
 from loggers import Logger
 from utility import Bits
 
@@ -12,7 +12,7 @@ class tests_call_cond(unittest.TestCase):
 	def test_call_c_jumps_if_CFlag_is_not_set(self):
 		ram = RAM()
 		
-		rom = FakeRom('\x00'*0x1A47+'\xD4\x35\x21')
+		rom = ROM('\x00'*0x1A47+'\xD4\x35\x21')
 		cpu = CPU(rom, ram)
 		cpu.PC = 0x1A47
 		cpu.SP = 0x3002
@@ -26,7 +26,7 @@ class tests_call_cond(unittest.TestCase):
 	def test_call_c_does_not_jumps_if_CFlag_is_set(self):
 		ram = RAM()
 		
-		rom = FakeRom('\x00'*0x1A47+'\xD4\x35\x21')
+		rom = ROM('\x00'*0x1A47+'\xD4\x35\x21')
 		cpu = CPU(rom, ram)
 		cpu.PC = 0x1A47
 		cpu.SP = 0x3002
@@ -38,7 +38,7 @@ class tests_call_cond(unittest.TestCase):
 
 	def test_call_po_jumps_if_PVFlag_is_not_set(self):
 		ram = RAM()
-		cpu = CPU(FakeRom('\x00'*0x1A47+'\xe4\x35\x21'), ram)
+		cpu = CPU(ROM('\x00'*0x1A47+'\xe4\x35\x21'), ram)
 		cpu.PC = 0x1A47
 		cpu.SP = 0x3002
 		
@@ -48,7 +48,7 @@ class tests_call_cond(unittest.TestCase):
 
 	def test_call_po_doesnt_jumps_if_PVFlag_is_set(self):
 		ram = RAM()
-		cpu = CPU(FakeRom('\x00'*0x1A47+'\xe4\x35\x21'), ram)
+		cpu = CPU(ROM('\x00'*0x1A47+'\xe4\x35\x21'), ram)
 		cpu.PC = 0x1A47
 		cpu.SP = 0x3002
 		
@@ -59,7 +59,7 @@ class tests_call_cond(unittest.TestCase):
 
 	def test_call_not_po_jumps_if_PVFlag_is_not_set(self):
 		ram = RAM()
-		cpu = CPU(FakeRom('\x00'*0x1A47+'\xec\x20\x15'))
+		cpu = CPU(ROM('\x00'*0x1A47+'\xec\x20\x15'))
 		cpu.PVFlag = False
 		cpu.PC = 0x1A47
 		cpu.SP = 0x3002
@@ -70,7 +70,7 @@ class tests_call_cond(unittest.TestCase):
 
 	def test_call_s_jumps_if_SFlag_is_set(self):
 		ram = RAM()
-		cpu = CPU(FakeRom('\x00'*0x1A47+'\xfc\x20\x15'))
+		cpu = CPU(ROM('\x00'*0x1A47+'\xfc\x20\x15'))
 		cpu.PC = 0x1A47
 		cpu.SP = 0x3002
 		cpu.SFlag = True
@@ -79,7 +79,7 @@ class tests_call_cond(unittest.TestCase):
 
 	def test_call_not_s_jumps_if_SFlag_is_not_set(self):
 		ram = RAM()
-		cpu = CPU(FakeRom('\x00'*0x1A47+'\xf4\x20\x15'))
+		cpu = CPU(ROM('\x00'*0x1A47+'\xf4\x20\x15'))
 		cpu.PC = 0x1A47
 		cpu.SP = 0x3002
 		cpu.SFlag = False
@@ -89,7 +89,7 @@ class tests_call_cond(unittest.TestCase):
 	def test_call_nz_jumps_if_ZFlag_is_not_set(self):
 		ram = RAM()
 		
-		rom = FakeRom('\x00'*0x1A47+'\xC4\x35\x21')
+		rom = ROM('\x00'*0x1A47+'\xC4\x35\x21')
 		cpu = CPU(rom, ram)
 		cpu.PC = 0x1A47
 		cpu.SP = 0x3002
@@ -103,7 +103,7 @@ class tests_call_cond(unittest.TestCase):
 	def test_call_z_jumps_if_ZFlag_is_set(self):
 		ram = RAM()
 		
-		rom = FakeRom('\x00'*0x1A47+'\xCC\x35\x21')
+		rom = ROM('\x00'*0x1A47+'\xCC\x35\x21')
 		cpu = CPU(rom, ram)
 		cpu.PC = 0x1A47
 		cpu.SP = 0x3002
@@ -117,7 +117,7 @@ class tests_call_cond(unittest.TestCase):
 	def test_call_c_jumps_if_CFlag_is_set(self):
 		ram = RAM()
 		
-		rom = FakeRom('\x00'*0x1A47+'\xDC\x35\x21')
+		rom = ROM('\x00'*0x1A47+'\xDC\x35\x21')
 		cpu = CPU(rom, ram)
 		cpu.PC = 0x1A47
 		cpu.SP = 0x3002
@@ -132,7 +132,7 @@ class tests_call_cond(unittest.TestCase):
 	def test_call_cc_takes_5_m_cycles_if_condition_is_true(self):
 		ram = RAM()
 		
-		rom = FakeRom('\x00'*0x1A47+'\xDC\x35\x21')
+		rom = ROM('\x00'*0x1A47+'\xDC\x35\x21')
 		cpu = CPU(rom, ram)
 		cpu.PC = 0x1A47
 		cpu.SP = 0x3002
@@ -144,7 +144,7 @@ class tests_call_cond(unittest.TestCase):
 	def test_call_cc_takes_3_m_cycles_if_condition_is_false(self):
 		ram = RAM()
 		
-		rom = FakeRom('\x00'*0x1A47+'\xDC\x35\x21')
+		rom = ROM('\x00'*0x1A47+'\xDC\x35\x21')
 		cpu = CPU(rom, ram)
 		cpu.PC = 0x1A47
 		cpu.SP = 0x3002
@@ -156,7 +156,7 @@ class tests_call_cond(unittest.TestCase):
 	def test_call_cc_takes_17_t_states_if_condition_is_true(self):
 		ram = RAM()
 		
-		rom = FakeRom('\x00'*0x1A47+'\xDC\x35\x21')
+		rom = ROM('\x00'*0x1A47+'\xDC\x35\x21')
 		cpu = CPU(rom, ram)
 		cpu.PC = 0x1A47
 		cpu.SP = 0x3002
@@ -168,7 +168,7 @@ class tests_call_cond(unittest.TestCase):
 	def test_call_cc_takes_10_t_cycles_if_condition_is_false(self):
 		ram = RAM()
 		
-		rom = FakeRom('\x00'*0x1A47+'\xDC\x35\x21')
+		rom = ROM('\x00'*0x1A47+'\xDC\x35\x21')
 		cpu = CPU(rom, ram)
 		cpu.PC = 0x1A47
 		cpu.SP = 0x3002

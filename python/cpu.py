@@ -268,6 +268,7 @@ class CPU(object):
 				ram = RAM(), 
 				logger = EmptyLogger(),
 				debugger = EmptyDebugger()):
+
 		#Index registers
 		self.ix = 0x00
 		self.iy = 0x00
@@ -293,6 +294,8 @@ class CPU(object):
 		
 		self.ram = ram
 		self.rom = rom
+		if len(self.rom) == 0:
+			self.rom.loadFrom('../rom/tc2048.rom')
 		self.ram.load(rom)
 		
 		self.dispatchTable = {

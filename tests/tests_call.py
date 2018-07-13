@@ -3,7 +3,7 @@ import unittest
 from cpu import CPU
 from ram import RAM
 from opcodes import Opcodes
-from fakes import *
+from rom import ROM
 from loggers import Logger
 
 class tests_call(unittest.TestCase):
@@ -11,7 +11,7 @@ class tests_call(unittest.TestCase):
 	def test_call(self):
 		ram = RAM()
 		
-		rom = FakeRom('\x00'*0x1A47+'\xcd\x35\x21')
+		rom = ROM('\x00'*0x1A47+'\xcd\x35\x21')
 		cpu = CPU(rom, ram)
 		cpu.PC = 0x1A47
 		cpu.SP = 0x3002
@@ -25,7 +25,7 @@ class tests_call(unittest.TestCase):
 	def test_call_takes_5_m_cycles(self):
 		ram = RAM()
 		
-		rom = FakeRom('\x00'*0x1A47+'\xcd\x35\x21')
+		rom = ROM('\x00'*0x1A47+'\xcd\x35\x21')
 		cpu = CPU(rom, ram)
 		cpu.PC = 0x1A47
 		cpu.SP = 0x3002
@@ -35,7 +35,7 @@ class tests_call(unittest.TestCase):
 	def test_call_Takes_17_t_states(self):
 		ram = RAM()
 		
-		rom = FakeRom('\x00'*0x1A47+'\xcd\x35\x21')
+		rom = ROM('\x00'*0x1A47+'\xcd\x35\x21')
 		cpu = CPU(rom, ram)
 		cpu.PC = 0x1A47
 		cpu.SP = 0x3002
