@@ -17,3 +17,6 @@ class ROM(object):
 	
 	def __getitem__(self, index):
 		return self.rom[index]
+
+	def __add__(self, data):
+		return self.rom + bytearray(data)
