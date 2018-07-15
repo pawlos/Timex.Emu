@@ -572,7 +572,7 @@ class Opcodes(object):
 
 	@staticmethod
 	def sub_r(cpu, opcode, logger):
-		index = opcode & 3
+		index = opcode & 7
 
 		old_A = cpu.A
 		cpu.A = cpu.A - cpu.regs[index]

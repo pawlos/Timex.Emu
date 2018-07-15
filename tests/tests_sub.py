@@ -18,12 +18,53 @@ class tests_sub(unittest.TestCase):
 		cpu.readOp()
 		self.assertTrue(cpu.ZFlag)
 
-	def test_sub_r_set_correct_value(self):
+	def test_sub_B_set_correct_value(self):
 		cpu = CPU(ROM('\x90'))
 		cpu.A = 0x52
 		cpu.B = 0x02
 		cpu.readOp()
 		self.assertEqual(0x50, cpu.A)
+
+	def test_sub_C_set_correct_value(self):
+		cpu = CPU(ROM('\x91'))
+		cpu.A = 0x53
+		cpu.C = 0x03
+		cpu.readOp()
+		self.assertEqual(0x50, cpu.A)
+
+	def test_sub_D_set_correct_value(self):
+		cpu = CPU(ROM('\x92'))
+		cpu.A = 0x54
+		cpu.D = 0x04
+		cpu.readOp()
+		self.assertEqual(0x50, cpu.A)
+
+	def test_sub_E_set_correct_value(self):
+		cpu = CPU(ROM('\x93'))
+		cpu.A = 0x55
+		cpu.E = 0x05
+		cpu.readOp()
+		self.assertEqual(0x50, cpu.A)
+
+	def test_sub_H_set_correct_value(self):
+		cpu = CPU(ROM('\x94'))
+		cpu.A = 0x53
+		cpu.H = 0x03
+		cpu.readOp()
+		self.assertEqual(0x50, cpu.A)
+
+	def test_sub_L_set_correct_value(self):
+		cpu = CPU(ROM('\x95'))
+		cpu.A = 0x53
+		cpu.L = 0x03
+		cpu.readOp()
+		self.assertEqual(0x50, cpu.A)
+
+	def test_sub_A_set_correct_value(self):
+		cpu = CPU(ROM('\x97'))
+		cpu.A = 0x53
+		cpu.readOp()
+		self.assertEqual(0, cpu.A)		
 
 	def test_sub_r_takes_1_m_cycles(self):
 		cpu = CPU(ROM('\x90'))
