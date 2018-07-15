@@ -40,7 +40,6 @@ class CPU(object):
 	@property
 	def D(self):
 		return self.regs[D]
-
 	@D.setter
 	def D(self, value):
 		self.regs[D] = Bits.limitTo8Bits(value)
@@ -48,7 +47,6 @@ class CPU(object):
 	@property
 	def E(self):
 		return self.regs[E]
-
 	@E.setter
 	def E(self, value):
 		self.regs[E] = Bits.limitTo8Bits(value)
@@ -56,7 +54,6 @@ class CPU(object):
 	@property
 	def H(self):
 		return self.regs[H]
-
 	@H.setter
 	def H(self, value):
 		self.regs[H] = Bits.limitTo8Bits(value)
@@ -64,7 +61,6 @@ class CPU(object):
 	@property
 	def L(self):
 		return self.regs[L]
-
 	@L.setter
 	def L(self, value):
 		self.regs[L] = Bits.limitTo8Bits(value)
@@ -72,7 +68,6 @@ class CPU(object):
 	@property
 	def R(self):
 		return self.r
-
 	@R.setter
 	def R(self, value):
 		self.r= Bits.limitTo8Bits(value)
@@ -80,7 +75,6 @@ class CPU(object):
 	@property
 	def ZFlag(self):
 		return Bits.getNthBit(self.F,ZF) == 1
-
 	@ZFlag.setter
 	def ZFlag(self, value):
 		self.F = Bits.setNthBit(self.F, ZF, 1 if value else 0)
@@ -88,7 +82,6 @@ class CPU(object):
 	@property
 	def CFlag(self):
 		return Bits.getNthBit(self.F, CF) == 1
-
 	@CFlag.setter
 	def CFlag(self, value):
 		self.F = Bits.setNthBit(self.F, CF, 1 if value else 0)
@@ -96,7 +89,6 @@ class CPU(object):
 	@property
 	def NFlag(self):
 		return Bits.getNthBit(self.F, NF) == 1
-
 	@NFlag.setter
 	def NFlag(self, value):
 		self.F = Bits.setNthBit(self.F, NF, 1 if value else 0)
@@ -104,7 +96,6 @@ class CPU(object):
 	@property
 	def HFlag(self):
 		return Bits.getNthBit(self.F, HF) == 1
-
 	@HFlag.setter
 	def HFlag(self, value):
 		self.F = Bits.setNthBit(self.F, HF, 1 if value else 0)
@@ -112,7 +103,6 @@ class CPU(object):
 	@property
 	def SFlag(self):
 		return Bits.getNthBit(self.F, SF) == 1
-
 	@SFlag.setter
 	def SFlag(self, value):
 		self.F = Bits.setNthBit(self.F, SF, 1 if value else 0)
@@ -120,7 +110,6 @@ class CPU(object):
 	@property
 	def PVFlag(self):
 		return Bits.getNthBit(self.F, PVF) == 1
-
 	@PVFlag.setter
 	def PVFlag(self, value):
 		self.F = Bits.setNthBit(self.F, PVF, 1 if value else 0)
@@ -128,7 +117,6 @@ class CPU(object):
 	@property
 	def HL(self):
 		return (self.regs[H] << 8) + self.regs[L]
-
 	@HL.setter
 	def HL(self, value):
 		value = Bits.limitTo16Bits(value)
@@ -138,7 +126,6 @@ class CPU(object):
 	@property
 	def HLPrim(self):
 		return (self.regsPri[H] << 8) + self.regsPri[L]
-
 	@HLPrim.setter
 	def HLPrim(self, value):
 		value = Bits.limitTo16Bits(value)
@@ -148,7 +135,6 @@ class CPU(object):
 	@property
 	def DE(self):
 		return (self.regs[D] << 8) + self.regs[E]
-
 	@DE.setter
 	def DE(self, value):
 		value = Bits.limitTo16Bits(value)
@@ -158,7 +144,6 @@ class CPU(object):
 	@property
 	def DEPrim(self):
 		return (self.regsPri[D] << 8) + self.regsPri[E]
-
 	@DEPrim.setter
 	def DEPrim(self, value):
 		value = Bits.limitTo16Bits(value)
@@ -168,7 +153,6 @@ class CPU(object):
 	@property
 	def BC(self):
 		return (self.regs[B] << 8) + self.regs[C]
-
 	@BC.setter
 	def BC(self, value):
 		value = Bits.limitTo16Bits(value)
@@ -178,7 +162,6 @@ class CPU(object):
 	@property
 	def BCPrim(self):
 		return (self.regsPri[B] << 8) + self.regsPri[C]
-
 	@BCPrim.setter
 	def BCPrim(self, value):
 		value = Bits.limitTo16Bits(value)
@@ -188,7 +171,6 @@ class CPU(object):
 	@property
 	def AF(self):
 		return (self.regs[A] << 8) + self.regs[F]
-	
 	@AF.setter
 	def AF(self, value):
 		value = Bits.limitTo16Bits(value)
@@ -198,7 +180,6 @@ class CPU(object):
 	@property
 	def AFPrim(self):
 		return (self.regsPri[A] << 8) + self.regsPri[F]
-	
 	@AFPrim.setter
 	def AFPrim(self, value):
 		value = Bits.limitTo16Bits(value)
@@ -208,7 +189,6 @@ class CPU(object):
 	@property
 	def SP(self):
 		return self.sp
-
 	@SP.setter
 	def SP(self, value):
 		self.sp = Bits.limitTo16Bits(value)
@@ -216,7 +196,6 @@ class CPU(object):
 	@property
 	def I(self):
 		return self.i
-
 	@I.setter
 	def I(self, value):
 		self.i = Bits.limitTo8Bits(value)
@@ -224,7 +203,6 @@ class CPU(object):
 	@property
 	def IX(self):
 		return self.ix
-
 	@IX.setter
 	def IX(self, value):
 		self.ix = Bits.limitTo16Bits(value)
@@ -232,7 +210,6 @@ class CPU(object):
 	@property
 	def IY(self):
 		return self.iy
-
 	@IY.setter
 	def IY(self, value):
 		self.iy = Bits.limitTo16Bits(value)
@@ -242,7 +219,6 @@ class CPU(object):
 		value = self.pc
 		self.pc += 1
 		return value
-
 	@PC.setter
 	def PC(self, value):
 		self.pc = Bits.limitTo16Bits(value)
@@ -250,7 +226,6 @@ class CPU(object):
 	@property
 	def t_states(self):
 		return self.tstates
-
 	@t_states.setter
 	def t_states(self, value):
 		self.tstates += value
@@ -258,7 +233,6 @@ class CPU(object):
 	@property
 	def m_cycles(self):
 		return self.mcycles
-
 	@m_cycles.setter
 	def m_cycles(self, value):
 		self.mcycles += value
