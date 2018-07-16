@@ -267,9 +267,8 @@ class CPU(object):
 		self.mcycles = 0
 		
 		self.ram = ram
-		self.rom = rom
-		if len(self.rom) == 0:
-			self.rom.loadFrom('../rom/tc2048.rom')
+		if len(rom) == 0:
+			rom.loadFrom('../rom/tc2048.rom')
 		self.ram.load(rom)
 		
 		self.dispatchTable = {
