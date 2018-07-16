@@ -592,12 +592,10 @@ class CPU(object):
 			else:
 				_dispatch = _dispatch[0]
 			_dispatch(self, opcode, self.logger)
-		except IndexError as e:
+		except (IndexError, KeyboardInterrupt) as e:
 			self.debugger.stop(self)
 		except KeyError as e:
 			print "Missing opcode key: {1:x}, PC = 0x{0:x}".format(self.PC, opcode)
-			self.debugger.stop(self)
-		except KeyboardInterrupt as e:
 			self.debugger.stop(self)
 
 	def run(self):
