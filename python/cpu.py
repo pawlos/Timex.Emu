@@ -496,6 +496,7 @@ class CPU(object):
 			0xfb : Opcodes.enableInterrupts,
 			0xfc : Opcodes.call_cond,
 			0xfd : [self.twoBytesOpcodes],
+			0xfe : Opcodes.cp_n,
 			0xff : Opcodes.rst,
 			0xcb3c : Opcodes.srl_r,
 			0xdd09 : Opcodes.add_ix_rr,
