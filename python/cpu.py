@@ -481,6 +481,7 @@ class CPU(object):
 			0xeb : Opcodes.ex_de_hl,
 			0xec : Opcodes.call_cond,
 			0xed : [self.twoBytesOpcodes],
+			0xee : Opcodes.xor_n,
 			0xef : Opcodes.rst,
 			0xf0 : Opcodes.ret_cc,
 			0xf1 : Opcodes.pop,

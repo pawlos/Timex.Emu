@@ -1357,3 +1357,19 @@ class Opcodes(object):
 
 		cpu.m_cycles, cpu.t_states = 2, 7
 		logger.info("CP {:02X}".format(n))
+
+	@staticmethod
+	def xor_n(cpu, opcode, logger):
+		n = cpu.ram[cpu.PC]
+		old = cpu.A
+		cpu.A = old ^ n
+
+		cpu.ZFlag = Bits.isZero(cpu.A)
+		cpu.CFlag = Bits.reset()
+		cpu.NFlag = Bits.reset()
+		cpu.HFlag = Bits.reset()
+		cpu.SFlag = Bits.isNegative(cpu.A)
+		cpu.PVFlag = Bits.isEvenParity(cpu.A)
+
+		cpu.m_cycles, cpu.t_states = 2, 7
+		logger.info("XOR {:02X}".format(n))
