@@ -1373,3 +1373,11 @@ class Opcodes(object):
 
 		cpu.m_cycles, cpu.t_states = 2, 7
 		logger.info("XOR {:02X}".format(n))
+
+	@staticmethod
+	def in_a_n(cpu, opcode, logger):
+		n = cpu.ram[cpu.PC]
+		cpu.A = cpu.io.readFrom(n)
+
+		cpu.m_cycles, cpu.t_states = 3, 11
+		logger.info("IN A, ({:02X}".format(n))

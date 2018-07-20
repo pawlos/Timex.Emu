@@ -24,3 +24,20 @@ class tests_in(unittest.TestCase):
 		cpu = CPU(ROM('\xed\x78'))
 		cpu.readOp()
 		self.assertEqual(12, cpu.t_states)
+
+	def test_in_A_n_correctly_reads_value_from_port_n(self):
+		cpu = CPU(ROM('\xdb\x12'))
+		cpu.io.writeTo(0x12, 0x55)
+
+		cpu.readOp()
+		self.assertEqual(0x55, cpu.A)
+
+	def test_in_A_n_takes_3_m_cycles(self):
+		cpu = CPU(ROM('\xdb\x12'))
+		cpu.readOp()
+		self.assertEqual(3, cpu.m_cycles)
+
+	def test_in_A_n_takes_11_t_states(self):
+		cpu = CPU(ROM('\xdb\x12'))
+		cpu.readOp()
+		self.assertEqual(11, cpu.t_states)
