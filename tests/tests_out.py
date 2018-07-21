@@ -12,7 +12,7 @@ class tests_out(unittest.TestCase):
 		cpu.A = 0x33
 		
 		cpu.readOp()
-		self.assertEqual(0x33, cpu.io.readFrom(0x22))
+		self.assertEqual(0x33, cpu.io[0x22])
 
 	def test_out_to_port_0x22_takes_3_m_cycles(self):
 		cpu = CPU(ROM('\xd3\x22'))

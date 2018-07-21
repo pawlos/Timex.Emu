@@ -83,7 +83,7 @@ class Opcodes(object):
 	@staticmethod
 	def out(cpu, opcode, logger):
 		value = cpu.ram[cpu.PC]
-		cpu.io.writeTo(value, cpu.A)
+		cpu.io[value] = cpu.A
 		cpu.m_cycles, cpu.t_states = 3, 11
 		logger.info("OUT ({:02X}), A".format(value))
 
@@ -1258,7 +1258,7 @@ class Opcodes(object):
 
 	@staticmethod
 	def portIn(cpu, opcode, logger):
-		cpu.A = cpu.io.readFrom(cpu.C)
+		cpu.A = cpu.io[cpu.C]
 
 		cpu.m_cycles, cpu.t_states = 3, 12
 		logger.info("IN A, (C)")
@@ -1377,7 +1377,7 @@ class Opcodes(object):
 	@staticmethod
 	def in_a_n(cpu, opcode, logger):
 		n = cpu.ram[cpu.PC]
-		cpu.A = cpu.io.readFrom(n)
+		cpu.A = cpu.io[n]
 
 		cpu.m_cycles, cpu.t_states = 3, 11
 		logger.info("IN A, ({:02X}".format(n))
