@@ -202,3 +202,63 @@ class tests_adc(unittest.TestCase):
 		cpu.CFlag = Bits.reset()
 		cpu.readOp()
 		self.assertEqual(15,cpu.t_states)
+
+	def test_adc_A_mem_HL_with_CFlag_reset_correctly_sets_A_register(self):
+		cpu = CPU(ROM('\x8e\x05\x06\x07\x08'))
+		cpu.HL = 0x03
+		cpu.A = 0x5
+		cpu.CFlag = Bits.reset()
+		cpu.readOp()
+		self.assertEqual(12, cpu.A)
+
+	def test_adc_A_mem_HL_with_CFlag_set_correctly_sets_A_register(self):
+		cpu = CPU(ROM('\x8e\x15\x16\x17\x18'))
+		cpu.HL = 0x03
+		cpu.A = 0x5
+		cpu.CFlag = Bits.set()
+		cpu.readOp()
+		self.assertEqual(0x1c, cpu.A)
+
+	def test_adc_A_mem_HL_takes_2_m_cycles(self):
+		cpu = CPU(ROM('\x8e\x05\x06\x07\x08'))
+		cpu.HL = 0x03
+		cpu.A = 0x5
+		cpu.CFlag = Bits.reset()
+		cpu.readOp()
+		self.assertEqual(2, cpu.m_cycles)
+
+	def test_adc_A_mem_HL_takes_7_t_states(self):
+		cpu = CPU(ROM('\x8e\x05\x06\x07\x08'))
+		cpu.HL = 0x03
+		cpu.A = 0x5
+		cpu.CFlag = Bits.reset()
+		cpu.readOp()
+		self.assertEqual(7, cpu.t_states)
+
+	def test_adc_A_mem_HL_sets_SFlag_when_result_is_negative(self):
+		cpu = CPU(ROM('\x8e\x05\x06\x07\x08'))
+		cpu.HL = 0x03
+		cpu.A = 0x7f
+		cpu.readOp()
+		self.assertTrue(cpu.SFlag)
+
+	def test_adc_A_mem_HL_sets_ZFlag_when_result_is_zero(self):
+		cpu = CPU(ROM('\x8e\x05\x06\x07\x08'))
+		cpu.HL = 0x03
+		cpu.A = 249
+		cpu.readOp()
+		self.assertTrue(cpu.ZFlag)
+
+	def test_adc_A_mem_HL_sets_CFlag_when_result_is_over_byte(self):
+		cpu = CPU(ROM('\x8e\x05\x06\x07\x08'))
+		cpu.HL = 0x03
+		cpu.A = 255
+		cpu.readOp()
+		self.assertTrue(cpu.CFlag)
+
+	def test_adc_A_mem_HL_sets_HFlag_when_value_is_over_nibble(self):
+		cpu = CPU(ROM('\x8e\x05\x06\x07\x08'))
+		cpu.HL = 0x03
+		cpu.A = 0x0F
+		cpu.readOp()
+		self.assertTrue(cpu.HFlag)
