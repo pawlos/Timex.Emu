@@ -47,5 +47,20 @@ class tests_utils(unittest.TestCase):
 	def test_IndexToReg_translate8Bit_returns_B_for_0(self):
 		self.assertEquals("B", IndexToReg.translate8Bit(0))
 
-	def test_IndexToReg_trasnalte8Bit_returns_C_for_1(self):
+	def test_IndexToReg_translate8Bit_returns_C_for_1(self):
 		self.assertEquals("C", IndexToReg.translate8Bit(1))
+
+	def test_IndexToReg_translate8Bit_returns_D_for_2(self):
+		self.assertEquals("D", IndexToReg.translate8Bit(2))
+
+	def test_IndexToReg_translate8Bit_returns_E_for_3(self):
+		self.assertEquals("E", IndexToReg.translate8Bit(3))
+
+	def test_IndexToReg_translate8Bit_returns_H_for_4(self):
+		self.assertEquals("H", IndexToReg.translate8Bit(4))
+
+	def test_IndexToReg_translate8Bit_returns_L_for_5(self):
+		self.assertEquals("L", IndexToReg.translate8Bit(5))
+
+	def test_IndexToReg_translate8Bit_returns_A_for_7(self):
+		self.assertEquals("A", IndexToReg.translate8Bit(7))
