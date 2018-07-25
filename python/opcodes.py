@@ -51,7 +51,7 @@ class Opcodes(object):
 			cpu.SP = value
 
 		cpu.m_cycles, cpu.t_states = 2, 10
-		logger.info("LD {}, {:04X}".format(IndexToReg.translate16bit(regInd),value))
+		logger.info("LD {}, {:04X}".format(IndexToReg.translate16Bit(regInd),value))
 
 	@staticmethod
 	def ld8(cpu, opcode, logger):
@@ -119,7 +119,7 @@ class Opcodes(object):
 			cpu.SP = cpu.SP - 1
 
 		cpu.m_cycles, cpu.t_states = 1, 6
-		logger.info("DEC {}".format(IndexToReg.translate16bit(regInd)))
+		logger.info("DEC {}".format(IndexToReg.translate16Bit(regInd)))
 
 	@staticmethod
 	def cp(cpu, opcode, logger):
@@ -132,7 +132,7 @@ class Opcodes(object):
 		cpu.NFlag = Bits.set()
 		cpu.HFlag = Bits.halfCarrySub(cpu.A, value)
 		cpu.SFlag = Bits.signFlag(value)
-		cpu.PVFlag = Bits.overflow(cpu.A, value)
+		cpu.PVFlag = Bits.overflow(value, cpu.A)
 		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("CP {}".format(IndexToReg.translate8Bit(regInd)))
 
@@ -198,13 +198,12 @@ class Opcodes(object):
 		cpu.SFlag = Bits.signFlag(cpu.HL, bits=16)
 		cpu.ZFlag = Bits.isZero(cpu.HL)
 		cpu.HFlag = Bits.halfCarrySub16(oldHL, cpu.HL)
-		cpu.PVFlag = Bits.overflow(Bits.twos_comp(oldHL, bits=16),
-									   Bits.twos_comp(cpu.HL, bits=16))
+		cpu.PVFlag = Bits.overflow(cpu.HL, oldHL, bits=16)
 		cpu.NFlag = Bits.set()
 		cpu.CFlag = Bits.borrow(cpu.HL, bits=16)
 
 		cpu.m_cycles, cpu.t_states = 4, 15
-		logger.info("SBC HL, {}".format(IndexToReg.translate16bit(regInd)))
+		logger.info("SBC HL, {}".format(IndexToReg.translate16Bit(regInd)))
 
 	@staticmethod
 	def add16(cpu, opcode, logger):
@@ -227,7 +226,7 @@ class Opcodes(object):
 		cpu.HFlag = Bits.carryFlag16(oldHL, cpu.HL, bits=11)
 		#S, Z, P/V - not affected
 		cpu.m_cycles, cpu.t_states = 3, 11
-		logger.info("ADD HL, {}".format(IndexToReg.translate16bit(regInd)))
+		logger.info("ADD HL, {}".format(IndexToReg.translate16Bit(regInd)))
 
 	@staticmethod
 	def inc16(cpu, opcode, logger):
@@ -243,7 +242,7 @@ class Opcodes(object):
 			cpu.SP = cpu.SP + 1
 
 		cpu.m_cycles, cpu.t_states = 1, 6
-		logger.info("INC {0}".format(IndexToReg.translate16bit(regInd)))
+		logger.info("INC {0}".format(IndexToReg.translate16Bit(regInd)))
 
 	@staticmethod
 	def jrz(cpu, opcode, logger):
@@ -297,7 +296,7 @@ class Opcodes(object):
 		cpu.ram[nn + 1] = value >> 8
 		cpu.ram[nn] = value & 0xFF
 		cpu.m_cycles, cpu.t_states = 6, 20
-		logger.info("LD ({:04X}), {}".format(nn, IndexToReg.translate16bit(regInd)))
+		logger.info("LD ({:04X}), {}".format(nn, IndexToReg.translate16Bit(regInd)))
 
 	@staticmethod
 	def ldNnHl(cpu, opcode, logger):
@@ -581,7 +580,7 @@ class Opcodes(object):
 		cpu.SFlag = Bits.isNegative(cpu.A)
 		cpu.ZFlag = Bits.isZero(cpu.A)
 		cpu.HFlag = Bits.halfCarrySub(old_A, cpu.A)
-		cpu.PVFlag = Bits.overflow(old_A, cpu.A)
+		cpu.PVFlag = Bits.overflow(cpu.A, old_A)
 		cpu.CFlag = Bits.carryFlag(cpu.A)
 
 		cpu.m_cycles, cpu.t_states = 1, 4
@@ -791,7 +790,7 @@ class Opcodes(object):
 			cpu.SP = value
 
 		cpu.m_cycles, cpu.t_states = 6, 20
-		logger.info("LD {},({:0X})".format(IndexToReg.translate16bit(reg), addr))
+		logger.info("LD {},({:0X})".format(IndexToReg.translate16Bit(reg), addr))
 
 	@staticmethod
 	def ld_a_bc(cpu, opcode, logger):
@@ -1158,7 +1157,7 @@ class Opcodes(object):
 		cpu.NFlag = Bits.reset()
 		cpu.CFlag = Bits.set() if Bits.getNthBit(old, 15) == 1 and Bits.getNthBit(cpu.HL, 15) == 0 else Bits.reset()
 		cpu.m_cycles, cpu.t_states = 4, 15
-		logger.info("ADC HL, {}".format(IndexToReg.translate16bit(r)))
+		logger.info("ADC HL, {}".format(IndexToReg.translate16Bit(r)))
 
 	@staticmethod
 	def add_ix_rr(cpu, opcode, logger):
@@ -1209,7 +1208,7 @@ class Opcodes(object):
 		cpu.IY = cpu.IY + val
 		cpu.NFlag = Bits.reset()
 		cpu.HFlag = Bits.carryFlagAdd16(old, cpu.IY)
-		cpu.CFlag = Bits.overflow(Bits.twos_comp(cpu.IY, bits=16), Bits.twos_comp(old, bits=16))
+		cpu.CFlag = Bits.overflow(cpu.IY, old, bits=16)
 		cpu.m_cycles, cpu.t_states = 4, 15
 		logger.info("ADD IY, {}".format(reg))
 
@@ -1351,7 +1350,7 @@ class Opcodes(object):
 		cpu.SFlag = Bits.isNegative(new)
 		cpu.ZFlag = Bits.isZero(new)
 		cpu.HFlag = Bits.halfCarrySub(old, new)
-		cpu.PVFlag = Bits.overflow(new, Bits.twos_comp(old))
+		cpu.PVFlag = Bits.overflow(old, new)
 		cpu.NFlag = Bits.set()
 		cpu.CFlag = Bits.carryFlag(new)
 
@@ -1391,8 +1390,7 @@ class Opcodes(object):
 		cpu.SFlag = Bits.isNegative(cpu.A)
 		cpu.ZFlag = Bits.isZero(cpu.A)
 		cpu.NFlag = Bits.reset()
-		cpu.PVFlag = Bits.overflow(Bits.twos_comp(cpu.A), 
-								   Bits.twos_comp(old))
+		cpu.PVFlag = Bits.overflow(cpu.A, old)
 		cpu.HFlag = Bits.halfCarrySub(cpu.A, old)
 		cpu.CFlag = Bits.carryFlag(old + v)
 
