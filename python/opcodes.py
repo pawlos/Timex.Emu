@@ -198,7 +198,7 @@ class Opcodes(object):
 		cpu.SFlag = Bits.signFlag(cpu.HL, bits=16)
 		cpu.ZFlag = Bits.isZero(cpu.HL)
 		cpu.HFlag = Bits.halfCarrySub16(oldHL, cpu.HL)
-		cpu.PVFlag = Bits.overflow(cpu.HL, oldHL, bits=16)
+		cpu.PVFlag = Bits.overflow(oldHL, cpu.HL, bits=16)
 		cpu.NFlag = Bits.set()
 		cpu.CFlag = Bits.borrow(cpu.HL, bits=16)
 
@@ -1181,7 +1181,7 @@ class Opcodes(object):
 		cpu.IX = cpu.IX + val
 		cpu.NFlag = Bits.reset()
 		cpu.HFlag = Bits.carryFlagAdd16(old, cpu.IX)
-		cpu.CFlag = Bits.overflow(Bits.twos_comp(cpu.IX, bits=16), Bits.twos_comp(old, bits=16))
+		cpu.CFlag = Bits.overflow(old, cpu.IX, bits=16)
 
 		cpu.m_cycles, cpu.t_states = 4, 15
 		logger.info("ADD IX, {}".format(reg))
@@ -1208,7 +1208,7 @@ class Opcodes(object):
 		cpu.IY = cpu.IY + val
 		cpu.NFlag = Bits.reset()
 		cpu.HFlag = Bits.carryFlagAdd16(old, cpu.IY)
-		cpu.CFlag = Bits.overflow(cpu.IY, old, bits=16)
+		cpu.CFlag = Bits.overflow(old, cpu.IY, bits=16)
 		cpu.m_cycles, cpu.t_states = 4, 15
 		logger.info("ADD IY, {}".format(reg))
 

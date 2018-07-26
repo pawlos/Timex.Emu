@@ -39,7 +39,7 @@ class tests_cp_n(unittest.TestCase):
 		self.assertTrue(cpu.HFlag)
 
 	def test_cp_n_correctly_sets_PVFlag_to_true_when_overflow(self):
-		cpu = CPU('\xfe\x01')
+		cpu = CPU('\xfe\x02')
 		cpu.A = 0x81
 		cpu.readOp()
 		self.assertTrue(cpu.PVFlag)

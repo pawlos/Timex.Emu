@@ -35,8 +35,8 @@ class Bits(object):
 		return oldValue <= 0xfff and newValue >= 0x1000
 
 	@staticmethod
-	def overflow(newValue, oldValue, bits = 8):
-		return True if (Bits.twos_comp(oldValue, bits) < 0) and (Bits.twos_comp(newValue) >= 0) else False
+	def overflow(oldValue, newValue, bits = 8):
+		return True if (Bits.twos_comp(oldValue, bits) < 0) and (Bits.twos_comp(newValue, bits) >= 0) else False
 
 	@staticmethod
 	def twos_comp(val, bits = 8):

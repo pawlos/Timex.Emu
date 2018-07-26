@@ -121,8 +121,8 @@ class tests_sbc(unittest.TestCase):
 
 	def test_sbc_hl_de_that_overflows_sets_pv_flag(self):
 		cpu = CPU(ROM('\xed\x52'))
-		cpu.HL = 0x1111
-		cpu.DE = 0x8000
+		cpu.HL = 0x8000
+		cpu.DE = 0x1111
 		cpu.PVFlag = False
 		cpu.readOp()
 		self.assertTrue(cpu.PVFlag)
@@ -134,7 +134,6 @@ class tests_sbc(unittest.TestCase):
 		cpu.PVFlag = True
 		cpu.readOp()
 		self.assertFalse(cpu.PVFlag)
-
 
 	def test_sbc_hl_de_for_negative_values(self):
 		cpu = CPU(ROM('\xed\x52'))
