@@ -319,7 +319,7 @@ class Opcodes(object):
 		cpu.ZFlag = Bits.isZero(cpu.regs[index])
 		cpu.HFlag = Bits.halfCarrySub(oldValue, cpu.regs[index])
 		cpu.PVFlag = True if oldValue == 0x7f else False
-		cpu.SFlag = Bits.isNegative(Bits.twos_comp(cpu.regs[index]))
+		cpu.SFlag = Bits.isNegative(cpu.regs[index])
 
 		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("INC {}".format(IndexToReg.translate8Bit(index)))
@@ -1152,8 +1152,7 @@ class Opcodes(object):
 		cpu.SFlag = Bits.signFlag(cpu.HL, bits=16)
 		cpu.ZFlag = Bits.isZero(cpu.HL)
 		cpu.HFlag = Bits.halfCarrySub16(old, cpu.HL)
-		cpu.PVFlag = Bits.overflow(Bits.twos_comp(old, bits=16),
-								   Bits.twos_comp(cpu.HL, bits=16))
+		cpu.PVFlag = Bits.overflow(old, cpu.HL, bits=16)
 		cpu.NFlag = Bits.reset()
 		cpu.CFlag = Bits.set() if Bits.getNthBit(old, 15) == 1 and Bits.getNthBit(cpu.HL, 15) == 0 else Bits.reset()
 		cpu.m_cycles, cpu.t_states = 4, 15
