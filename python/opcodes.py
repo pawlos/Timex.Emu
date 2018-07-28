@@ -1272,7 +1272,7 @@ class Opcodes(object):
 		cpu.SFlag = Bits.isNegative(cpu.A)
 		cpu.ZFlag = Bits.isZero(cpu.A)
 		cpu.NFlag = Bits.reset()
-		cpu.PVFlag = Bits.overflow(cpu.A, old)
+		cpu.PVFlag = Bits.overflow(old, cpu.A)
 		cpu.HFlag = Bits.halfCarrySub(cpu.A, old)
 		cpu.CFlag = Bits.carryFlag(old + v)
 
