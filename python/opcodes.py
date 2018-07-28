@@ -41,14 +41,7 @@ class Opcodes(object):
 		hiValue = cpu.ram[cpu.PC]
 		value = (hiValue << 8) + loValue
 
-		if regInd == 0:
-			cpu.BC = value
-		elif regInd == 1:
-			cpu.DE = value
-		elif regInd == 2:
-			cpu.HL = value
-		elif regInd == 3:
-			cpu.SP = value
+		cpu.Reg16(regInd, value)
 
 		cpu.m_cycles, cpu.t_states = 2, 10
 		logger.info("LD {}, {:04X}".format(IndexToReg.translate16Bit(regInd),value))
@@ -109,14 +102,7 @@ class Opcodes(object):
 	def dec16b(cpu, opcode, logger):
 		regInd = (opcode >> 4) & 3
 
-		if regInd == 0:
-			cpu.BC = cpu.BC - 1
-		elif regInd == 1:
-			cpu.DE = cpu.DE - 1
-		elif regInd == 2:
-			cpu.HL = cpu.HL - 1
-		elif regInd == 3:
-			cpu.SP = cpu.SP - 1
+		cpu.Reg16(regInd, cpu.Reg16(regInd) - 1)
 
 		cpu.m_cycles, cpu.t_states = 1, 6
 		logger.info("DEC {}".format(IndexToReg.translate16Bit(regInd)))
@@ -181,15 +167,7 @@ class Opcodes(object):
 	@staticmethod
 	def sbc(cpu, opcode, logger):
 		regInd = (opcode & 0x30) >> 4
-		value = 0
-		if regInd == 0:
-			value = cpu.BC
-		elif regInd == 1:
-			value = cpu.DE
-		elif regInd == 2:
-			value = cpu.HL
-		elif regInd == 3:
-			value = cpu.SP
+		value = cpu.Reg16(regInd)
 
 		oldHL = cpu.HL
 
@@ -208,15 +186,7 @@ class Opcodes(object):
 	@staticmethod
 	def add16(cpu, opcode, logger):
 		regInd = (opcode & 0x30) >> 4
-		value = 0
-		if regInd == 0:
-			value = cpu.BC
-		elif regInd == 1:
-			value = cpu.DE
-		elif regInd == 2:
-			value = cpu.HL
-		elif regInd == 3:
-			value = cpu.SP
+		value = cpu.Reg16(regInd)
 
 		oldHL = cpu.HL
 		cpu.HL = cpu.HL + value
@@ -232,14 +202,7 @@ class Opcodes(object):
 	def inc16(cpu, opcode, logger):
 
 		regInd = (opcode & 0x30) >> 4
-		if regInd == 0:
-			cpu.BC = cpu.BC + 1
-		elif regInd == 1:
-			cpu.DE = cpu.DE + 1
-		elif regInd == 2:
-			cpu.HL = cpu.HL + 1
-		elif regInd == 3:
-			cpu.SP = cpu.SP + 1
+		cpu.Reg16(regInd, cpu.Reg16(regInd) + 1)
 
 		cpu.m_cycles, cpu.t_states = 1, 6
 		logger.info("INC {0}".format(IndexToReg.translate16Bit(regInd)))
@@ -283,15 +246,8 @@ class Opcodes(object):
 		high = cpu.ram[cpu.PC]
 		low = cpu.ram[cpu.PC]
 		nn =  (high << 8) + low
-		#logger.info("Addr: 0x{0:x}".format(nn))
-		if regInd == 0:
-			value = cpu.BC
-		elif regInd == 1:
-			value = cpu.DE
-		elif regInd == 2:
-			value = cpu.HL
-		elif regInd == 3:
-			value = cpu.SP
+
+		value = cpu.Reg16(regInd)
 
 		cpu.ram[nn + 1] = value >> 8
 		cpu.ram[nn] = value & 0xFF
@@ -547,27 +503,14 @@ class Opcodes(object):
 
 	@staticmethod
 	def push(cpu, opcode, logger):
-		index = (opcode >> 4) & 3
-		reg = ""
-		value = 0
-		if index == 0:
-			reg = "BC"
-			value = cpu.BC
-		elif index == 1:
-			reg = "DE"
-			value = cpu.DE
-		elif index == 2:
-			reg = "HL"
-			value = cpu.HL
-		else:
-			reg = "AF"
-			value = cpu.AF
+		regInd = (opcode >> 4) & 3
+		value = cpu.Reg16(regInd, af=True)
 
 		cpu.ram[cpu.SP-1] = value >> 8
 		cpu.ram[cpu.SP-2] = value & 255
 		cpu.SP -= 2
 		cpu.m_cycles, cpu.t_states = 3, 11
-		logger.info("PUSH {}".format(reg))
+		logger.info("PUSH {}".format(IndexToReg.translate16Bit(regInd)))
 
 	@staticmethod
 	def sub_r(cpu, opcode, logger):
@@ -665,27 +608,16 @@ class Opcodes(object):
 
 	@staticmethod
 	def pop(cpu, opcode, logger):
-		index = (opcode >> 4) & 3
+		regInd = (opcode >> 4) & 3
 		high = cpu.ram[cpu.SP+1]
 		low = cpu.ram[cpu.SP]
 		cpu.SP += 2
 		val = (high << 8) + low
-		reg = ""
-		if index == 0:
-			cpu.BC = val
-			reg = "BC"
-		elif index == 1:
-			cpu.DE = val
-			reg = "DE"
-		elif index == 2:
-			cpu.HL = val
-			reg = "HL"
-		elif index == 3:
-			cpu.AF = val
-			reg = "AF"
+
+		cpu.Reg16(regInd, val, af = True)
 
 		cpu.m_cycles, cpu.t_states = 3, 7
-		logger.info("POP {}".format(reg))
+		logger.info("POP {}".format(IndexToReg.translate16Bit(regInd)))
 
 	@staticmethod
 	def ldiy_d_n(cpu, opcode, logger):
@@ -778,19 +710,12 @@ class Opcodes(object):
 		value_low = cpu.ram[addr]
 		value_high = cpu.ram[addr+1]
 		value = (value_high << 8) + value_low
-		reg = ( opcode >> 4 ) & 3
+		regInd = ( opcode >> 4 ) & 3
 
-		if reg == 0:
-			cpu.BC = value
-		elif reg == 1:
-			cpu.DE = value
-		elif reg == 2:
-			cpu.HL = value
-		else:
-			cpu.SP = value
+		cpu.Reg16(regInd, value)
 
 		cpu.m_cycles, cpu.t_states = 6, 20
-		logger.info("LD {},({:0X})".format(IndexToReg.translate16Bit(reg), addr))
+		logger.info("LD {},({:0X})".format(IndexToReg.translate16Bit(regInd), addr))
 
 	@staticmethod
 	def ld_a_bc(cpu, opcode, logger):
@@ -1136,16 +1061,8 @@ class Opcodes(object):
 
 	@staticmethod
 	def add_Hl_rr_c(cpu, opcode, logger):
-		r = (opcode >> 4) & 3
-		val = 0
-		if r == 0:
-			val = cpu.BC
-		elif r == 1:
-			val = cpu.DE
-		elif r == 2:
-			val = cpu.HL
-		else:
-			val = cpu.SP
+		regInd = (opcode >> 4) & 3
+		val = cpu.Reg16(regInd)
 
 		old = cpu.HL
 		cpu.HL = cpu.HL + val + (1 if cpu.CFlag else 0)
@@ -1156,25 +1073,12 @@ class Opcodes(object):
 		cpu.NFlag = Bits.reset()
 		cpu.CFlag = Bits.set() if Bits.getNthBit(old, 15) == 1 and Bits.getNthBit(cpu.HL, 15) == 0 else Bits.reset()
 		cpu.m_cycles, cpu.t_states = 4, 15
-		logger.info("ADC HL, {}".format(IndexToReg.translate16Bit(r)))
+		logger.info("ADC HL, {}".format(IndexToReg.translate16Bit(regInd)))
 
 	@staticmethod
 	def add_ix_rr(cpu, opcode, logger):
-		r = (opcode >> 4) & 3
-		val = 0
-		reg = ""
-		if r == 0:
-			val = cpu.BC
-			reg = "BC"
-		elif r == 1:
-			val = cpu.DE
-			reg = "DE"
-		elif r == 2:
-			val = cpu.IX
-			reg = "IX"
-		else:
-			val = cpu.SP
-			reg = "SP"
+		regInd = (opcode >> 4) & 3
+		val = cpu.Reg16(regInd, ix=True)
 
 		old = cpu.IX
 		cpu.IX = cpu.IX + val
@@ -1183,25 +1087,12 @@ class Opcodes(object):
 		cpu.CFlag = Bits.overflow(old, cpu.IX, bits=16)
 
 		cpu.m_cycles, cpu.t_states = 4, 15
-		logger.info("ADD IX, {}".format(reg))
+		logger.info("ADD IX, {}".format(IndexToReg.translate16Bit(regInd)))
 
 	@staticmethod
 	def add_iy_rr(cpu, opcode, logger):
-		r = (opcode >> 4) & 3
-		val = 0
-		reg = ""
-		if r == 0:
-			val = cpu.BC
-			reg = "BC"
-		elif r == 1:
-			val = cpu.DE
-			reg = "DE"
-		elif r == 2:
-			val = cpu.IY
-			reg = "IY"
-		else:
-			val = cpu.SP
-			reg = "SP"
+		regInd = (opcode >> 4) & 3
+		val = cpu.Reg16(regInd, iy=True)
 
 		old = cpu.IY
 		cpu.IY = cpu.IY + val
@@ -1209,7 +1100,7 @@ class Opcodes(object):
 		cpu.HFlag = Bits.carryFlagAdd16(old, cpu.IY)
 		cpu.CFlag = Bits.overflow(old, cpu.IY, bits=16)
 		cpu.m_cycles, cpu.t_states = 4, 15
-		logger.info("ADD IY, {}".format(reg))
+		logger.info("ADD IY, {}".format(IndexToReg.translate16Bit(regInd)))
 
 	@staticmethod
 	def jp_hl(cpu, opcode, logger):

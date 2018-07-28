@@ -89,15 +89,21 @@ class Bits(object):
 
 class IndexToReg(object):
 	@staticmethod
-	def translate16Bit(ind):
+	def translate16Bit(ind, ix = False, iy = False, af = False):
 		if ind == 0:
 			return "BC"
 		if ind == 1:
 			return "DE"
-		if ind == 2:
+		if ind == 2 and not ix and not iy:
 			return "HL"
-		if ind == 3:
+		if ind == 2 and ix:
+			return "IX"
+		if ind == 2 and iy:
+			return "IY"
+		if ind == 3 and not af:
 			return "SP"
+		if ind == 3 and af:
+			return "AF"
 
 	@staticmethod
 	def translate8Bit(ind):

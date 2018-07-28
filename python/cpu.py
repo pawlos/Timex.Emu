@@ -223,6 +223,48 @@ class CPU(object):
 	def PC(self, value):
 		self.pc = Bits.limitTo16Bits(value)
 
+	def Reg16(self, index, value = None, ix = False, iy = False, af = False):
+		if value is None:
+			if index == 0:
+				return self.BC
+			elif index == 1:
+				return self.DE
+			elif index == 2: 
+				if not ix and not iy:
+					return self.HL
+				elif ix:
+					return self.IX
+				elif iy:
+					return self.IY
+			elif index == 3 and not af:
+				return self.SP
+			elif index == 3 and af:
+				return self.AF
+		else:
+			value = Bits.limitTo16Bits(value)
+			if index == 0:
+				self.BC = value
+				return self.BC
+			elif index == 1:
+				self.DE = value
+				return self.DE
+			elif index == 2:
+				if not ix and not iy:
+					self.HL = value
+					return self.HL
+				elif ix:
+					self.IX = value
+					return self.IX
+				elif iy:
+					self.IY = value
+					return self.IY
+			elif index == 3 and not af:
+				self.SP = value
+				return self.SP
+			elif index == 3 and af:
+				self.AF = value
+				return self.AF
+
 	@property
 	def t_states(self):
 		return self.tstates

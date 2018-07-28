@@ -76,3 +76,12 @@ class tests_utils(unittest.TestCase):
 
 	def test_IndexToReg_translate16Bit_returns_SP_for_3(self):
 		self.assertEquals("SP", IndexToReg.translate16Bit(3))
+
+	def test_IndexToReg_translate16Bit_returns_IX_for_2_and_ix_True(self):
+		self.assertEquals("IX", IndexToReg.translate16Bit(2, ix=True))
+
+	def test_IndexToReg_translate16Bit_returns_IY_for_2_and_iy_True(self):
+		self.assertEquals("IY", IndexToReg.translate16Bit(2, iy=True))
+
+	def test_IndextoReg_translate16Bit_returns_AF_for_3_and_af_True(self):
+		self.assertEquals("AF", IndexToReg.translate16Bit(3, af=True))
