@@ -224,17 +224,9 @@ class Opcodes(object):
 	@staticmethod
 	def exx(cpu, opcode, logger):
 
-		tempBC = cpu.BC
-		tempDE = cpu.DE
-		tempHL = cpu.HL
-
-		cpu.BC = cpu.BCPrim
-		cpu.DE = cpu.DEPrim
-		cpu.HL = cpu.HLPrim
-
-		cpu.BCPrim = tempBC
-		cpu.DEPrim = tempDE
-		cpu.HLPrim = tempHL
+		cpu.BC, cpu.BCPrim = cpu.BCPrim, cpu.BC
+		cpu.DE, cpu.DEPrim = cpu.DEPrim, cpu.DE
+		cpu.HL, cpu.HLPrim = cpu.HLPrim, cpu.HL
 
 		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("EXX")
