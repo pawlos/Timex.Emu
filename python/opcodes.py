@@ -1,7 +1,7 @@
 # Aux class
 from regs import *
 from utility import Bits
-from utility import IndexToReg
+from utility import IndexToReg, IndexToFlag
 
 class Opcodes(object):
 
@@ -883,23 +883,7 @@ class Opcodes(object):
 		addr = (high << 8) + low
 
 		taken = False
-		flag = ""
-		if cond == 0:
-			flag = "NZ"
-		if cond == 1:
-			flag == "Z"
-		if cond == 2:
-			flag = "NC"
-		if cond == 3:
-			flag = "C"
-		if cond == 4:
-			flag = "NPV"
-		if cond == 5:
-			flag = "PV"
-		if cond == 6:
-			flag = "NS"
-		if cond == 7:
-			flag = "S"
+
 		if cond == 0 and cpu.ZFlag == False:
 			taken = True
 		if cond == 1 and cpu.ZFlag:
@@ -921,7 +905,7 @@ class Opcodes(object):
 			cpu.PC = addr
 
 		cpu.m_cycles, cpu.t_states = 3, 10
-		logger.info("JP {} {:04X}".format(flag, addr))
+		logger.info("JP {} {:04X}".format(IndexToFlag.translate(cond), addr))
 
 	@staticmethod
 	def call_cond(cpu, opcode, logger):
@@ -934,24 +918,6 @@ class Opcodes(object):
 		pc += 1
 
 		taken = False
-		flag = ""
-
-		if cond == 0:
-			flag == "NZ"
-		elif cond == 1:
-			flag == "Z"
-		elif cond == 2:
-			flag = "NC"
-		elif cond == 3:
-			flag = "C"
-		elif cond == 4:
-			flag = "NPV"
-		elif cond == 5:
-			flag = "PV"
-		elif cond == 6:
-			flag = "NS"
-		elif cond == 7:
-			flag = "S"
 
 		if cond == 0 and cpu.ZFlag == False:
 			taken = True
@@ -978,7 +944,7 @@ class Opcodes(object):
 			cpu.m_cycles, cpu.t_states = 2, 7
 
 		cpu.m_cycles, cpu.t_states = 3, 10
-		logger.info("CALL {}, {:04X}".format(flag, addr))
+		logger.info("CALL {}, {:04X}".format(IndexToFlag.translate(cond), addr))
 
 	@staticmethod
 	def dec8b(cpu, opcode, logger):

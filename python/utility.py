@@ -121,3 +121,23 @@ class IndexToReg(object):
 			return "L"
 		if ind == 7:
 			return "A"
+
+class IndexToFlag(object):
+	@staticmethod
+	def translate(ind):
+		if ind == 0:
+			return "NZ"
+		if ind == 1:
+			return "Z"
+		if ind == 2:
+			return "NC"
+		if ind == 3:
+			return "C"
+		if ind == 4:
+			return "NPV"
+		if ind == 5:
+			return "PV"
+		if ind == 6:
+			return "NS"
+		if ind == 7:
+			return "S"
