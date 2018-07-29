@@ -274,9 +274,7 @@ class Opcodes(object):
 
 	@staticmethod
 	def ex_de_hl(cpu, opcode, logger):
-		oldValue = cpu.DE
-		cpu.DE = cpu.HL
-		cpu.HL = oldValue
+		cpu.DE, cpu.HL = cpu.HL, cpu.DE
 
 		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("EX DE, HL")
