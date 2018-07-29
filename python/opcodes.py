@@ -521,9 +521,9 @@ class Opcodes(object):
 
 	@staticmethod
 	def rrca(cpu, opcode, logger):
-		cflag = cpu.A & 1
-		cpu.A = (cpu.A >> 1) | (cflag << 7)
-		cpu.CFlag = True if cflag != 0 else False
+		cflag = Bits.getNthBit(cpu.A, 0)
+		cpu.A = Bits.setNthBit(cpu.A >> 1, 7, cflag)
+		cpu.CFlag = Bits.set() if cflag != 0 else Bits.reset()
 		cpu.HFlag = Bits.reset()
 		cpu.NFlag = Bits.reset()
 
@@ -533,8 +533,8 @@ class Opcodes(object):
 
 	@staticmethod
 	def rlca(cpu, opcode, logger):
-		cflag = cpu.A & (1 << 7)
-		cpu.A = (cpu.A << 1) | (cflag >> 7)
+		cflag = Bits.getNthBit(cpu.A, 7)
+		cpu.A = Bits.setNthBit(cpu.A << 1, 0, cflag)
 		cpu.CFlag = Bits.set() if cflag != 0 else Bits.reset()
 
 		cpu.m_cycles, cpu.t_states = 1, 4
@@ -746,7 +746,7 @@ class Opcodes(object):
 
 	@staticmethod
 	def lra(cpu, opcode, logger):
-		cflag = (cpu.A >> 7) & 1
+		cflag = Bits.getNthBit(cpu.A, 7)
 		cpu.A = Bits.setNthBit((cpu.A << 1), 0, cpu.CFlag)
 		cpu.CFlag = Bits.set() if cflag == 1 else Bits.reset()
 		cpu.m_cycles, cpu.t_states = 1, 4
@@ -754,7 +754,7 @@ class Opcodes(object):
 
 	@staticmethod
 	def rra(cpu, opcode, logger):
-		cflag = (cpu.A & 1)
+		cflag = Bits.getNthBit(cpu.A, 0)
 		cpu.A = Bits.setNthBit((cpu.A >> 1), 7, cpu.CFlag)
 		cpu.CFlag = Bits.set() if cflag == 1 else Bits.reset()
 		cpu.HFlag = Bits.reset()
@@ -803,7 +803,7 @@ class Opcodes(object):
 		cpu.NFlag = Bits.reset()
 		cpu.ZFlag = Bits.isZero(cpu.A)
 		cpu.SFlag = Bits.isNegative(cpu.A)
-		cpu.PVFlag = old == 0x80
+		cpu.PVFlag = Bits.set() if old == 0x80 else Bits.reset()
 		cpu.CFlag = Bits.isZero(old)
 		cpu.HFlag = Bits.halfCarrySub(0x0, old)
 		cpu.m_cycles, cpu.t_states = 2, 8
@@ -843,7 +843,7 @@ class Opcodes(object):
 		cpu.SFlag = Bits.isNegative(cpu.R)
 		cpu.ZFlag = Bits.isZero(cpu.R)
 		cpu.HFlag = Bits.reset()
-		cpu.PVFlag = cpu.iff2
+		cpu.PVFlag = Bits.set() if cpu.iff2 == 1 else Bits.reset()
 		cpu.NFlag = Bits.reset()
 
 		cpu.m_cycles, cpu.t_states = 2, 9
@@ -996,7 +996,7 @@ class Opcodes(object):
 
 	@staticmethod
 	def ccf(cpu, opcode, logger):
-		cpu.CFlag = cpu.CFlag == False
+		cpu.CFlag = Bits.flip(cpu.CFlag)
 		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("CCF")
 

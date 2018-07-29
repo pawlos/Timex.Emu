@@ -8,6 +8,10 @@ class Bits(object):
 		return False
 
 	@staticmethod
+	def flip(val):
+		return not val
+
+	@staticmethod
 	def count(value):
 		return bin(value).count('1')
 
