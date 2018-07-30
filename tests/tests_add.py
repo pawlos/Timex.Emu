@@ -223,6 +223,13 @@ class tests_add(unittest.TestCase):
 		cpu.readOp()
 		self.assertTrue(cpu.CFlag)
 
+	def test_add_a_hl_correctly_sets_h_flag_if_resuls_is_overflow_on_bit3(self):
+		cpu = CPU(ROM('\x86\x0f'))
+		cpu.HL = 0x1
+		cpu.A = 0x01
+		cpu.readOp()
+		self.assertTrue(cpu.HFlag)
+
 	def test_add_a_hl_takes_2_m_cycles(self):
 		cpu = CPU(ROM('\x86\xA0'))
 		cpu.HL = 0x1

@@ -1184,6 +1184,8 @@ class Opcodes(object):
 		cpu.ZFlag = Bits.isZero(cpu.A)
 		cpu.NFlag = Bits.reset()
 		cpu.CFlag = Bits.carryFlag(value)
+		cpu.PVFlag = Bits.overflow(oldA, cpu.A)
+		cpu.HFlag = Bits.halfCarrySub(cpu.A, oldA)
 
 		cpu.m_cycles, cpu.t_states = 2, 7
 		logger.info("ADD A, (HL)")
