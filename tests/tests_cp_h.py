@@ -14,6 +14,47 @@ class tests_cp_h(unittest.TestCase):
 		cpu.readOp()
 		self.assertTrue(cpu.ZFlag)
 
+	def test_cp_B(self):
+		cpu = CPU(ROM('\xb8'))
+		cpu.A = 3
+		cpu.B = 3
+		cpu.readOp()
+		self.assertTrue(cpu.ZFlag)
+
+	def test_cp_C(self):
+		cpu = CPU(ROM('\xb9'))
+		cpu.A = 3
+		cpu.C = 3
+		cpu.readOp()
+		self.assertTrue(cpu.ZFlag)
+
+	def test_cp_D(self):
+		cpu = CPU(ROM('\xba'))
+		cpu.A = 3
+		cpu.D = 3
+		cpu.readOp()
+		self.assertTrue(cpu.ZFlag)
+
+	def test_cp_E(self):
+		cpu = CPU(ROM('\xbb'))
+		cpu.A = 3
+		cpu.E = 3
+		cpu.readOp()
+		self.assertTrue(cpu.ZFlag)
+
+	def test_cp_L(self):
+		cpu = CPU(ROM('\xbd'))
+		cpu.A = 3
+		cpu.L = 3
+		cpu.readOp()
+		self.assertTrue(cpu.ZFlag)
+
+	def test_cp_A(self):
+		cpu = CPU(ROM('\xbf'))
+		cpu.A = 5
+		cpu.readOp()
+		self.assertTrue(cpu.ZFlag)
+
 	def test_cp_H_resets_ZF_if_H_is_not_equal_to_0(self):
 		cpu = CPU(ROM('\xbc'))
 		cpu.H = 1
