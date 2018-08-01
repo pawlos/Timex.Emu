@@ -470,6 +470,7 @@ class CPU(object):
 			0xa3 : Opcodes._and,
 			0xa4 : Opcodes._and,
 			0xa5 : Opcodes._and,
+			0xa6 : Opcodes._and_hl,
 			0xa7 : Opcodes._and,
 			0xa8 : Opcodes.xorA,
 			0xa9 : Opcodes.xorA,

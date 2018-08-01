@@ -165,6 +165,21 @@ class Opcodes(object):
 		logger.info("AND A")
 
 	@staticmethod
+	def _and_hl(cpu, opcode, logger):
+		val = cpu.ram[cpu.HL]
+		cpu.A = cpu.A & val
+
+		cpu.HFlag = Bits.set()
+		cpu.CFlag = Bits.reset()
+		cpu.NFlag = Bits.reset()
+		cpu.ZFlag = Bits.isZero(cpu.A)
+		cpu.SFlag = Bits.signInTwosComp(cpu.A)
+		cpu.PVFlag = Bits.isEvenParity(cpu.A)
+
+		cpu.m_cycles, cpu.t_states = 1, 7
+		logger.info("AND (HL)")
+
+	@staticmethod
 	def sbc(cpu, opcode, logger):
 		regInd = (opcode & 0x30) >> 4
 		value = cpu.Reg16(regInd)
