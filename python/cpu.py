@@ -279,12 +279,7 @@ class CPU(object):
 	def m_cycles(self, value):
 		self.mcycles += value
 
-	def __init__(self,
-				rom = ROM(), 
-				ram = RAM(), 
-				logger = EmptyLogger(),
-				debugger = EmptyDebugger()):
-
+	def reset(self):
 		#Index registers
 		self.ix = 0x00
 		self.iy = 0x00
@@ -293,20 +288,31 @@ class CPU(object):
 		#special registers
 		self.i = 0x00
 		self.r = 0x00
+
+		self.iff1 = 0x00
+		self.iff2 = 0x00
+
+		self.interruptMode = 0
+					#B,C,D,E,H,L,none,A, F
+		self.regs = [0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0x00,0x00] 
+					#B',C',D',E',H',L',none,A',F'
+		self.regsPri = [0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0x00,0x00] 
+		self.tstates = 0
+		self.mcycles = 0
+
+	def __init__(self,
+				rom = ROM(), 
+				ram = RAM(), 
+				logger = EmptyLogger(),
+				debugger = EmptyDebugger()):
+
+
 		self.logger = logger
 		self.debugger = debugger
 
 		self.io = IOPorts()
 		
-		self.iff1 = 0x00
-		self.iff2 = 0x00
-
-		self.interruptMode = 0
-
-		self.regs = [0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0x00,0x00] #B,C,D,E,H,L,none,A, F
-		self.regsPri = [0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0x00,0x00] #B',C',D',E',H',L',none,A',F'
-		self.tstates = 0
-		self.mcycles = 0
+		self.reset()
 		
 		self.ram = ram
 		if len(rom) == 0:
