@@ -6,9 +6,13 @@ from rom import *
 from loggers import EmptyLogger
 from debugger import EmptyDebugger
 from ioports import IOPorts
+from utility import Bits
+from known_addresses import *
 
 class CPU(object):
 
+	interruptsHandlers = {0: 0x40, 1: 0x48, 2: 0x50, 3: 0x58, 4: 0x60}
+	
 	@property
 	def A(self):
 		return self.regs[A]
@@ -195,10 +199,10 @@ class CPU(object):
 
 	@property
 	def I(self):
-		return self.i
+		return self.ram[Interrupt]
 	@I.setter
 	def I(self, value):
-		self.i = Bits.limitTo8Bits(value)
+		self.ram[Interrupt] = Bits.limitTo8Bits(value)
 
 	@property
 	def IX(self):
@@ -664,3 +668,23 @@ class CPU(object):
 	def run(self):
 		while True:
 			self.readOp()
+			if Bits.getNthBit(self.I, 0):
+				#handle V-Blank
+				self.copy_pc = self.pc
+				self.PC = self.interruptsHandlers[0]
+			if Bits.getNthBit(self.I, 1):
+				#handle LCD STAT
+				self.copy_pc = self.pc
+				self.PC = self.interruptsHandlers[1]
+			if Bits.getNthBit(self.I, 2):
+				# handle timer
+				self.copy_pc = self.pc
+				self.PC = self.interruptsHandlers[2]
+			if Bits.getNthBit(self.I, 3):
+				# handle serial
+				self.copy_pc = self.pc
+				self.PC = self.interruptsHandlers[3]
+			if Bits.getNthBit(self.I, 4):
+				# handle joypad
+				self.copy_pc = self.pc
+				self.PC = self.interruptsHandlers[4]
