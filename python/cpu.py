@@ -293,10 +293,11 @@ class CPU(object):
 		self.i = 0x00
 		self.r = 0x00
 
+		self.halted = Bits.reset()
 		self.iff1 = 0x00
 		self.iff2 = 0x00
 
-		self.interruptMode = 0
+		self.im = 0
 					#B,C,D,E,H,L,none,A, F
 		self.regs = [0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0x00,0x00] 
 					#B',C',D',E',H',L',none,A',F'
@@ -628,10 +629,6 @@ class CPU(object):
 			0xfdcb30a6 : Opcodes.bit_res
 		}
 
-	def generateInterrupt(self):
-		if self.interruptMode == 1:
-			self.PC = 0x38
-
 	def readOp(self):
 		self.prev_pc = self.PC
 		pc = self.prev_pc
@@ -666,13 +663,22 @@ class CPU(object):
 			self.debugger.stop(self)
 
 	def _checkInterrupts(self):
-		pass
+		if self.iff1:
+			self.halted = Bits.reset()
+			self.iff1 = Bits.reset()
+			self.iff2 = Bits.reset()
+			self.ram[--self.SP] = Bits.limitTo8Bits(self.pc)
+			self.ram[--self.SP] = self.pc >> 8
+			self.R += 1
+			if self.im == 0 or self.im == 1:
+				self.PC = 0x0038
 
 	def _checkTimers(self):
 		pass
 
 	def run(self):
 		while True:
-			self.readOp()
+			if not self.halted:
+				self.readOp()
 			self._checkInterrupts()
 			self._checkTimers()

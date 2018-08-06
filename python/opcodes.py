@@ -337,7 +337,7 @@ class Opcodes(object):
 
 	@staticmethod
 	def im1(cpu, opcode, logger):
-		cpu.interruptMode = 1
+		cpu.im = 1
 
 		cpu.m_cycles, cpu.t_states = 2, 8
 		logger.info("IM 1")
@@ -865,14 +865,14 @@ class Opcodes(object):
 
 	@staticmethod
 	def im2(cpu, opcode, logger):
-		cpu.interruptMode = 2
+		cpu.im = 2
 
 		cpu.m_cycles, cpu.t_states = 2, 8
 		logger.info("IM 2")
 
 	@staticmethod
 	def im0(cpu, opcode, logger):
-		cpu.interruptMode = 0
+		cpu.im = 0
 
 		cpu.m_cycles, cpu.t_states = 2, 8
 		logger.info("IM 0")
@@ -1024,10 +1024,9 @@ class Opcodes(object):
 
 	@staticmethod
 	def hlt(cpu, opcode, logger):
-		logger.Info("HALT")
+		logger.info("HALT")
 		cpu.m_cycles, cpu.t_states = 1, 4
-		while True:
-			pass
+		cpu.halted = Bits.set()
 
 	@staticmethod
 	def add_Hl_rr_c(cpu, opcode, logger):
