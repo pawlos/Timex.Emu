@@ -605,11 +605,10 @@ class Opcodes(object):
 		cpu.ram[cpu.SP - 1] = pc >> 8
 		cpu.ram[cpu.SP - 2] = pc & 8
 		cpu.SP -= 2
-		rst_jumps = {0:0x00, 1:0x08, 2:0x10, 3:0x18, 4:0x20, 5:0x28, 6:0x30, 7:0x38}
 
-		cpu.PC = rst_jumps[index]
+		cpu.PC = cpu.rst_jumps[index]
 		cpu.m_cycles, cpu.t_states = 3, 11
-		logger.info("RST {:02X}".format(rst_jumps[index]))
+		logger.info("RST {:02X}".format(cpu.rst_jumps[index]))
 
 	@staticmethod
 	def pop(cpu, opcode, logger):

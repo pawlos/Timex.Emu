@@ -12,6 +12,7 @@ from known_addresses import *
 class CPU(object):
 
 	interruptsHandlers = {0: 0x40, 1: 0x48, 2: 0x50, 3: 0x58, 4: 0x60}
+	rst_jumps = {0:0x00, 1:0x08, 2:0x10, 3:0x18, 4:0x20, 5:0x28, 6:0x30, 7:0x38}
 	
 	@property
 	def A(self):
@@ -665,26 +666,35 @@ class CPU(object):
 			print "Missing opcode key: {1:x}, PC = 0x{0:x}".format(self.PC, opcode)
 			self.debugger.stop(self)
 
-	def run(self):
-		while True:
-			self.readOp()
-			if Bits.getNthBit(self.I, 0):
+	def _checkInterrupts(self):
+		if Bits.getNthBit(self.I, 0):
 				#handle V-Blank
 				self.copy_pc = self.pc
 				self.PC = self.interruptsHandlers[0]
-			if Bits.getNthBit(self.I, 1):
-				#handle LCD STAT
-				self.copy_pc = self.pc
-				self.PC = self.interruptsHandlers[1]
-			if Bits.getNthBit(self.I, 2):
-				# handle timer
-				self.copy_pc = self.pc
-				self.PC = self.interruptsHandlers[2]
-			if Bits.getNthBit(self.I, 3):
-				# handle serial
-				self.copy_pc = self.pc
-				self.PC = self.interruptsHandlers[3]
-			if Bits.getNthBit(self.I, 4):
-				# handle joypad
-				self.copy_pc = self.pc
-				self.PC = self.interruptsHandlers[4]
+		if Bits.getNthBit(self.I, 1):
+			#handle LCD STAT
+			self.copy_pc = self.pc
+			self.PC = self.interruptsHandlers[1]
+		if Bits.getNthBit(self.I, 2):
+			# handle timer
+			self.copy_pc = self.pc
+			self.PC = self.interruptsHandlers[2]
+		if Bits.getNthBit(self.I, 3):
+			# handle serial
+			self.copy_pc = self.pc
+			self.PC = self.interruptsHandlers[3]
+		if Bits.getNthBit(self.I, 4):
+			# handle joypad
+			self.copy_pc = self.pc
+			self.PC = self.interruptsHandlers[4]
+
+	def _checkTimers(self):
+		if Bits.getNthBit(self.ram[TAC], 2):
+			# handle timers
+			pass
+
+	def run(self):
+		while True:
+			self.readOp()
+			self._checkInterrupts()
+			self._checkTimers()
