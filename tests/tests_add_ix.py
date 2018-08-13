@@ -27,7 +27,7 @@ class tests_add_ix(unittest.TestCase):
 		cpu.readOp()
 		self.assertEqual(0x2002, cpu.IX)
 
-	def test_add_ix_sp_retursn_correct_result(self):
+	def test_add_ix_sp_returns_correct_result(self):
 		cpu = CPU(ROM('\xdd\x39'))
 		cpu.IX = 0x1001
 		cpu.SP = 0x0880
