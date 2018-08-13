@@ -1167,9 +1167,15 @@ class Opcodes(object):
 	def srl_r(cpu, opcode, logger):
 		reg_idx = (opcode & 7)
 		old_val = cpu.regs[reg_idx]
-		last_bit = Bits.getNthBit(old_val, 0)
-		cpu.CFlag = Bits.set() if last_bit == 1 else Bits.reset()
 		cpu.regs[reg_idx] = (old_val >> 1)
+		last_bit = Bits.getNthBit(old_val, 0)
+
+		cpu.CFlag = Bits.set() if last_bit == 1 else Bits.reset()
+		cpu.NFlag = Bits.reset()
+		cpu.HFlag = Bits.reset()
+		cpu.ZFlag = Bits.isZero(cpu.regs[reg_idx])
+		cpu.PVFlag = Bits.isEvenParity(cpu.regs[reg_idx])
+		cpu.SFlag = Bit.reset()
 
 		cpu.m_cycles, cpu.t_states = 2, 8
 		logger.info("SRL {}".format(IndexToReg.translate8Bit(reg_idx)))
