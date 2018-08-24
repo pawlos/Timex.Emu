@@ -80,3 +80,23 @@ class tests_sub(unittest.TestCase):
 		cpu.readOp()
 		self.assertEqual(4, cpu.t_states)
 
+	def test_sub_a_hl_correctly_calculates_value(self):
+		cpu = CPU(ROM('\x96\x00\x00\x22'))
+		cpu.A = 0x52
+		cpu.HL = 0x3
+		cpu.readOp()
+		self.assertEqual(0x30, cpu.A)
+
+	def test_sub_r_takes_1_m_cycles(self):
+		cpu = CPU(ROM('\x96\x00\x00\x22'))
+		cpu.A = 0x52
+		cpu.HL = 0x3
+		cpu.readOp()
+		self.assertEqual(1, cpu.m_cycles)
+
+	def test_sub_r_takes_7_t_states(self):
+		cpu = CPU(ROM('\x96\x00\x00\x22'))
+		cpu.A = 0x52
+		cpu.HL = 0x3
+		cpu.readOp()
+		self.assertEqual(7, cpu.t_states)

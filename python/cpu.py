@@ -474,6 +474,7 @@ class CPU(object):
 			0x93 : Opcodes.sub_r,
 			0x94 : Opcodes.sub_r,
 			0x95 : Opcodes.sub_r,
+			0x96 : Opcodes.sub_a_hl,
 			0x97 : Opcodes.sub_r,
 			0xa0 : Opcodes._and,
 			0xa1 : Opcodes._and,

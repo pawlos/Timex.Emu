@@ -1263,3 +1263,20 @@ class Opcodes(object):
 
 		cpu.m_cycles, cpu.t_states = 2, 7
 		logger.info("ADC A, (HL)")
+
+	@staticmethod
+	def sub_a_hl(cpu, opcode, logger):
+		v = cpu.ram[cpu.HL]
+		old_A = cpu.AFPrim
+		cpu.A -= v
+
+		cpu.NFlag = Bits.set()
+		cpu.SFlag = Bits.isNegative(cpu.A)
+		cpu.ZFlag = Bits.isZero(cpu.A)
+		cpu.HFlag = Bits.halfCarrySub(old_A, cpu.A)
+		cpu.PVFlag = Bits.overflow(cpu.A, old_A)
+		cpu.CFlag = Bits.carryFlag(cpu.A)
+
+		cpu.m_cycles, cpu.t_states = 1, 7
+		logger.info("SUB A, (HL)")
+
