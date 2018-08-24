@@ -1175,7 +1175,7 @@ class Opcodes(object):
 		cpu.HFlag = Bits.reset()
 		cpu.ZFlag = Bits.isZero(cpu.regs[reg_idx])
 		cpu.PVFlag = Bits.isEvenParity(cpu.regs[reg_idx])
-		cpu.SFlag = Bit.reset()
+		cpu.SFlag = Bits.reset()
 
 		cpu.m_cycles, cpu.t_states = 2, 8
 		logger.info("SRL {}".format(IndexToReg.translate8Bit(reg_idx)))
