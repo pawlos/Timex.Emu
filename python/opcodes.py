@@ -1280,3 +1280,16 @@ class Opcodes(object):
 		cpu.m_cycles, cpu.t_states = 1, 7
 		logger.info("SUB A, (HL)")
 
+	@staticmethod
+	def sbc_r(cpu, opcode, logger):
+		reg_idx = (opcode & 7)
+		old_val = cpu.A
+		cpu.A = old_val - cpu.regs[reg_idx] - (1 if cpu.CFlag else 0)
+
+		cpu.SFlag = Bits.isNegative(cpu.A)
+		cpu.ZFlag = Bits.isZero(cpu.A)
+		cpu.NFlag = Bits.set()
+
+		cpu.m_cycles, cpu.t_states = 1, 4
+		logger.info("SDC A, {}".format(IndexToReg.translate8Bit(reg_idx)))
+
