@@ -3,6 +3,7 @@ from cpu import CPU
 from opcodes import Opcodes
 from rom import ROM
 from loggers import Logger
+from utility import Bits
 
 class tests_sbc(unittest.TestCase):
 
@@ -155,3 +156,11 @@ class tests_sbc(unittest.TestCase):
 		cpu.DE = 0xffff
 		cpu.readOp()
 		self.assertEquals(15, cpu.t_states)
+
+	def test_sbc_a_b_correctly_caluclates_result(self):
+		cpu = CPU(ROM('\x98'))
+		cpu.A = 0x40
+		cpu.B = 0x3f
+		cpu.CFlag = Bits.set()
+		cpu.readOp()
+		self.assertEquals(0, cpu.A)
