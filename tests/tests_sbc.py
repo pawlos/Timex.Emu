@@ -164,3 +164,11 @@ class tests_sbc(unittest.TestCase):
 		cpu.CFlag = Bits.set()
 		cpu.readOp()
 		self.assertEquals(0, cpu.A)
+
+	def test_sbc_a_c_without_c_calculates_results(self):
+		cpu = CPU(ROM('\x99'))
+		cpu.A = 0x40
+		cpu.C = 0x3f
+		cpu.CFlag = Bits.reset()
+		cpu.readOp()
+		self.assertEquals(1, cpu.A)
