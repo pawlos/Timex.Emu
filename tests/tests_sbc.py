@@ -157,7 +157,7 @@ class tests_sbc(unittest.TestCase):
 		cpu.readOp()
 		self.assertEquals(15, cpu.t_states)
 
-	def test_sbc_a_b_correctly_caluclates_result(self):
+	def test_sbc_a_b_correctly_calculates_result(self):
 		cpu = CPU(ROM('\x98'))
 		cpu.A = 0x40
 		cpu.B = 0x3f
