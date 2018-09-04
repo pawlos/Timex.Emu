@@ -1274,7 +1274,7 @@ class Opcodes(object):
 		cpu.SFlag = Bits.isNegative(cpu.A)
 		cpu.ZFlag = Bits.isZero(cpu.A)
 		cpu.HFlag = Bits.halfCarrySub(old_A, cpu.A)
-		cpu.PVFlag = Bits.overflow(cpu.A, old_A)
+		cpu.PVFlag = Bits.overflow(old_A, cpu.A)
 		cpu.CFlag = Bits.carryFlag(cpu.A)
 
 		cpu.m_cycles, cpu.t_states = 1, 7
@@ -1289,6 +1289,9 @@ class Opcodes(object):
 		cpu.SFlag = Bits.isNegative(cpu.A)
 		cpu.ZFlag = Bits.isZero(cpu.A)
 		cpu.NFlag = Bits.set()
+		cpu.HFlag = Bits.halfCarrySub(old_val, cpu.A)
+		cpu.PVFlag = Bits.overflow(old_val, cpu.A)
+		cpu.CFlag = Bits.carryFlag(cpu.A)
 
 		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("SDC A, {}".format(IndexToReg.translate8Bit(reg_idx)))
