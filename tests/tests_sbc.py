@@ -180,3 +180,11 @@ class tests_sbc(unittest.TestCase):
 		cpu.CFlag = Bits.reset()
 		cpu.readOp()
 		self.assertTrue(cpu.SFlag)
+
+	def test_sbc_a_e_sets_ZFlag_when_result_is_zero(self):
+		cpu = CPU(ROM('\x9b'))
+		cpu.A = 0x44
+		cpu.E = 0x44
+		cpu.CFlag = Bits.reset()
+		cpu.readOp()
+		self.assertTrue(cpu.ZFlag)
