@@ -108,7 +108,7 @@ class tests_sbc(unittest.TestCase):
 		cpu = CPU(ROM('\xed\x52'))
 		cpu.HL = 0x1000
 		cpu.DE = 0x1002
-		cpu.SFLag = False
+		cpu.SFlag = False
 		cpu.readOp()
 		self.assertTrue(cpu.SFlag)
 
@@ -172,3 +172,11 @@ class tests_sbc(unittest.TestCase):
 		cpu.CFlag = Bits.reset()
 		cpu.readOp()
 		self.assertEquals(1, cpu.A)
+
+	def test_sbc_a_d_sets_SFlag_when_result_is_below_zero(self):
+		cpu = CPU(ROM('\x9a'))
+		cpu.A = 0x40
+		cpu.D = 0x44
+		cpu.CFlag = Bits.reset()
+		cpu.readOp()
+		self.assertTrue(cpu.SFlag)
