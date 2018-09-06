@@ -77,6 +77,10 @@ class tests_cpu(unittest.TestCase):
 		cpu.IY = 0x3456
 		self.assertEqual(0x3456, cpu.IY)
 
+	def test_rom_getitem(self):
+		rom = ROM('\x00\x01\x02\x03\x04\x05')
+		self.assertEqual(0x05, rom[5])
+
 def suite():
 	return unittest.TestLoader().discover(".", pattern="*.py")
 
