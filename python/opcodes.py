@@ -1296,3 +1296,17 @@ class Opcodes(object):
 		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("SDC A, {}".format(IndexToReg.translate8Bit(reg_idx)))
 
+	@staticmethod
+	def sbc_hl(cpu, opcode, logger):
+		old_val = cpu.A
+		cpu.A = old_val - cpu.ram[cpu.HL] - (1 if cpu.CFlag else 0)
+
+		cpu.SFlag = Bits.isNegative(cpu.A)
+		cpu.ZFlag = Bits.isZero(cpu.A)
+		cpu.NFlag = Bits.set()
+		cpu.HFlag = Bits.halfCarrySub(old_val, cpu.A)
+		cpu.PVFlag = Bits.overflow(old_val, cpu.A)
+		cpu.CFlag = Bits.carryFlag(cpu.A)
+
+		cpu.m_cycles, cpu.t_states = 2, 7
+		logger.info("SDC A, (HL)")

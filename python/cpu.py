@@ -482,6 +482,7 @@ class CPU(object):
 			0x9b : Opcodes.sbc_r,
 			0x9c : Opcodes.sbc_r,
 			0x9d : Opcodes.sbc_r,
+			0x9e : Opcodes.sbc_hl,
 			0x9f : Opcodes.sbc_r,
 			0xa0 : Opcodes._and,
 			0xa1 : Opcodes._and,

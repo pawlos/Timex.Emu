@@ -188,3 +188,11 @@ class tests_sbc(unittest.TestCase):
 		cpu.CFlag = Bits.reset()
 		cpu.readOp()
 		self.assertTrue(cpu.ZFlag)
+
+	def test_sbc_a_mem_hl_correctly_calculates_value(self):
+		cpu = CPU(ROM('\x9e\x00\x00\x22'))
+		cpu.A = 0x23
+		cpu.HL = 0x3
+		cpu.CFlag = Bits.set()
+		cpu.readOp()
+		self.assertEqual(0, cpu.A)
