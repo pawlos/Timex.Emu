@@ -498,6 +498,7 @@ class CPU(object):
 			0xab : Opcodes.xorA,
 			0xac : Opcodes.xorA,
 			0xad : Opcodes.xorA,
+			0xae : Opcodes.xor_hl,
 			0xaf : Opcodes.xorA,
 			0xb0 : Opcodes._or,
 			0xb1 : Opcodes._or,

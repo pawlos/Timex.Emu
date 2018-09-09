@@ -1310,3 +1310,18 @@ class Opcodes(object):
 
 		cpu.m_cycles, cpu.t_states = 2, 7
 		logger.info("SDC A, (HL)")
+
+	@staticmethod
+	def xor_hl(cpu, opcode, logger):
+		old_val = cpu.A
+		cpu.A ^= cpu.ram[cpu.HL]
+
+		cpu.SFlag = Bits.isNegative(cpu.A)
+		cpu.ZFlag = Bits.isZero(cpu.A)
+		cpu.HFlag = Bits.reset()
+		cpu.PVFlag = Bits.isEvenParity(cpu.A)
+		cpu.NFlag = Bits.reset()
+		cpu.CFlag = Bits.reset()
+
+		cpu.m_cycles, cpu.t_states = 2, 7
+		logger.info("XOR (HL)")

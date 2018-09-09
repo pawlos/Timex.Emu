@@ -102,3 +102,10 @@ class tests_xor_a(unittest.TestCase):
 		cpu = CPU(ROM('\xa8'))
 		cpu.readOp()
 		self.assertEqual(4, cpu.t_states)
+
+	def test_xor_a_hl_calculates_value_crrectly(self):
+		cpu = CPU(ROM('\xae\x01\x02\x03'))
+		cpu.A = 0x5
+		cpu.HL = 0x3
+		cpu.readOp()
+		self.assertEqual(6, cpu.A)
