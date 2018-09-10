@@ -1325,3 +1325,17 @@ class Opcodes(object):
 
 		cpu.m_cycles, cpu.t_states = 2, 7
 		logger.info("XOR (HL)")
+
+	@staticmethod
+	def cp_hl(cpu, opcode, logger):
+		#logger.info(regInd)
+		value = cpu.A - cpu.ram[cpu.HL]
+		"""Flags"""
+		cpu.ZFlag = Bits.isZero(value)
+		cpu.CFlag = Bits.carryFlag(value)
+		cpu.NFlag = Bits.set()
+		cpu.HFlag = Bits.halfCarrySub(cpu.A, value)
+		cpu.SFlag = Bits.signFlag(value)
+		cpu.PVFlag = Bits.overflow(value, cpu.A)
+		cpu.m_cycles, cpu.t_states = 1, 7
+		logger.info("CP (HL)")

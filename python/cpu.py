@@ -513,6 +513,7 @@ class CPU(object):
 			0xbb : Opcodes.cp,
 			0xbc : Opcodes.cp,
 			0xbd : Opcodes.cp,
+			0xbe : Opcodes.cp_hl,
 			0xbf : Opcodes.cp,
 			0xc0 : Opcodes.ret_cc,
 			0xc1 : Opcodes.pop,
