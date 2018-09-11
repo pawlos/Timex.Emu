@@ -136,3 +136,10 @@ class tests_cp_h(unittest.TestCase):
 		cpu.HL = 0x04
 		cpu.readOp()
 		self.assertTrue(cpu.ZFlag)
+
+	def test_cp_hl_sets_SFlag_correctly(self):
+		cpu = CPU(ROM('\xbe\x01\x02\x04\x05'))
+		cpu.A = 0x03
+		cpu.HL = 0x03
+		cpu.readOp()
+		self.assertTrue(cpu.SFlag)
