@@ -1328,9 +1328,8 @@ class Opcodes(object):
 
 	@staticmethod
 	def cp_hl(cpu, opcode, logger):
-		#logger.info(regInd)
 		value = cpu.A - cpu.ram[cpu.HL]
-		"""Flags"""
+		
 		cpu.ZFlag = Bits.isZero(value)
 		cpu.CFlag = Bits.carryFlag(value)
 		cpu.NFlag = Bits.set()

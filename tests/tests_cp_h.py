@@ -123,7 +123,7 @@ class tests_cp_h(unittest.TestCase):
 		cpu.readOp()
 		self.assertEquals(1, cpu.m_cycles)
 
-	def test_cp_r_takes_4_t_tates(self):
+	def test_cp_r_takes_4_t_states(self):
 		cpu = CPU(ROM('\xbc'))
 		cpu.A = 3
 		cpu.H = 3
@@ -143,3 +143,17 @@ class tests_cp_h(unittest.TestCase):
 		cpu.HL = 0x03
 		cpu.readOp()
 		self.assertTrue(cpu.SFlag)
+
+	def test_cp_hl_takes_1_m_cycles(self):
+		cpu = CPU(ROM('\xbe\x01\x02\x04\x05'))
+		cpu.A = 0x03
+		cpu.HL = 0x03
+		cpu.readOp()
+		self.assertEquals(1, cpu.m_cycles)
+
+	def test_cp_hl_takes_7_t_states(self):
+		cpu = CPU(ROM('\xbe\x01\x02\x04\x05'))
+		cpu.A = 0x03
+		cpu.HL = 0x03
+		cpu.readOp()
+		self.assertEquals(7, cpu.t_states)
