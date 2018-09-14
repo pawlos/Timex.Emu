@@ -262,3 +262,10 @@ class tests_adc(unittest.TestCase):
 		cpu.A = 0x0F
 		cpu.readOp()
 		self.assertTrue(cpu.HFlag)
+
+	def test_adc_A_n_correctly_calculates_values(self):
+		cpu = CPU(ROM('\xce\x02'))
+		cpu.A = 0x02
+		cpu.CFlag = Bits.set()
+		cpu.readOp()
+		self.assertEqual(0x05, cpu.A)

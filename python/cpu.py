@@ -529,6 +529,7 @@ class CPU(object):
 			0xcb : [self.twoBytesOpcodes],
 			0xcc : Opcodes.call_cond,
 			0xcd : Opcodes.call,
+			0xce : Opcodes.adc_n,
 			0xcf : Opcodes.rst,
 			0xd0 : Opcodes.ret_cc,
 			0xd1 : Opcodes.pop,

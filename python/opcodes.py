@@ -1329,7 +1329,7 @@ class Opcodes(object):
 	@staticmethod
 	def cp_hl(cpu, opcode, logger):
 		value = cpu.A - cpu.ram[cpu.HL]
-		
+
 		cpu.ZFlag = Bits.isZero(value)
 		cpu.CFlag = Bits.carryFlag(value)
 		cpu.NFlag = Bits.set()
@@ -1338,3 +1338,19 @@ class Opcodes(object):
 		cpu.PVFlag = Bits.overflow(value, cpu.A)
 		cpu.m_cycles, cpu.t_states = 1, 7
 		logger.info("CP (HL)")
+
+	@staticmethod
+	def adc_n(cpu, opcode, logger):
+		n = cpu.ram[cpu.PC]
+		old_val = cpu.A
+		new_val = cpu.A + n + (1 if cpu.CFlag else 0)
+		cpu.A = new_val
+
+		cpu.SFlag = Bits.isNegative(cpu.A)
+		cpu.ZFlag = Bits.isZero(cpu.A)
+		cpu.HFlag = Bits.halfCarrySub(old_val, cpu.A)
+		cpu.PVFlag = Bits.overflow(old_val, cpu.A)
+		cpu.NFlag = Bits.reset()
+		cpu.CFlag = Bits.carryFlag(new_val)
+
+		logger.info("ADC A, {:02X}".format(n))
