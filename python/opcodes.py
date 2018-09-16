@@ -675,7 +675,6 @@ class Opcodes(object):
 		index = (opcode >> 3) & 7
 
 		value = cpu.ram[cpu.HL]
-		old = cpu.regs[index]
 
 		cpu.regs[index] = value
 
@@ -783,7 +782,7 @@ class Opcodes(object):
 		low_hl = mem_hl & 0x0F
 		high_hl = (mem_hl & 0xF0) >> 4
 		cpu.A = ((cpu.A & 0xF0) | high_hl)
-		mem_hl = (mem_hl << 4) | low_a
+		mem_hl = (low_hl << 4) | low_a
 		cpu.ram[cpu.HL] = mem_hl
 		cpu.ZFlag = Bits.isZero(cpu.A)
 		cpu.SFlag = Bits.isNegative(cpu.A)
@@ -1313,7 +1312,6 @@ class Opcodes(object):
 
 	@staticmethod
 	def xor_hl(cpu, opcode, logger):
-		old_val = cpu.A
 		cpu.A ^= cpu.ram[cpu.HL]
 
 		cpu.SFlag = Bits.isNegative(cpu.A)
