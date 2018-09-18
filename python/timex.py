@@ -1,5 +1,4 @@
 #Timex 2048
-import io
 from cpu import CPU
 from loggers import Logger
 from debugger import Debugger
