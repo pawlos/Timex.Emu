@@ -1352,3 +1352,16 @@ class Opcodes(object):
 		cpu.CFlag = Bits.carryFlag(new_val)
 
 		logger.info("ADC A, {:02X}".format(n))
+
+	@staticmethod
+	def _or_hl(cpu, opcode, logger):
+		cpu.A = cpu.A | cpu.ram[cpu.HL]
+		cpu.HFlag = Bits.reset()
+		cpu.CFlag = Bits.reset()
+		cpu.NFlag = Bits.reset()
+		cpu.ZFlag = Bits.isZero(cpu.A)
+		cpu.SFlag = Bits.isNegative(cpu.A)
+		cpu.PVFlag = Bits.isEvenParity(cpu.A)
+
+		cpu.m_cycles, cpu.t_states = 2, 7
+		logger.info("OR (HL)")

@@ -506,6 +506,7 @@ class CPU(object):
 			0xb3 : Opcodes._or,
 			0xb4 : Opcodes._or,
 			0xb5 : Opcodes._or,
+			0xb6 : Opcodes._or_hl,
 			0xb7 : Opcodes._or,
 			0xb8 : Opcodes.cp,
 			0xb9 : Opcodes.cp,

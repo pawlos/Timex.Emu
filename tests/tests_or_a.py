@@ -114,3 +114,10 @@ class tests_or_a(unittest.TestCase):
 		cpu.B = 0x04
 		cpu.readOp()
 		self.assertEqual(4, cpu.t_states)
+
+	def test_or_hl_correctly_perform_operation(self):
+		cpu = CPU(ROM('\xb6\x05\x06\x00\x09'))
+		cpu.HL = 0x04
+		cpu.A = 0x02
+		cpu.readOp()
+		self.assertEqual(0b1011, cpu.A)
