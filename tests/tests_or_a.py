@@ -121,3 +121,10 @@ class tests_or_a(unittest.TestCase):
 		cpu.A = 0x02
 		cpu.readOp()
 		self.assertEqual(0b1011, cpu.A)
+
+	def test_or_hl_correctly_sets_ZFlag(self):
+		cpu = CPU(ROM('\xb6\x05\x06\x00\x00'))
+		cpu.HL = 0x04
+		cpu.A = 0x00
+		cpu.readOp()
+		self.assertTrue(cpu.ZFlag)
