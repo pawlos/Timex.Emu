@@ -128,3 +128,17 @@ class tests_or_a(unittest.TestCase):
 		cpu.A = 0x00
 		cpu.readOp()
 		self.assertTrue(cpu.ZFlag)
+
+	def test_or_hl_takes_2_m_cycles(self):
+		cpu = CPU(ROM('\xb6\x05\x06\x00\x00'))
+		cpu.HL = 0x04
+		cpu.A = 0x00
+		cpu.readOp()
+		self.assertEqual(2, cpu.m_cycles)
+
+	def test_or_hl_takes_7_t_states(self):
+		cpu = CPU(ROM('\xb6\x05\x06\x00\x00'))
+		cpu.HL = 0x04
+		cpu.A = 0x00
+		cpu.readOp()
+		self.assertEqual(7, cpu.t_states)
