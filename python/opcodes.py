@@ -252,25 +252,25 @@ class Opcodes(object):
 		regInd = (opcode & 0x30) >> 4
 		high = cpu.ram[cpu.PC]
 		low = cpu.ram[cpu.PC]
-		nn =  (high << 8) + low
+		addr =  (high << 8) + low
 
 		value = cpu.Reg16(regInd)
 
-		cpu.ram[nn + 1] = value >> 8
-		cpu.ram[nn] = value & 0xFF
+		cpu.ram[addr + 1] = value >> 8
+		cpu.ram[addr] = value & 0xFF
 		cpu.m_cycles, cpu.t_states = 6, 20
-		logger.info("LD ({:04X}), {}".format(nn, IndexToReg.translate16Bit(regInd)))
+		logger.info("LD ({:04X}), {}".format(addr, IndexToReg.translate16Bit(regInd)))
 
 	@staticmethod
 	def ldNnHl(cpu, opcode, logger):
 		high = cpu.ram[cpu.PC]
 		low = cpu.ram[cpu.PC]
-		nn = (high << 8) + low
-		cpu.ram[nn+1] = cpu.H
-		cpu.ram[nn] = cpu.L
+		addr = (high << 8) + low
+		cpu.ram[addr+1] = cpu.H
+		cpu.ram[addr] = cpu.L
 
 		cpu.m_cycles, cpu.t_states = 5, 16
-		logger.info("LD ({:04X}), HL".format(nn))
+		logger.info("LD ({:04X}), HL".format(addr))
 
 	@staticmethod
 	def inc8(cpu, opcode, logger):
