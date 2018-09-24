@@ -7,24 +7,20 @@ class Opcodes(object):
 
 	@staticmethod
 	def disableInterrupts(cpu, opcode, logger):
-		"""DI"""
 		cpu.iff1, cpu.iff2 = 0x00, 0x00
 		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("DI")
 
 	@staticmethod
 	def enableInterrupts(cpu, opcode, logger):
-		''' EI '''
 		cpu.iff1, cpu.iff2 = 0x01, 0x01
 		cpu.m_cycles, cpu.t_states = 1, 4
 		logger.info("EI")
 
 	@staticmethod
 	def xorA(cpu, opcode, logger):
-		"""XOR A"""
 		regInd = opcode & 7
 		cpu.A = cpu.A ^ cpu.regs[regInd]
-		"""Flags"""
 		cpu.ZFlag = Bits.isZero(cpu.A)
 		cpu.CFlag = Bits.reset()
 		cpu.NFlag = Bits.reset()
@@ -110,9 +106,7 @@ class Opcodes(object):
 	@staticmethod
 	def cp(cpu, opcode, logger):
 		regInd = opcode & 7
-		#logger.info(regInd)
 		value = cpu.A - cpu.regs[regInd]
-		"""Flags"""
 		cpu.ZFlag = Bits.isZero(value)
 		cpu.CFlag = Bits.carryFlag(value)
 		cpu.NFlag = Bits.set()
@@ -344,7 +338,6 @@ class Opcodes(object):
 
 	@staticmethod
 	def ldiy(cpu, opcode, logger):
-		''' Executes LD IY, nn opcode'''
 		low = cpu.ram[cpu.PC]
 		high = cpu.ram[cpu.PC]
 		imm = (high << 8) + low
@@ -354,7 +347,6 @@ class Opcodes(object):
 
 	@staticmethod
 	def ldir(cpu, opcode, logger):
-		''' (DE) <- (HL), DE = DE + 1, HL = HL + 1, BC F = BC - 1'''
 		wasZero = cpu.BC == 0
 		while True:
 			hl_mem = cpu.ram[cpu.HL]
@@ -373,7 +365,6 @@ class Opcodes(object):
 
 	@staticmethod
 	def ldnn_a(cpu, opcode, logger):
-		''' LD (nn),A '''
 		high = cpu.ram[cpu.PC]
 		low = cpu.ram[cpu.PC]
 		addr = (high << 8) + low
@@ -384,7 +375,6 @@ class Opcodes(object):
 
 	@staticmethod
 	def dec_mem_at_iy(cpu, opcode, logger):
-		''' DEC (IY+d) '''
 		displacement = cpu.ram[cpu.PC]
 		addr = cpu.IY + displacement
 		value = cpu.ram[addr]
@@ -432,7 +422,6 @@ class Opcodes(object):
 
 	@staticmethod
 	def call(cpu, opcode, logger):
-		''' CALL '''
 		pc = cpu.PC
 		addr_lo = cpu.ram[pc]
 		pc += 1
@@ -449,7 +438,6 @@ class Opcodes(object):
 
 	@staticmethod
 	def ldiy_d_r(cpu, opcode, logger):
-		''' LD (IY+d),r '''
 		regInd = opcode & 7
 		d = cpu.ram[cpu.PC]
 		cpu.ram[cpu.IY + d] = cpu.regs[regInd]
@@ -625,7 +613,6 @@ class Opcodes(object):
 
 	@staticmethod
 	def ldiy_d_n(cpu, opcode, logger):
-		''' LD (IY+d),n '''
 		d = cpu.ram[cpu.PC]
 		n = cpu.ram[cpu.PC]
 		cpu.ram[cpu.IY + d] = n
@@ -634,7 +621,6 @@ class Opcodes(object):
 
 	@staticmethod
 	def add_r(cpu, opcode, logger):
-		''' ADD A,r '''
 		index = (opcode & 7)
 		old = cpu.A
 		cpu.A = old + cpu.regs[index]
@@ -651,7 +637,6 @@ class Opcodes(object):
 
 	@staticmethod
 	def add_r_n(cpu, opcode, logger):
-		''' ADD A,n '''
 		n = cpu.ram[cpu.PC]
 		old = cpu.A
 
@@ -670,8 +655,6 @@ class Opcodes(object):
 
 	@staticmethod
 	def ld_r_hl(cpu, opcode, logger):
-		''' LD r, (HL) '''
-
 		index = (opcode >> 3) & 7
 
 		value = cpu.ram[cpu.HL]
