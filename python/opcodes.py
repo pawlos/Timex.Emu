@@ -203,7 +203,6 @@ class Opcodes(object):
 		cpu.NFlag = Bits.reset()
 		cpu.CFlag = Bits.carryFlag16(oldHL, cpu.HL)
 		cpu.HFlag = Bits.carryFlag16(oldHL, cpu.HL, bits=11)
-		#S, Z, P/V - not affected
 		cpu.m_cycles, cpu.t_states = 3, 11
 		logger.info("ADD HL, {}".format(IndexToReg.translate16Bit(regInd)))
 
@@ -666,7 +665,6 @@ class Opcodes(object):
 
 	@staticmethod
 	def _or(cpu, opcode, logger):
-		''' OR r '''
 		regInd = opcode & 7
 		cpu.A = cpu.A | cpu.regs[regInd]
 		cpu.HFlag = Bits.reset()
