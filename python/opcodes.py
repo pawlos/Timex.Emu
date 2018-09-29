@@ -241,7 +241,6 @@ class Opcodes(object):
 
 	@staticmethod
 	def ldNnRr(cpu, opcode, logger):
-		value = 0
 		regInd = (opcode & 0x30) >> 4
 		high = cpu.ram[cpu.PC]
 		low = cpu.ram[cpu.PC]
@@ -267,7 +266,7 @@ class Opcodes(object):
 
 	@staticmethod
 	def inc8(cpu, opcode, logger):
-		index = ( opcode >> 3 ) & 7
+		index = (opcode >> 3) & 7
 		oldValue =  cpu.regs[index]
 		cpu.regs[index] = Bits.limitTo8Bits(cpu.regs[index] + 1)
 
@@ -694,7 +693,7 @@ class Opcodes(object):
 		value_low = cpu.ram[addr]
 		value_high = cpu.ram[addr+1]
 		value = (value_high << 8) + value_low
-		regInd = ( opcode >> 4 ) & 3
+		regInd = (opcode >> 4) & 3
 
 		cpu.Reg16(regInd, value)
 
