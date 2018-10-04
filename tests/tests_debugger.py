@@ -1,12 +1,13 @@
 
 import unittest
-from debugger import *
-from fakes import *
-from regs import *
+from debugger import Debugger
+from fakes import FakeCpu
+from loggers import EmptyLogger, Logger
+from regs import CF
 
 
 class tests_debugger(unittest.TestCase):
-    
+
     def test_init_zeros_registers(self):
         debugger = Debugger()
         self.assertFalse(debugger.isSingleStepping)
