@@ -4,7 +4,6 @@ from rom import ROM
 
 
 class tests_ld_ext(unittest.TestCase):
-
     def test_ld_I_A_correctly_assigns_value(self):
         cpu = CPU(ROM('\xed\x47'))
         cpu.A = 0x33

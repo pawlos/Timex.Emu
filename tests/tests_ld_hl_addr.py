@@ -4,7 +4,6 @@ from rom import ROM
 
 
 class tests_ld_hl_addr(unittest.TestCase):
-
     def test_ld_hl_addr_correctly_stores_value_from_given_address_to_hl(self):
         cpu = CPU(ROM('\x2a\x45\x45'))
         cpu.ram[0x4545] = 0x37
