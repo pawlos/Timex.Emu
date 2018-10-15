@@ -142,7 +142,7 @@ class Opcodes(object):
             cpu.PC = pc + jumpOffset+1
             cpu.m_cycles, cpu.t_states = 1, 5
 
-        cpu.m_cycles, cpu.t_states  = 2, 7
+        cpu.m_cycles, cpu.t_states = 2, 7
         logger.info("JR NC, {0:04X}".format(pc+jumpOffset+1))
 
     @staticmethod
@@ -221,7 +221,7 @@ class Opcodes(object):
         pc = cpu.PC
         jumpTo = pc + Bits.twos_comp(cpu.ram[pc]) + 1
 
-        no_jump = cpu.ZFlag == False
+        no_jump = cpu.ZFlag is False
 
         if not no_jump:
             cpu.PC = jumpTo
@@ -245,7 +245,7 @@ class Opcodes(object):
         regInd = (opcode & 0x30) >> 4
         high = cpu.ram[cpu.PC]
         low = cpu.ram[cpu.PC]
-        addr =  (high << 8) + low
+        addr = (high << 8) + low
 
         value = cpu.Reg16(regInd)
 
@@ -268,7 +268,7 @@ class Opcodes(object):
     @staticmethod
     def inc8(cpu, opcode, logger):
         index = (opcode >> 3) & 7
-        oldValue =  cpu.regs[index]
+        oldValue = cpu.regs[index]
         cpu.regs[index] = Bits.limitTo8Bits(cpu.regs[index] + 1)
 
         cpu.NFlag = Bits.reset()
@@ -457,7 +457,7 @@ class Opcodes(object):
         cpu.B = cpu.B - 1
         pc = pc + Bits.twos_comp(e) + 1
         if cpu.B != 0:
-            cpu.m_cycles,cpu.t_states = 1, 5
+            cpu.m_cycles, cpu.t_states = 1, 5
             cpu.PC = pc
 
         cpu.m_cycles, cpu.t_states = 2, 8
@@ -605,7 +605,7 @@ class Opcodes(object):
         cpu.SP += 2
         val = (high << 8) + low
 
-        cpu.Reg16(regInd, val, af = True)
+        cpu.Reg16(regInd, val, af=True)
 
         cpu.m_cycles, cpu.t_states = 3, 7
         logger.info("POP {}".format(IndexToReg.translate16Bit(regInd)))
@@ -690,7 +690,7 @@ class Opcodes(object):
     def ld16_nn(cpu, opcode, logger):
         low = cpu.ram[cpu.PC]
         high = cpu.ram[cpu.PC]
-        addr = ( high << 8 ) + low
+        addr = (high << 8) + low
         value_low = cpu.ram[addr]
         value_high = cpu.ram[addr+1]
         value = (value_high << 8) + value_low
@@ -876,19 +876,19 @@ class Opcodes(object):
 
         taken = False
 
-        if cond == 0 and cpu.ZFlag == False:
+        if cond == 0 and cpu.ZFlag is False:
             taken = True
         if cond == 1 and cpu.ZFlag:
             taken = True
-        if cond == 2 and cpu.CFlag == False:
+        if cond == 2 and cpu.CFlag is False:
             taken = True
         if cond == 3 and cpu.CFlag:
             taken = True
-        if cond == 4 and cpu.PVFlag == False:
+        if cond == 4 and cpu.PVFlag is False:
             taken = True
         if cond == 5 and cpu.PVFlag:
             taken = True
-        if cond == 6 and cpu.SFlag == False:
+        if cond == 6 and cpu.SFlag is False:
             taken = True
         if cond == 7 and cpu.SFlag:
             taken = True
@@ -911,19 +911,19 @@ class Opcodes(object):
 
         taken = False
 
-        if cond == 0 and cpu.ZFlag == False:
+        if cond == 0 and cpu.ZFlag is False:
             taken = True
         elif cond == 1 and cpu.ZFlag:
             taken = True
-        elif cond == 2 and cpu.CFlag == False:
+        elif cond == 2 and cpu.CFlag is False:
             taken = True
         elif cond == 3 and cpu.CFlag:
             taken = True
-        elif cond == 4 and cpu.PVFlag == False:
+        elif cond == 4 and cpu.PVFlag is False:
             taken = True
         elif cond == 5 and cpu.PVFlag:
             taken = True
-        elif cond == 6 and cpu.SFlag == False:
+        elif cond == 6 and cpu.SFlag is False:
             taken = True
         elif cond == 7 and cpu.SFlag:
             taken = True
@@ -1086,7 +1086,7 @@ class Opcodes(object):
     def jr_c(cpu, opcode, logger):
         pc = cpu.PC + 1
         jumpOffset = Bits.twos_comp(cpu.ram[pc]) - 2
-        no_jump = cpu.CFlag == False
+        no_jump = cpu.CFlag is False
         pc = pc + jumpOffset
         if not no_jump:
             cpu.PC = pc

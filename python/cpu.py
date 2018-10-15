@@ -257,7 +257,7 @@ class CPU(object):
     def PC(self, value):
         self.pc = Bits.limitTo16Bits(value)
 
-    def Reg16(self, index, value = None, ix = False, iy = False, af = False):
+    def Reg16(self, index, value=None, ix=False, iy=False, af=False):
         if value is None:
             if index == 0:
                 return self.BC
@@ -339,7 +339,7 @@ class CPU(object):
                      0x00,
                      0xFF,
                      0x00,
-                     0x00] 
+                     0x00]
                     #B',C',D',E',H',L',none,A',F'
         self.regsPri = [0x00,
                         0x00,
@@ -354,10 +354,10 @@ class CPU(object):
         self.mcycles = 0
 
     def __init__(self,
-                rom = ROM(), 
-                ram = RAM(), 
-                logger = EmptyLogger(),
-                debugger = EmptyDebugger()):
+                 rom=ROM(),
+                 ram=RAM(),
+                 logger=EmptyLogger(),
+                 debugger=EmptyDebugger()):
 
         self.logger = logger
         self.debugger = debugger
@@ -725,8 +725,11 @@ class CPU(object):
         except (IndexError, KeyboardInterrupt) as e:
             self.debugger.stop(self)
         except KeyError as e:
-            print "Missing opcode key: {1:x}, PC = 0x{0:x}".format(self.PC, opcode)
+            self.printError(pc, opcode)
             self.debugger.stop(self)
+
+    def printError(self, pc, opcode):
+        print "Missing opcode key: {1:x}, PC = 0x{0:x}".format(pc, opcode)
 
     def _checkInterrupts(self):
         if self.iff1:
