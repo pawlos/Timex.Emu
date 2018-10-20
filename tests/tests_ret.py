@@ -18,7 +18,6 @@ class tests_ret(unittest.TestCase):
         self.assertEqual(0x18B5, cpu.PC)
         self.assertEqual(0x4002, cpu.SP)
 
-
     def test_ret_nz_does_sets_PC_correctly_if_Zflag_is_reset(self):
         ram = RAM()
         ram[0x4000] = 0xB5

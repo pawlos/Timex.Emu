@@ -20,7 +20,7 @@ class tests_inc(unittest.TestCase):
         cpu = CPU(ROM('\x34'), ram)
         cpu.HL = 0x100
         cpu.readOp()
-        self.assertEqual(3, cpu.m_cycles)       
+        self.assertEqual(3, cpu.m_cycles)
 
     def test_inc_hl_takes_11_t_states(self):
         ram = RAM()

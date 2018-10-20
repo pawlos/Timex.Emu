@@ -26,4 +26,3 @@ class tests_ld_a_nn(unittest.TestCase):
         cpu = CPU(ROM('\x3a\x32\x88'), ram)
         cpu.readOp()
         self.assertEqual(13, cpu.t_states)
-      

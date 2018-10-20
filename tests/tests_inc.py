@@ -100,14 +100,13 @@ class tests_inc(unittest.TestCase):
         cpu.readOp()
         self.assertEqual(1, cpu.C)
 
-
     def test_inc_r_does_reset_N_flag(self):
         cpu = CPU(ROM('\x04\x04'))
         cpu.B = 0xAA
         cpu.NFlag = True
         cpu.readOp()
         self.assertFalse(cpu.NFlag)
-        cpu.NFlag = False #redundant but to be explicit
+        cpu.NFlag = False
         cpu.readOp()
         self.assertFalse(cpu.NFlag)
 

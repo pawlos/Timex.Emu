@@ -165,7 +165,7 @@ class tests_add(unittest.TestCase):
         cpu.L = 0xE0
         cpu.readOp()
         self.assertEqual(0xF2, cpu.A)
-    
+
     def test_add_A_C_correctly_calculates_value(self):
         cpu = CPU(ROM('\x81'))
         cpu.A = 0x12
