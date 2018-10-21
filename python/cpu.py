@@ -203,7 +203,7 @@ class CPU(object):
     def AF(self, value):
         value = Bits.limitTo16Bits(value)
         self.regs[A] = value >> 8
-        self.regs[F] = Bits.limitTo8Bits(value) 
+        self.regs[F] = Bits.limitTo8Bits(value)
 
     @property
     def AFPrim(self):

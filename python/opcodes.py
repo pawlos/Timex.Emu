@@ -1,5 +1,4 @@
 # Aux class
-from regs import *
 from utility import Bits
 from utility import IndexToReg, IndexToFlag
 
@@ -41,16 +40,20 @@ class Opcodes(object):
         cpu.Reg16(regInd, value)
 
         cpu.m_cycles, cpu.t_states = 2, 10
-        logger.info("LD {}, {:04X}".format(IndexToReg.translate16Bit(regInd),value))
+        logger.info("LD {}, {:04X}".format(
+            IndexToReg.translate16Bit(regInd),
+            value))
 
     @staticmethod
     def ld8(cpu, opcode, logger):
         regIndPrim = (opcode & 7)
-        regInd     = (opcode >> 3) & 7
+        regInd = (opcode >> 3) & 7
         cpu.regs[regInd] = cpu.regs[regIndPrim]
 
         cpu.m_cycles, cpu.t_states = 1, 4
-        logger.info("LD {}, {}".format(IndexToReg.translate8Bit(regInd), IndexToReg.translate8Bit(regIndPrim)))
+        logger.info("LD {}, {}".format(
+            IndexToReg.translate8Bit(regInd),
+            IndexToReg.translate8Bit(regIndPrim)))
 
     @staticmethod
     def ld8n(cpu, opcode, logger):
@@ -59,7 +62,9 @@ class Opcodes(object):
         cpu.regs[regInd] = value
 
         cpu.m_cycles, cpu.t_states = 2, 7
-        logger.info("LD {}, {:02X}".format(IndexToReg.translate8Bit(regInd), value))
+        logger.info("LD {}, {:02X}".format(
+            IndexToReg.translate8Bit(regInd),
+            value))
 
     @staticmethod
     def jp(cpu, opcode, logger):
@@ -936,7 +941,9 @@ class Opcodes(object):
             cpu.m_cycles, cpu.t_states = 2, 7
 
         cpu.m_cycles, cpu.t_states = 3, 10
-        logger.info("CALL {}, {:04X}".format(IndexToFlag.translate(cond), addr))
+        logger.info("CALL {}, {:04X}".format(
+            IndexToFlag.translate(cond),
+            addr))
 
     @staticmethod
     def dec8b(cpu, opcode, logger):
@@ -1020,7 +1027,8 @@ class Opcodes(object):
         cpu.HFlag = Bits.halfCarrySub16(old, cpu.HL)
         cpu.PVFlag = Bits.overflow(old, cpu.HL, bits=16)
         cpu.NFlag = Bits.reset()
-        cpu.CFlag = Bits.set() if Bits.getNthBit(old, 15) == 1 and Bits.getNthBit(cpu.HL, 15) == 0 else Bits.reset()
+        cpu.CFlag = Bits.set() if (Bits.getNthBit(old, 15) == 1 and
+                                   Bits.getNthBit(cpu.HL, 15) == 0) else Bits.reset()
         cpu.m_cycles, cpu.t_states = 4, 15
         logger.info("ADC HL, {}".format(IndexToReg.translate16Bit(regInd)))
 

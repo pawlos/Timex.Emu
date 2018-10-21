@@ -63,7 +63,7 @@ class tests_sub(unittest.TestCase):
         cpu = CPU(ROM('\x97'))
         cpu.A = 0x53
         cpu.readOp()
-        self.assertEqual(0, cpu.A)      
+        self.assertEqual(0, cpu.A)
 
     def test_sub_A_B_takes_1_m_cycles(self):
         cpu = CPU(ROM('\x90'))
