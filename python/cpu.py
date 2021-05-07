@@ -729,7 +729,7 @@ class CPU(object):
             self.debugger.stop(self)
 
     def printError(self, pc, opcode):
-        print "Missing opcode key: {1:x}, PC = 0x{0:x}".format(pc, opcode)
+        print("Missing opcode key: {1:x}, PC = 0x{0:x}".format(pc, opcode))
 
     def _checkInterrupts(self):
         if self.iff1:
