@@ -6,7 +6,7 @@ from rom import ROM
 class tests_lra(unittest.TestCase):
 
     def test_lra_does_modify_value_correctly(self):
-        cpu = CPU(ROM('\x17'))
+        cpu = CPU(ROM(b'\x17'))
         cpu.A = 0b01110110
         cpu.CFlag = True
         cpu.readOp()
@@ -14,14 +14,14 @@ class tests_lra(unittest.TestCase):
         self.assertFalse(cpu.CFlag)
 
     def test_lra_does_take_1_m_cycles(self):
-        cpu = CPU(ROM('\x17'))
+        cpu = CPU(ROM(b'\x17'))
         cpu.A = 0b01110110
         cpu.CFlag = True
         cpu.readOp()
         self.assertEqual(1, cpu.m_cycles)
 
     def test_lra_does_take_4_t_states(self):
-        cpu = CPU(ROM('\x17'))
+        cpu = CPU(ROM(b'\x17'))
         cpu.A = 0b01110110
         cpu.CFlag = True
         cpu.readOp()

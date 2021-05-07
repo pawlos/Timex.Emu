@@ -8,7 +8,7 @@ class tests_rst(unittest.TestCase):
 
     def test_rst_does_sets_PC_correctly(self):
         ram = RAM()
-        cpu = CPU(ROM('\x00'*0x15b3+'\xdf'), ram)
+        cpu = CPU(ROM(b'\x00'*0x15b3+b'\xdf'), ram)
         cpu.PC = 0x15B3
         cpu.SP = 0x2000
         cpu.readOp()
@@ -16,7 +16,7 @@ class tests_rst(unittest.TestCase):
 
     def test_rst_0_does_sets_PC_correctly(self):
         ram = RAM()
-        cpu = CPU(ROM('\x00'*0x15b3+'\xc7'), ram)
+        cpu = CPU(ROM(b'\x00'*0x15b3+b'\xc7'), ram)
         cpu.PC = 0x15B3
         cpu.SP = 0x2000
         cpu.readOp()
@@ -24,7 +24,7 @@ class tests_rst(unittest.TestCase):
 
     def test_rst_8_does_sets_PC_correctly(self):
         ram = RAM()
-        cpu = CPU(ROM('\x00'*0x15b3+'\xcf'), ram)
+        cpu = CPU(ROM(b'\x00'*0x15b3+b'\xcf'), ram)
         cpu.PC = 0x15B3
         cpu.SP = 0x2000
         cpu.readOp()
@@ -32,7 +32,7 @@ class tests_rst(unittest.TestCase):
 
     def test_rst_10_does_sets_PC_correctly(self):
         ram = RAM()
-        cpu = CPU(ROM('\x00'*0x15b3+'\xd7'), ram)
+        cpu = CPU(ROM(b'\x00'*0x15b3+b'\xd7'), ram)
         cpu.PC = 0x15B3
         cpu.SP = 0x2000
         cpu.readOp()
@@ -40,7 +40,7 @@ class tests_rst(unittest.TestCase):
 
     def test_rst_20_does_sets_PC_correctly(self):
         ram = RAM()
-        cpu = CPU(ROM('\x00'*0x15b3+'\xe7'), ram)
+        cpu = CPU(ROM(b'\x00'*0x15b3+b'\xe7'), ram)
         cpu.PC = 0x15B3
         cpu.SP = 0x2000
         cpu.readOp()
@@ -48,7 +48,7 @@ class tests_rst(unittest.TestCase):
 
     def test_rst_28_does_sets_PC_correctly(self):
         ram = RAM()
-        cpu = CPU(ROM('\x00'*0x15b3+'\xef'), ram)
+        cpu = CPU(ROM(b'\x00'*0x15b3+b'\xef'), ram)
         cpu.PC = 0x15B3
         cpu.SP = 0x2000
         cpu.readOp()
@@ -56,7 +56,7 @@ class tests_rst(unittest.TestCase):
 
     def test_rst_30_does_sets_PC_correctly(self):
         ram = RAM()
-        cpu = CPU(ROM('\x00'*0x15b3+'\xf7'), ram)
+        cpu = CPU(ROM(b'\x00'*0x15b3+b'\xf7'), ram)
         cpu.PC = 0x15B3
         cpu.SP = 0x2000
         cpu.readOp()
@@ -64,7 +64,7 @@ class tests_rst(unittest.TestCase):
 
     def test_rst_38_does_sets_PC_correctly(self):
         ram = RAM()
-        cpu = CPU(ROM('\x00'*0x15b3+'\xff'), ram)
+        cpu = CPU(ROM(b'\x00'*0x15b3+b'\xff'), ram)
         cpu.PC = 0x15B3
         cpu.SP = 0x2000
         cpu.readOp()
@@ -72,7 +72,7 @@ class tests_rst(unittest.TestCase):
 
     def test_rst_takes_3_m_cycles(self):
         ram = RAM()
-        cpu = CPU(ROM('\x00'*0x15b3+'\xff'), ram)
+        cpu = CPU(ROM(b'\x00'*0x15b3+b'\xff'), ram)
         cpu.PC = 0x15B3
         cpu.SP = 0x2000
         cpu.readOp()
@@ -80,7 +80,7 @@ class tests_rst(unittest.TestCase):
 
     def test_rst_takes_11_t_states(self):
         ram = RAM()
-        cpu = CPU(ROM('\x00'*0x15b3+'\xff'), ram)
+        cpu = CPU(ROM(b'\x00'*0x15b3+b'\xff'), ram)
         cpu.PC = 0x15B3
         cpu.SP = 0x2000
         cpu.readOp()

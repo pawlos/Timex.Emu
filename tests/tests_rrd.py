@@ -9,7 +9,7 @@ class tests_rrd(unittest.TestCase):
     def test_rrd_does_modify_value_correctly(self):
         ram = RAM()
         ram[0x5000] = 0b00100000
-        cpu = CPU(ROM('\xed\x67'), ram)
+        cpu = CPU(ROM(b'\xed\x67'), ram)
         cpu.A = 0b10000100
         cpu.HL = 0x5000
         cpu.readOp()
@@ -19,7 +19,7 @@ class tests_rrd(unittest.TestCase):
     def test_rrd_does_take_5_m_cycles(self):
         ram = RAM()
         ram[0x5000] = 0b00100000
-        cpu = CPU(ROM('\xed\x67'), ram)
+        cpu = CPU(ROM(b'\xed\x67'), ram)
         cpu.A = 0b10000100
         cpu.HL = 0x5000
         cpu.readOp()
@@ -28,7 +28,7 @@ class tests_rrd(unittest.TestCase):
     def test_rrd_does_take_18_t_states(self):
         ram = RAM()
         ram[0x5000] = 0b00100000
-        cpu = CPU(ROM('\xed\x67'), ram)
+        cpu = CPU(ROM(b'\xed\x67'), ram)
         cpu.A = 0b10000100
         cpu.HL = 0x5000
         cpu.readOp()

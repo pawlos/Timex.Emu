@@ -10,7 +10,7 @@ class tests_pop(unittest.TestCase):
         ram = RAM()
         ram[0x1000] = 0x55
         ram[0x1001] = 0x33
-        cpu = CPU(ROM('\xdd\xe1'), ram)
+        cpu = CPU(ROM(b'\xdd\xe1'), ram)
         cpu.SP = 0x1000
 
         cpu.readOp()
@@ -20,7 +20,7 @@ class tests_pop(unittest.TestCase):
         ram = RAM()
         ram[0x1000] = 0x55
         ram[0x1001] = 0x33
-        cpu = CPU(ROM('\xdd\xe1'), ram)
+        cpu = CPU(ROM(b'\xdd\xe1'), ram)
         cpu.SP = 0x1000
 
         cpu.readOp()
@@ -30,7 +30,7 @@ class tests_pop(unittest.TestCase):
         ram = RAM()
         ram[0x1000] = 0x55
         ram[0x1001] = 0x33
-        cpu = CPU(ROM('\xdd\xe1'), ram)
+        cpu = CPU(ROM(b'\xdd\xe1'), ram)
         cpu.SP = 0x1000
 
         cpu.readOp()

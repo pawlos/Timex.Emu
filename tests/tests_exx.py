@@ -5,7 +5,7 @@ from rom import ROM
 
 class tests_exx(unittest.TestCase):
     def test_exx_echanges_16_bit_bc_de_hl_registers(self):
-        cpu = CPU(ROM('\xd9'))
+        cpu = CPU(ROM(b'\xd9'))
         cpu.BC = 0x445a
         cpu.DE = 0x3da2
         cpu.HL = 0x8859
@@ -22,7 +22,7 @@ class tests_exx(unittest.TestCase):
         self.assertEqual(0x8859, cpu.HLPrim)
 
     def test_exx_does_not_affect_flags(self):
-        cpu = CPU(ROM('\xd9'))
+        cpu = CPU(ROM(b'\xd9'))
         cpu.ZFlag = True
         cpu.SFlag = False
         cpu.PVFlag = True
@@ -37,11 +37,11 @@ class tests_exx(unittest.TestCase):
         self.assertTrue(cpu.NFlag)
 
     def test_exx_takes_1_m_cycle(self):
-        cpu = CPU(ROM('\xd9'))
+        cpu = CPU(ROM(b'\xd9'))
         cpu.readOp()
         self.assertEqual(1, cpu.m_cycles)
 
     def test_exx_takes_4_t_states(self):
-        cpu = CPU(ROM('\xd9'))
+        cpu = CPU(ROM(b'\xd9'))
         cpu.readOp()
         self.assertEqual(4, cpu.t_states)
