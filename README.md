@@ -18,6 +18,7 @@ rom:
 
 tests:
   - a suite of unit tests
+    - running tests: `python3 -m unittest discover`.
 
 Links
 =====
