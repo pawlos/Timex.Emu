@@ -1,3 +1,6 @@
+import sys
+sys.path.append('../python')
+
 import unittest
 from cpu import CPU
 from ram import RAM
@@ -81,3 +84,15 @@ class tests_bit(unittest.TestCase):
         cpu.IY = 0x2000
         cpu.readOp()
         self.assertEqual(20, cpu.t_states)
+
+    def test_bit_7_B_correctly_set_z_flag(self):
+        cpu = CPU(ROM(b'\xcb\x78'))
+        cpu.B = 0b10000000
+        cpu.readOp()
+        self.assertFalse(cpu.ZFlag)
+
+    def test_bit_7_B_correctly_reset_z_flag(self):
+        cpu = CPU(ROM(b'\xcb\x78'))
+        cpu.B = 0b01111111
+        cpu.readOp()
+        self.assertTrue(cpu.ZFlag)

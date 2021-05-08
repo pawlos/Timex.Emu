@@ -633,6 +633,7 @@ class CPU(object):
             0xcb3c: Opcodes.srl_r,
             0xcb3d: Opcodes.srl_r,
             0xcb3f: Opcodes.srl_r,
+            0xcb78: Opcodes.bit_7_b,
             0xdd09: Opcodes.add_ix_rr,
             0xdd19: Opcodes.add_ix_rr,
             0xdd29: Opcodes.add_ix_rr,
