@@ -625,6 +625,7 @@ class CPU(object):
             0xfd: [self.twoBytesOpcodes],
             0xfe: Opcodes.cp_n,
             0xff: Opcodes.rst,
+            0xcb00: Opcodes.rlc_b,
             0xcb38: Opcodes.srl_r,
             0xcb39: Opcodes.srl_r,
             0xcb3a: Opcodes.srl_r,

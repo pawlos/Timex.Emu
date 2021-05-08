@@ -548,6 +548,16 @@ class Opcodes(object):
         logger.info("RLCA")
 
     @staticmethod
+    def rlc_b(cpu, opcode, logger):
+        cflag = Bits.getNthBit(cpu.B, 7)
+        cpu.B = Bits.setNthBit(cpu.B << 1, 0, cflag)
+        cpu.CFlag = Bits.set() if cflag != 0 else Bits.reset()
+
+        #cpu.m_cycles, cpu.t_states = ?, ?
+        logger.info("RLC B")
+
+
+    @staticmethod
     def and_n(cpu, opcode, logger):
         n = cpu.ram[cpu.PC]
         old = cpu.A
