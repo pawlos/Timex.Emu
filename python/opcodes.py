@@ -556,13 +556,15 @@ class Opcodes(object):
         logger.info("RLCA")
 
     @staticmethod
-    def rlc_b(cpu, opcode, logger):
-        cflag = Bits.getNthBit(cpu.B, 7)
-        cpu.B = Bits.setNthBit(cpu.B << 1, 0, cflag)
+    def rlc_n(cpu, opcode, logger):
+        n = opcode % 7
+        r = cpu.regs[n]
+        cflag = Bits.getNthBit(r, 7)
+        cpu.regs[n] = Bits.limitTo8Bits(Bits.setNthBit(r << 1, 0, cflag))
         cpu.CFlag = Bits.set() if cflag != 0 else Bits.reset()
 
         #cpu.m_cycles, cpu.t_states = ?, ?
-        logger.info("RLC B")
+        logger.info("RLC {}".format(IndexToReg.translate8Bit(r)))
 
 
     @staticmethod
