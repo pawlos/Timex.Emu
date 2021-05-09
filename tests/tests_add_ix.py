@@ -1,5 +1,4 @@
-import sys
-sys.path.append('../python')
+import tests_suite
 
 import unittest
 from cpu import CPU

@@ -1,5 +1,6 @@
-import unittest
+import tests_suite
 
+import unittest
 from cpu import CPU
 from ram import RAM
 from rom import ROM

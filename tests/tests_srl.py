@@ -1,3 +1,5 @@
+import tests_suite
+
 import unittest
 from cpu import CPU
 from rom import ROM

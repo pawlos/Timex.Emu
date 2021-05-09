@@ -1,3 +1,5 @@
+import tests_suite
+
 import unittest
 from utility import Bits, IndexToReg
 

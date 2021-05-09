@@ -1,3 +1,4 @@
+import tests_suite
 
 import unittest
 from debugger import Debugger
