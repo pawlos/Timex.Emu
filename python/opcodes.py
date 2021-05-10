@@ -425,12 +425,14 @@ class Opcodes(object):
         logger.info("BIT {:X}, (IY+{:02X})".format(bit, index))
 
     @staticmethod
-    def bit_7_b(cpu, opcode, logger):
-        bit7value = Bits.getNthBit(cpu.B, 7)
+    def bit_7_n(cpu, opcode, logger):
+        n = opcode & 7
+        reg = cpu.regs[n]
+        bit7value = Bits.getNthBit(reg, 7)
         cpu.ZFlag = Bits.set() if bit7value == 0 else Bits.reset()
 
         #cpu.m_cycles, cpu.t_states = ?, ?
-        logger.info("BIT 7, B")
+        logger.info("BIT 7, {}".format(IndexToReg.translate8Bit(n)))
 
     @staticmethod
     def call(cpu, opcode, logger):

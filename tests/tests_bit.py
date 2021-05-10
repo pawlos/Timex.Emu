@@ -95,3 +95,63 @@ class tests_bit(unittest.TestCase):
         cpu.B = 0b01111111
         cpu.readOp()
         self.assertTrue(cpu.ZFlag)
+
+    def test_bit_7_C_correctly_set_z_flag(self):
+        cpu = CPU(ROM(b'\xcb\x79'))
+        cpu.C = 0b10000000
+        cpu.readOp()
+        self.assertFalse(cpu.ZFlag)
+
+    def test_bit_7_C_correctly_reset_z_flag(self):
+        cpu = CPU(ROM(b'\xcb\x79'))
+        cpu.C = 0b01111111
+        cpu.readOp()
+        self.assertTrue(cpu.ZFlag)
+
+    def test_bit_7_D_correctly_set_z_flag(self):
+        cpu = CPU(ROM(b'\xcb\x7a'))
+        cpu.D = 0b10000000
+        cpu.readOp()
+        self.assertFalse(cpu.ZFlag)
+
+    def test_bit_7_D_correctly_reset_z_flag(self):
+        cpu = CPU(ROM(b'\xcb\x7a'))
+        cpu.D = 0b01111111
+        cpu.readOp()
+        self.assertTrue(cpu.ZFlag)
+
+    def test_bit_7_E_correctly_set_z_flag(self):
+        cpu = CPU(ROM(b'\xcb\x7b'))
+        cpu.E = 0b10000000
+        cpu.readOp()
+        self.assertFalse(cpu.ZFlag)
+
+    def test_bit_7_E_correctly_reset_z_flag(self):
+        cpu = CPU(ROM(b'\xcb\x7b'))
+        cpu.E = 0b01111111
+        cpu.readOp()
+        self.assertTrue(cpu.ZFlag)
+
+    def test_bit_7_H_correctly_set_z_flag(self):
+        cpu = CPU(ROM(b'\xcb\x7c'))
+        cpu.H = 0b10000000
+        cpu.readOp()
+        self.assertFalse(cpu.ZFlag)
+
+    def test_bit_7_H_correctly_reset_z_flag(self):
+        cpu = CPU(ROM(b'\xcb\x7c'))
+        cpu.H = 0b01111111
+        cpu.readOp()
+        self.assertTrue(cpu.ZFlag)
+
+    def test_bit_7_L_correctly_set_z_flag(self):
+        cpu = CPU(ROM(b'\xcb\x7d'))
+        cpu.L = 0b10000000
+        cpu.readOp()
+        self.assertFalse(cpu.ZFlag)
+
+    def test_bit_7_L_correctly_reset_z_flag(self):
+        cpu = CPU(ROM(b'\xcb\x7d'))
+        cpu.L = 0b01111111
+        cpu.readOp()
+        self.assertTrue(cpu.ZFlag)
