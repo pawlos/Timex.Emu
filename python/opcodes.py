@@ -612,6 +612,19 @@ class Opcodes(object):
         cpu.m_cycles, cpu.t_states = 3, 10
         logger.info("RET")
 
+
+    @staticmethod
+    def retn(cpu, opcode, logger):
+        low = cpu.ram[cpu.SP]
+        high = cpu.ram[cpu.SP+1]
+        addr = (high << 8) + low
+        cpu.SP += 2
+        cpu.PC = addr
+
+        cpu.m_cycles = 14
+        cpu.iff1 = cpu.iff2
+        logger.info("RETN")
+
     @staticmethod
     def rst(cpu, opcode, logger):
         index = (opcode >> 3) & 7
