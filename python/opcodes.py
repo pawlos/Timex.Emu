@@ -1389,3 +1389,8 @@ class Opcodes(object):
 
         cpu.m_cycles, cpu.t_states = 2, 7
         logger.info("OR (HL)")
+
+    @staticmethod
+    def daa(cpu, opcode, logger):
+        logger.info("DAA")
+        raise Exception("Not yet implemented")

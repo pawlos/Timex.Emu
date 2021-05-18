@@ -411,6 +411,7 @@ class CPU(object):
             0x24: Opcodes.inc8,
             0x25: Opcodes.dec8b,
             0x26: Opcodes.ld8n,
+            0x27: Opcodes.daa,
             0x28: Opcodes.jrz,
             0x29: Opcodes.add16,
             0x2a: Opcodes.ldHl_addr,
