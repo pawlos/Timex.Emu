@@ -1,9 +1,14 @@
 import tests_suite
-
+import os
 import unittest
+
 from cpu import CPU
 from rom import ROM
+from loggers import Logger
+from debugger import Debugger
+from opcodes import Opcodes
 
+ZEXALL_TESTS = os.environ.get('ZEXALL', False)
 
 class tests_cpu(unittest.TestCase):
     def test_init_zeros_registers(self):
@@ -77,6 +82,55 @@ class tests_cpu(unittest.TestCase):
     def test_rom_getitem(self):
         rom = ROM(b'\x00\x01\x02\x03\x04\x05')
         self.assertEqual(0x05, rom[5])
+
+    def systemFunction(self, cpu):
+        if cpu.C == 2:
+            self.systemFunction2(cpu)
+        elif cpu.C == 9:
+            self.systemFunction9(cpu)
+
+        Opcodes.ret(cpu, 0xc9, cpu.logger)
+        return True #handled
+
+    def systemFunction2(self, cpu):
+        c = cpu.E
+        print(chr(c), end='')
+
+    def systemFunction9(self, cpu):
+        idx = cpu.DE
+        msg = ''
+        while True:
+            c = cpu.ram[idx]
+            if chr(c) == '$':
+                break
+            msg += chr(c)
+            idx += 1
+        print(msg, end='')
+
+    def stop(self, cpu):
+        #print(f'Stop...')
+        pass
+
+    def print(self, cpu):
+        print('{:04x}: AF: {:04x}, BC: {:04x}, DE: {:04x}, HL: {:04x}, SP: {:04x}, IY: {:04x}, (HL): {:02x}, (0x1c2): {:02x}, (0x1c3): {:02x}'.format(
+                (cpu.pc-1), cpu.AF, cpu.BC, cpu.DE, cpu.HL, cpu.SP, cpu.IY, cpu.ram[cpu.HL], cpu.ram[0x1c2], cpu.ram[0x1c3]))
+
+    @unittest.skipUnless(ZEXALL_TESTS, "ZEXALL test")
+    def test_zexall(self):
+        print(">>> RUNNING ZEXALL")
+        debugger = Debugger()
+        debugger.setBreakpoint(0x100)
+        debugger.setBreakpoint(0x1B3B)
+        debugger.setHook(0x5, self.systemFunction)
+        debugger.setHook(0x0, self.stop)
+        debugger.setHook(-1, self.print)
+        rom = ROM(mapAt=0x100)
+        rom.loadFrom('zexall.com', False)
+        cpu = CPU(rom=rom,debugger=debugger)
+        cpu.SP = 0xF000
+        #cpu.logger = Logger(cpu)
+        cpu.run(0x100)
+        self.assertTrue(True)
 
 
 def suite():

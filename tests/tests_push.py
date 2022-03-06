@@ -65,3 +65,21 @@ class tests_push(unittest.TestCase):
 
         cpu.readOp()
         self.assertEqual(11, cpu.t_states)
+
+    def test_push_ix_stores_value_from_IX(self):
+        ram = RAM()
+        cpu = CPU(ROM(b'\xdd\xe5'), ram)
+        cpu.IX = 0x1122
+        cpu.SP = 0x1007
+        cpu.readOp()
+        self.assertEqual(0x11, ram[0x1006])
+        self.assertEqual(0x22, ram[0x1005])
+
+    def test_push_iy_stores_value_from_IY(self):
+        ram = RAM()
+        cpu = CPU(ROM(b'\xfd\xe5'), ram)
+        cpu.IY = 0x3344
+        cpu.SP = 0x1007
+        cpu.readOp()
+        self.assertEqual(0x33, ram[0x1006])
+        self.assertEqual(0x44, ram[0x1005])

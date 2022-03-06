@@ -136,6 +136,22 @@ class CPU(object):
         self.F = Bits.setNthBit(self.F, PVF, 1 if value else 0)
 
     @property
+    def YFlag(self):
+        return Bits.getNthBit(self.F, YF) == 1
+
+    @YFlag.setter
+    def YFlag(self, value):
+        self.F = Bits.setNthBit(self.F, YF, 1 if value else 0)
+
+    @property
+    def XFlag(self):
+        return Bits.getNthBit(self.F, XF) == 1
+
+    @XFlag.setter
+    def XFlag(self, value):
+        self.F = Bits.setNthBit(self.F, XF, 1 if value else 0)
+
+    @property
     def HL(self):
         return (self.regs[H] << 8) + self.regs[L]
 
@@ -367,8 +383,6 @@ class CPU(object):
         self.reset()
 
         self.ram = ram
-        if len(rom) == 0:
-            rom.loadFrom('../rom/tc2048.rom')
         self.ram.load(rom)
 
         self.dispatchTable = {
@@ -647,11 +661,13 @@ class CPU(object):
             0xcb7d: Opcodes.bit_7_n,
             0xdd09: Opcodes.add_ix_rr,
             0xdd19: Opcodes.add_ix_rr,
+            0xdd26: Opcodes.ld_hx_nn,
             0xdd29: Opcodes.add_ix_rr,
             0xdd2a: Opcodes.ld_ix_nn,
             0xdd35: Opcodes.dec_at_ix_d,
             0xdd39: Opcodes.add_ix_rr,
             0xdde1: Opcodes.pop_ix,
+            0xdde5: Opcodes.push_ix,
             0xdde9: Opcodes.jp_ix,
             0xed42: Opcodes.sbc,
             0xed43: Opcodes.ldNnRr,
@@ -702,6 +718,8 @@ class CPU(object):
             0xfd7e: Opcodes.ld_r_iy_d,
             0xfd86: Opcodes.add_iy,
             0xfdcb: [self.fourBytesOpcodes],
+            0xfde1: Opcodes.pop_iy,
+            0xfde5: Opcodes.push_iy,
             0xfde9: Opcodes.jp_iy,
             0xfdcb014e: Opcodes.bit_bit,
             0xfdcb01ce: Opcodes.bit_set,
@@ -735,7 +753,9 @@ class CPU(object):
         try:
             _dispatch = self.dispatchTable[opcode]
             if type(_dispatch) is not list:
-                self.debugger.next_opcode(pc, self)
+                handled = self.debugger.next_opcode(pc, self)
+                if handled:
+                    return
             else:
                 _dispatch = _dispatch[0]
             _dispatch(self, opcode, self.logger)
@@ -749,20 +769,22 @@ class CPU(object):
         print("Missing opcode key: {1:x}, PC = 0x{0:x}".format(pc, opcode))
 
     def _checkInterrupts(self):
-        if self.iff1:
-            self.halted = Bits.reset()
-            self.iff1 = Bits.reset()
-            self.iff2 = Bits.reset()
-            self.ram[--self.SP] = Bits.limitTo8Bits(self.pc)
-            self.ram[--self.SP] = self.pc >> 8
-            self.R += 1
-            if self.im == 0 or self.im == 1:
-                self.PC = 0x0038
+        pass
+        #if self.iff1:
+        #    self.halted = Bits.reset()
+        #    self.iff1 = Bits.reset()
+        #    self.iff2 = Bits.reset()
+        #    self.ram[--self.SP] = Bits.limitTo8Bits(self.pc)
+        #    self.ram[--self.SP] = self.pc >> 8
+        #    self.R += 1
+        #    if self.im == 0 or self.im == 1:
+        #        self.PC = 0x0038
 
     def _checkTimers(self):
         pass
 
-    def run(self):
+    def run(self, pc=0x0):
+        self.pc = pc
         while True:
             if not self.halted:
                 self.readOp()

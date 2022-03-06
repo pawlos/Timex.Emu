@@ -27,6 +27,10 @@ class Bits(object):
             return (value | (1 << nth))
 
     @staticmethod
+    def halfCarryAdd(firstByte, secondByte):
+        return True if ((firstByte&0xf) + (secondByte&0xf))&0x10 == 0x10 else False
+
+    @staticmethod
     def halfCarrySub(firstByte, secondByte):
         return True if ((firstByte & 0xf)
                        - (secondByte & 0xf)) \

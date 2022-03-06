@@ -1,6 +1,7 @@
 # Aux class
 from utility import Bits
 from utility import IndexToReg, IndexToFlag
+from regs import XF, YF
 
 
 class Opcodes(object):
@@ -112,15 +113,18 @@ class Opcodes(object):
     @staticmethod
     def cp(cpu, opcode, logger):
         regInd = opcode & 7
-        value = cpu.A - cpu.regs[regInd]
+        sub = cpu.regs[regInd]
+        value = cpu.A - sub
         cpu.ZFlag = Bits.isZero(value)
         cpu.CFlag = Bits.carryFlag(value)
         cpu.NFlag = Bits.set()
         cpu.HFlag = Bits.halfCarrySub(cpu.A, value)
         cpu.SFlag = Bits.signFlag(value)
         cpu.PVFlag = Bits.overflow(value, cpu.A)
+        cpu.XFlag = Bits.getNthBit(sub, XF)
+        cpu.YFlag = Bits.getNthBit(sub, YF)
         cpu.m_cycles, cpu.t_states = 1, 4
-        logger.info("CP {}".format(IndexToReg.translate8Bit(regInd)))
+        logger.info("CP A, {}".format(IndexToReg.translate8Bit(regInd)))
 
     @staticmethod
     def jpnz(cpu, opcode, logger):
@@ -153,16 +157,19 @@ class Opcodes(object):
     @staticmethod
     def _and(cpu, opcode, logger):
         regInd = opcode & 7
-        cpu.A = cpu.A & cpu.regs[regInd]
+        val = cpu.regs[regInd]
+        cpu.A = cpu.A & val
         cpu.HFlag = Bits.set()
         cpu.CFlag = Bits.reset()
         cpu.NFlag = Bits.reset()
         cpu.ZFlag = Bits.isZero(cpu.A)
         cpu.SFlag = Bits.signInTwosComp(cpu.A)
         cpu.PVFlag = Bits.isEvenParity(cpu.A)
+        cpu.XFlag = Bits.getNthBit(cpu.A, XF)
+        cpu.YFlag = Bits.getNthBit(cpu.A, YF)
 
         cpu.m_cycles, cpu.t_states = 1, 4
-        logger.info("AND A")
+        logger.info("AND A, {}".format(IndexToReg.translate8Bit(regInd)))
 
     @staticmethod
     def _and_hl(cpu, opcode, logger):
@@ -278,9 +285,11 @@ class Opcodes(object):
 
         cpu.NFlag = Bits.reset()
         cpu.ZFlag = Bits.isZero(cpu.regs[index])
-        cpu.HFlag = Bits.halfCarrySub(oldValue, cpu.regs[index])
+        cpu.HFlag = Bits.halfCarryAdd(oldValue, cpu.regs[index])
         cpu.PVFlag = True if oldValue == 0x7f else False
         cpu.SFlag = Bits.isNegative(cpu.regs[index])
+        cpu.XFlag = Bits.getNthBit(cpu.regs[index], XF)
+        cpu.YFlag = Bits.getNthBit(cpu.regs[index], YF)
 
         cpu.m_cycles, cpu.t_states = 1, 4
         logger.info("INC {}".format(IndexToReg.translate8Bit(index)))
@@ -362,8 +371,10 @@ class Opcodes(object):
                 break
         cpu.NFlag = Bits.reset()
         cpu.HFlag = Bits.reset()
-        cpu.PVFlag = Bits.reset()
-
+        cpu.PVFlag = Bits.set() if wasZero else Bits.reset()
+        n = cpu.A + hl_mem
+        cpu.YFlag = Bits.getNthBit(n, 4)
+        cpu.XFlag = Bits.getNthBit(n, 2)
         cpu.m_cycles, cpu.t_states = 4 if wasZero else 5, 16 if wasZero else 21
         logger.info("LDIR")
 
@@ -517,7 +528,28 @@ class Opcodes(object):
         cpu.ram[cpu.SP-2] = value & 255
         cpu.SP -= 2
         cpu.m_cycles, cpu.t_states = 3, 11
-        logger.info("PUSH {}".format(IndexToReg.translate16Bit(regInd)))
+        logger.info("PUSH {}".format(IndexToReg.translate16Bit(regInd, af=True)))
+
+
+    @staticmethod
+    def push_ix(cpu, opcode, logger):
+        value = cpu.IX
+
+        cpu.ram[cpu.SP-1] = value >> 8
+        cpu.ram[cpu.SP-2] = value & 255
+        cpu.SP -= 2
+        cpu.m_cycles, cpu.t_states = 3, 11
+        logger.info("PUSH IX")
+
+    @staticmethod
+    def push_iy(cpu, opcode, logger):
+        value = cpu.IY
+
+        cpu.ram[cpu.SP-1] = value >> 8
+        cpu.ram[cpu.SP-2] = value & 255
+        cpu.SP -= 2
+        cpu.m_cycles, cpu.t_states = 3, 11
+        logger.info("PUSH IY")
 
     @staticmethod
     def sub_r(cpu, opcode, logger):
@@ -553,7 +585,9 @@ class Opcodes(object):
         cflag = Bits.getNthBit(cpu.A, 7)
         cpu.A = Bits.setNthBit(cpu.A << 1, 0, cflag)
         cpu.CFlag = Bits.set() if cflag != 0 else Bits.reset()
-
+        cpu.XFlag = Bits.getNthBit(cpu.A, XF)
+        cpu.YFlag = Bits.getNthBit(cpu.A, YF)
+        cpu.HFlag = Bits.reset()
         cpu.m_cycles, cpu.t_states = 1, 4
         logger.info("RLCA")
 
@@ -608,7 +642,6 @@ class Opcodes(object):
         addr = (high << 8) + low
         cpu.SP += 2
         cpu.PC = addr
-
         cpu.m_cycles, cpu.t_states = 3, 10
         logger.info("RET")
 
@@ -648,7 +681,7 @@ class Opcodes(object):
         cpu.Reg16(regInd, val, af=True)
 
         cpu.m_cycles, cpu.t_states = 3, 7
-        logger.info("POP {}".format(IndexToReg.translate16Bit(regInd)))
+        logger.info("POP {}".format(IndexToReg.translate16Bit(regInd, af=True)))
 
     @staticmethod
     def ldiy_d_n(cpu, opcode, logger):
@@ -865,6 +898,15 @@ class Opcodes(object):
         logger.info("LD IX, ({:04X})".format(addr))
 
     @staticmethod
+    def ld_hx_nn(cpu, opcode, logger):
+        val = cpu.ram[cpu.PC]
+        low_val = cpu.IX & 255
+        cpu.IX = (val << 8) + low_val
+
+        cpu.m_cycles, cpu.t_states = 6, 20
+        logger.info("LD HX, {:04X}".format(cpu.IX))
+
+    @staticmethod
     def ldra(cpu, opcode, logger):
         cpu.R = cpu.A
         cpu.m_cycles, cpu.t_states = 2, 9
@@ -906,6 +948,16 @@ class Opcodes(object):
         cpu.IX = (high << 8) + low
         cpu.m_cycles, cpu.t_states = 4, 14
         logger.info("POP IX")
+
+    @staticmethod
+    def pop_iy(cpu, opcode, logger):
+        low = cpu.ram[cpu.SP]
+        cpu.SP = cpu.SP + 1
+        high = cpu.ram[cpu.SP]
+        cpu.SP = cpu.SP + 1
+        cpu.IY = (high << 8) + low
+        cpu.m_cycles, cpu.t_states = 4, 14
+        logger.info("POP IY")
 
     @staticmethod
     def jp_cond(cpu, opcode, logger):
@@ -1243,9 +1295,10 @@ class Opcodes(object):
         cpu.PVFlag = Bits.overflow(old, new)
         cpu.NFlag = Bits.set()
         cpu.CFlag = Bits.carryFlag(new)
-
+        cpu.XFlag = Bits.getNthBit(n, XF)
+        cpu.YFlag = Bits.getNthBit(n, YF)
         cpu.m_cycles, cpu.t_states = 2, 7
-        logger.info("CP {:02X}".format(n))
+        logger.info("CP A, {:02X}".format(n))
 
     @staticmethod
     def xor_n(cpu, opcode, logger):
@@ -1261,7 +1314,7 @@ class Opcodes(object):
         cpu.PVFlag = Bits.isEvenParity(cpu.A)
 
         cpu.m_cycles, cpu.t_states = 2, 7
-        logger.info("XOR {:02X}".format(n))
+        logger.info("XOR A, {:02X}".format(n))
 
     @staticmethod
     def in_a_n(cpu, opcode, logger):
@@ -1346,7 +1399,7 @@ class Opcodes(object):
         cpu.CFlag = Bits.reset()
 
         cpu.m_cycles, cpu.t_states = 2, 7
-        logger.info("XOR (HL)")
+        logger.info("XOR A, (HL)")
 
     @staticmethod
     def cp_hl(cpu, opcode, logger):
