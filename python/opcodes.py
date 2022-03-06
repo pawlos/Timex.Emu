@@ -120,7 +120,7 @@ class Opcodes(object):
         cpu.SFlag = Bits.signFlag(value)
         cpu.PVFlag = Bits.overflow(value, cpu.A)
         cpu.m_cycles, cpu.t_states = 1, 4
-        logger.info("CP {}".format(IndexToReg.translate8Bit(regInd)))
+        logger.info("CP A, {}".format(IndexToReg.translate8Bit(regInd)))
 
     @staticmethod
     def jpnz(cpu, opcode, logger):
@@ -162,7 +162,7 @@ class Opcodes(object):
         cpu.PVFlag = Bits.isEvenParity(cpu.A)
 
         cpu.m_cycles, cpu.t_states = 1, 4
-        logger.info("AND A")
+        logger.info("AND A, {}".format(IndexToReg.translate8Bit(regInd)))
 
     @staticmethod
     def _and_hl(cpu, opcode, logger):
@@ -517,7 +517,28 @@ class Opcodes(object):
         cpu.ram[cpu.SP-2] = value & 255
         cpu.SP -= 2
         cpu.m_cycles, cpu.t_states = 3, 11
-        logger.info("PUSH {}".format(IndexToReg.translate16Bit(regInd)))
+        logger.info("PUSH {}".format(IndexToReg.translate16Bit(regInd, af=True)))
+
+
+    @staticmethod
+    def push_ix(cpu, opcode, logger):
+        value = cpu.IX
+
+        cpu.ram[cpu.SP-1] = value >> 8
+        cpu.ram[cpu.SP-2] = value & 255
+        cpu.SP -= 2
+        cpu.m_cycles, cpu.t_states = 3, 11
+        logger.info("PUSH IX")
+
+    @staticmethod
+    def push_iy(cpu, opcode, logger):
+        value = cpu.IY
+
+        cpu.ram[cpu.SP-1] = value >> 8
+        cpu.ram[cpu.SP-2] = value & 255
+        cpu.SP -= 2
+        cpu.m_cycles, cpu.t_states = 3, 11
+        logger.info("PUSH IY")
 
     @staticmethod
     def sub_r(cpu, opcode, logger):
@@ -608,7 +629,6 @@ class Opcodes(object):
         addr = (high << 8) + low
         cpu.SP += 2
         cpu.PC = addr
-
         cpu.m_cycles, cpu.t_states = 3, 10
         logger.info("RET")
 
@@ -648,7 +668,7 @@ class Opcodes(object):
         cpu.Reg16(regInd, val, af=True)
 
         cpu.m_cycles, cpu.t_states = 3, 7
-        logger.info("POP {}".format(IndexToReg.translate16Bit(regInd)))
+        logger.info("POP {}".format(IndexToReg.translate16Bit(regInd, af=True)))
 
     @staticmethod
     def ldiy_d_n(cpu, opcode, logger):
@@ -865,6 +885,15 @@ class Opcodes(object):
         logger.info("LD IX, ({:04X})".format(addr))
 
     @staticmethod
+    def ld_hx_nn(cpu, opcode, logger):
+        val = cpu.ram[cpu.PC]
+        low_val = cpu.IX & 255
+        cpu.IX = (val << 8) + low_val
+
+        cpu.m_cycles, cpu.t_states = 6, 20
+        logger.info("LD HX, {:04X}".format(cpu.IX))
+
+    @staticmethod
     def ldra(cpu, opcode, logger):
         cpu.R = cpu.A
         cpu.m_cycles, cpu.t_states = 2, 9
@@ -906,6 +935,16 @@ class Opcodes(object):
         cpu.IX = (high << 8) + low
         cpu.m_cycles, cpu.t_states = 4, 14
         logger.info("POP IX")
+
+    @staticmethod
+    def pop_iy(cpu, opcode, logger):
+        low = cpu.ram[cpu.SP]
+        cpu.SP = cpu.SP + 1
+        high = cpu.ram[cpu.SP]
+        cpu.SP = cpu.SP + 1
+        cpu.IY = (high << 8) + low
+        cpu.m_cycles, cpu.t_states = 4, 14
+        logger.info("POP IY")
 
     @staticmethod
     def jp_cond(cpu, opcode, logger):
@@ -1245,7 +1284,7 @@ class Opcodes(object):
         cpu.CFlag = Bits.carryFlag(new)
 
         cpu.m_cycles, cpu.t_states = 2, 7
-        logger.info("CP {:02X}".format(n))
+        logger.info("CP A, {:02X}".format(n))
 
     @staticmethod
     def xor_n(cpu, opcode, logger):
@@ -1261,7 +1300,7 @@ class Opcodes(object):
         cpu.PVFlag = Bits.isEvenParity(cpu.A)
 
         cpu.m_cycles, cpu.t_states = 2, 7
-        logger.info("XOR {:02X}".format(n))
+        logger.info("XOR A, {:02X}".format(n))
 
     @staticmethod
     def in_a_n(cpu, opcode, logger):
@@ -1346,7 +1385,7 @@ class Opcodes(object):
         cpu.CFlag = Bits.reset()
 
         cpu.m_cycles, cpu.t_states = 2, 7
-        logger.info("XOR (HL)")
+        logger.info("XOR A, (HL)")
 
     @staticmethod
     def cp_hl(cpu, opcode, logger):

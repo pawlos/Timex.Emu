@@ -367,8 +367,6 @@ class CPU(object):
         self.reset()
 
         self.ram = ram
-        if len(rom) == 0:
-            rom.loadFrom('../rom/tc2048.rom')
         self.ram.load(rom)
 
         self.dispatchTable = {
@@ -647,11 +645,13 @@ class CPU(object):
             0xcb7d: Opcodes.bit_7_n,
             0xdd09: Opcodes.add_ix_rr,
             0xdd19: Opcodes.add_ix_rr,
+            0xdd26: Opcodes.ld_hx_nn,
             0xdd29: Opcodes.add_ix_rr,
             0xdd2a: Opcodes.ld_ix_nn,
             0xdd35: Opcodes.dec_at_ix_d,
             0xdd39: Opcodes.add_ix_rr,
             0xdde1: Opcodes.pop_ix,
+            0xdde5: Opcodes.push_ix,
             0xdde9: Opcodes.jp_ix,
             0xed42: Opcodes.sbc,
             0xed43: Opcodes.ldNnRr,
@@ -702,6 +702,8 @@ class CPU(object):
             0xfd7e: Opcodes.ld_r_iy_d,
             0xfd86: Opcodes.add_iy,
             0xfdcb: [self.fourBytesOpcodes],
+            0xfde1: Opcodes.pop_iy,
+            0xfde5: Opcodes.push_iy,
             0xfde9: Opcodes.jp_iy,
             0xfdcb014e: Opcodes.bit_bit,
             0xfdcb01ce: Opcodes.bit_set,
@@ -735,7 +737,9 @@ class CPU(object):
         try:
             _dispatch = self.dispatchTable[opcode]
             if type(_dispatch) is not list:
-                self.debugger.next_opcode(pc, self)
+                handled = self.debugger.next_opcode(pc, self)
+                if handled:
+                    return
             else:
                 _dispatch = _dispatch[0]
             _dispatch(self, opcode, self.logger)
@@ -762,7 +766,8 @@ class CPU(object):
     def _checkTimers(self):
         pass
 
-    def run(self):
+    def run(self, pc=0x0):
+        self.pc = pc
         while True:
             if not self.halted:
                 self.readOp()
