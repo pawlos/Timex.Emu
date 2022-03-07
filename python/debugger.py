@@ -118,7 +118,7 @@ class Debugger(object):
 
     def stop(self, cpu):
         while True:
-            cmd = raw_input("> ")
+            cmd = input("> ")
             if cmd == "":
                 cmd = self.lastInput
 
