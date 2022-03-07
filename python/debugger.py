@@ -79,8 +79,8 @@ class Debugger(object):
               "HL : {:04X} "
               "IX : {:04X} "
               "IY : {:04X} "
-              "SP : {:04X}").format(
-            cpu.BC, cpu.DE, cpu.HL, cpu.IX, cpu.IY, cpu.SP)
+              "SP : {:04X}"
+              .format(cpu.BC, cpu.DE, cpu.HL, cpu.IX, cpu.IY, cpu.SP))
 
     def print8bitregs(self, cpu):
         print("A : {:02X} "
