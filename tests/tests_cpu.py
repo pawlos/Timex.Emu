@@ -107,18 +107,28 @@ class tests_cpu(unittest.TestCase):
             idx += 1
         print(msg, end='')
 
+    def stop(self, cpu):
+        #print(f'Stop...')
+        pass
+
+    def print(self, cpu):
+        print('{:04x}: AF: {:04x}, BC: {:04x}, DE: {:04x}, HL: {:04x}, SP: {:04x}, IY: {:04x}, (HL): {:02x}, (0x1c2): {:02x}, (0x1c3): {:02x}'.format(
+                (cpu.pc-1), cpu.AF, cpu.BC, cpu.DE, cpu.HL, cpu.SP, cpu.IY, cpu.ram[cpu.HL], cpu.ram[0x1c2], cpu.ram[0x1c3]))
+
     @unittest.skipUnless(ZEXALL_TESTS, "ZEXALL test")
     def test_zexall(self):
+        print(">>> RUNNING ZEXALL")
         debugger = Debugger()
         debugger.setBreakpoint(0x100)
+        debugger.setBreakpoint(0x1B3B)
         debugger.setHook(0x5, self.systemFunction)
+        debugger.setHook(0x0, self.stop)
+        debugger.setHook(-1, self.print)
         rom = ROM(mapAt=0x100)
         rom.loadFrom('zexall.com', False)
         cpu = CPU(rom=rom,debugger=debugger)
         cpu.SP = 0xF000
-        cpu.ram[0x06] = 0x00
-        cpu.ram[0x07] = 0xF0
-        cpu.logger = Logger(cpu)
+        #cpu.logger = Logger(cpu)
         cpu.run(0x100)
         self.assertTrue(True)
 

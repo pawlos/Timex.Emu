@@ -9,7 +9,9 @@ F = 8
 
 SF = 7
 ZF = 6
+YF = 5 #undocumented
 HF = 4
+XF = 3 #undocumented
 PVF = 2
 NF = 1
 CF = 0

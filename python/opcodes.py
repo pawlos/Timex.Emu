@@ -1,6 +1,7 @@
 # Aux class
 from utility import Bits
 from utility import IndexToReg, IndexToFlag
+from regs import XF, YF
 
 
 class Opcodes(object):
@@ -112,13 +113,16 @@ class Opcodes(object):
     @staticmethod
     def cp(cpu, opcode, logger):
         regInd = opcode & 7
-        value = cpu.A - cpu.regs[regInd]
+        sub = cpu.regs[regInd]
+        value = cpu.A - sub
         cpu.ZFlag = Bits.isZero(value)
         cpu.CFlag = Bits.carryFlag(value)
         cpu.NFlag = Bits.set()
         cpu.HFlag = Bits.halfCarrySub(cpu.A, value)
         cpu.SFlag = Bits.signFlag(value)
         cpu.PVFlag = Bits.overflow(value, cpu.A)
+        cpu.XFlag = Bits.getNthBit(sub, XF)
+        cpu.YFlag = Bits.getNthBit(sub, YF)
         cpu.m_cycles, cpu.t_states = 1, 4
         logger.info("CP A, {}".format(IndexToReg.translate8Bit(regInd)))
 
@@ -153,13 +157,16 @@ class Opcodes(object):
     @staticmethod
     def _and(cpu, opcode, logger):
         regInd = opcode & 7
-        cpu.A = cpu.A & cpu.regs[regInd]
+        val = cpu.regs[regInd]
+        cpu.A = cpu.A & val
         cpu.HFlag = Bits.set()
         cpu.CFlag = Bits.reset()
         cpu.NFlag = Bits.reset()
         cpu.ZFlag = Bits.isZero(cpu.A)
         cpu.SFlag = Bits.signInTwosComp(cpu.A)
         cpu.PVFlag = Bits.isEvenParity(cpu.A)
+        cpu.XFlag = Bits.getNthBit(cpu.A, XF)
+        cpu.YFlag = Bits.getNthBit(cpu.A, YF)
 
         cpu.m_cycles, cpu.t_states = 1, 4
         logger.info("AND A, {}".format(IndexToReg.translate8Bit(regInd)))
@@ -278,9 +285,11 @@ class Opcodes(object):
 
         cpu.NFlag = Bits.reset()
         cpu.ZFlag = Bits.isZero(cpu.regs[index])
-        cpu.HFlag = Bits.halfCarrySub(oldValue, cpu.regs[index])
+        cpu.HFlag = Bits.halfCarryAdd(oldValue, cpu.regs[index])
         cpu.PVFlag = True if oldValue == 0x7f else False
         cpu.SFlag = Bits.isNegative(cpu.regs[index])
+        cpu.XFlag = Bits.getNthBit(cpu.regs[index], XF)
+        cpu.YFlag = Bits.getNthBit(cpu.regs[index], YF)
 
         cpu.m_cycles, cpu.t_states = 1, 4
         logger.info("INC {}".format(IndexToReg.translate8Bit(index)))
@@ -362,8 +371,10 @@ class Opcodes(object):
                 break
         cpu.NFlag = Bits.reset()
         cpu.HFlag = Bits.reset()
-        cpu.PVFlag = Bits.reset()
-
+        cpu.PVFlag = Bits.set() if wasZero else Bits.reset()
+        n = cpu.A + hl_mem
+        cpu.YFlag = Bits.getNthBit(n, 4)
+        cpu.XFlag = Bits.getNthBit(n, 2)
         cpu.m_cycles, cpu.t_states = 4 if wasZero else 5, 16 if wasZero else 21
         logger.info("LDIR")
 
@@ -574,7 +585,9 @@ class Opcodes(object):
         cflag = Bits.getNthBit(cpu.A, 7)
         cpu.A = Bits.setNthBit(cpu.A << 1, 0, cflag)
         cpu.CFlag = Bits.set() if cflag != 0 else Bits.reset()
-
+        cpu.XFlag = Bits.getNthBit(cpu.A, XF)
+        cpu.YFlag = Bits.getNthBit(cpu.A, YF)
+        cpu.HFlag = Bits.reset()
         cpu.m_cycles, cpu.t_states = 1, 4
         logger.info("RLCA")
 
@@ -1282,7 +1295,8 @@ class Opcodes(object):
         cpu.PVFlag = Bits.overflow(old, new)
         cpu.NFlag = Bits.set()
         cpu.CFlag = Bits.carryFlag(new)
-
+        cpu.XFlag = Bits.getNthBit(n, XF)
+        cpu.YFlag = Bits.getNthBit(n, YF)
         cpu.m_cycles, cpu.t_states = 2, 7
         logger.info("CP A, {:02X}".format(n))
 

@@ -136,6 +136,22 @@ class CPU(object):
         self.F = Bits.setNthBit(self.F, PVF, 1 if value else 0)
 
     @property
+    def YFlag(self):
+        return Bits.getNthBit(self.F, YF) == 1
+
+    @YFlag.setter
+    def YFlag(self, value):
+        self.F = Bits.setNthBit(self.F, YF, 1 if value else 0)
+
+    @property
+    def XFlag(self):
+        return Bits.getNthBit(self.F, XF) == 1
+
+    @XFlag.setter
+    def XFlag(self, value):
+        self.F = Bits.setNthBit(self.F, XF, 1 if value else 0)
+
+    @property
     def HL(self):
         return (self.regs[H] << 8) + self.regs[L]
 
@@ -753,15 +769,16 @@ class CPU(object):
         print("Missing opcode key: {1:x}, PC = 0x{0:x}".format(pc, opcode))
 
     def _checkInterrupts(self):
-        if self.iff1:
-            self.halted = Bits.reset()
-            self.iff1 = Bits.reset()
-            self.iff2 = Bits.reset()
-            self.ram[--self.SP] = Bits.limitTo8Bits(self.pc)
-            self.ram[--self.SP] = self.pc >> 8
-            self.R += 1
-            if self.im == 0 or self.im == 1:
-                self.PC = 0x0038
+        pass
+        #if self.iff1:
+        #    self.halted = Bits.reset()
+        #    self.iff1 = Bits.reset()
+        #    self.iff2 = Bits.reset()
+        #    self.ram[--self.SP] = Bits.limitTo8Bits(self.pc)
+        #    self.ram[--self.SP] = self.pc >> 8
+        #    self.R += 1
+        #    if self.im == 0 or self.im == 1:
+        #        self.PC = 0x0038
 
     def _checkTimers(self):
         pass

@@ -78,13 +78,26 @@ class Debugger(object):
         return flag_name if state != 0 else flag_name.lower()
 
     def print16bitregs(self, cpu):
-        print("BC : {:04X} "
+        print("AF : {:04X} "
+              "BC : {:04X} "
               "DE : {:04X} "
               "HL : {:04X} "
               "IX : {:04X} "
               "IY : {:04X} "
               "SP : {:04X}"
+<<<<<<< HEAD
               .format(cpu.BC, cpu.DE, cpu.HL, cpu.IX, cpu.IY, cpu.SP))
+=======
+              .format(cpu.AF, cpu.BC, cpu.DE, cpu.HL, cpu.IX, cpu.IY, cpu.SP))
+
+    def print16bitregsprim(self, cpu):
+        print("AF': {:04X} "
+              "BC': {:04X} "
+              "DE': {:04X} "
+              "HL': {:04X}"
+              .format(cpu.AFPrim, cpu.BCPrim, cpu.DEPrim, cpu.HLPrim))
+
+>>>>>>> task/debugger
 
     def print8bitregs(self, cpu):
         print("A : {:02X} "
@@ -134,6 +147,7 @@ class Debugger(object):
                 self.printflags(cpu)
             elif "ir16" == cmd:
                 self.print16bitregs(cpu)
+                self.print16bitregsprim(cpu)
             elif "pram " in cmd:
                 addr = self.getAddr(cmd)
                 print("RAM value at: 0x{:04X} is 0x{:02X}"
@@ -175,11 +189,15 @@ class Debugger(object):
         return pc in self.breakpoints and self.breakpoints[pc]
 
     def isHook(self, pc):
-        return pc in self.hooks and self.hooks[pc] is not None
+        return (pc in self.hooks and self.hooks[pc] is not None) or \
+               (-1 in self.hooks and self.hooks[-1] is not None)
+
+    def getHookAddr(self, pc):
+        return -1 if pc not in self.hooks else pc
 
     def next_opcode(self, pc, cpu):
         if self.isHook(pc):
-            return self.hooks[pc](cpu)
+            return self.hooks[self.getHookAddr(pc)](cpu)
         if (self.isBreakpoint(pc)) or self.isSingleStepping:
             if self.isSingleStepping is False:
                 print("Stopped...@ 0x{:04X}".format(pc))
