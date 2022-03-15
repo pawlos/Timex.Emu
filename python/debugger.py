@@ -85,9 +85,6 @@ class Debugger(object):
               "IX : {:04X} "
               "IY : {:04X} "
               "SP : {:04X}"
-<<<<<<< HEAD
-              .format(cpu.BC, cpu.DE, cpu.HL, cpu.IX, cpu.IY, cpu.SP))
-=======
               .format(cpu.AF, cpu.BC, cpu.DE, cpu.HL, cpu.IX, cpu.IY, cpu.SP))
 
     def print16bitregsprim(self, cpu):
@@ -96,8 +93,6 @@ class Debugger(object):
               "DE': {:04X} "
               "HL': {:04X}"
               .format(cpu.AFPrim, cpu.BCPrim, cpu.DEPrim, cpu.HLPrim))
-
->>>>>>> task/debugger
 
     def print8bitregs(self, cpu):
         print("A : {:02X} "
