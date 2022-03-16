@@ -5,7 +5,7 @@ import unittest
 from cpu import CPU
 from rom import ROM
 from loggers import Logger
-from debugger import Debugger
+from debugger import Debugger, HOOK_ADDR_ALL
 from opcodes import Opcodes
 
 ZEXALL_TESTS = os.environ.get('ZEXALL', False)
@@ -94,7 +94,7 @@ class tests_cpu(unittest.TestCase):
 
     def systemFunction2(self, cpu):
         c = cpu.E
-        print(chr(c), end='')
+        print(chr(c), end='', flush=True)
 
     def systemFunction9(self, cpu):
         idx = cpu.DE
@@ -105,27 +105,42 @@ class tests_cpu(unittest.TestCase):
                 break
             msg += chr(c)
             idx += 1
-        print(msg, end='')
+
+        print(msg, end='', flush=True)
 
     def stop(self, cpu):
         #print(f'Stop...')
         pass
 
+    def printIUT(self, cpu):
+        pc = cpu.prev_pc
+        opcode = cpu.ram[pc]
+        print('{:04x}: AF: {:04x}, {:02x}'.format(pc, cpu.AF, opcode))
+    
+    def printIUT2B(self, cpu):
+        pc = cpu.prev_pc
+        opcode = cpu.ram[pc-1]
+        opcode2 = cpu.ram[pc-2]
+        print('{:04x}: AF: {:04x}, {:02x}{:02x}'.format(pc, cpu.AF, opcode2, opcode))
+
     def print(self, cpu):
-        print('{:04x}: AF: {:04x}, BC: {:04x}, DE: {:04x}, HL: {:04x}, SP: {:04x}, IY: {:04x}, (HL): {:02x}, (0x1c2): {:02x}, (0x1c3): {:02x}'.format(
-                (cpu.pc-1), cpu.AF, cpu.BC, cpu.DE, cpu.HL, cpu.SP, cpu.IY, cpu.ram[cpu.HL], cpu.ram[0x1c2], cpu.ram[0x1c3]))
+        #if cpu.prev_pc % 0x8 == 0:
+        #print('{:04x}: AF: {:04x}, BC: {:04x}, DE: {:04x}, HL: {:04x}, SP: {:04x}, IY: {:04x}'.format(
+        #        cpu.prev_pc, cpu.AF, cpu.BC, cpu.DE, cpu.HL, cpu.SP, cpu.IY))
+        print('{:04x}: AF: {:04x}'.format(cpu.prev_pc, cpu.AF))
 
     @unittest.skipUnless(ZEXALL_TESTS, "ZEXALL test")
     def test_zexall(self):
         print(">>> RUNNING ZEXALL")
         debugger = Debugger()
-        debugger.setBreakpoint(0x100)
-        debugger.setBreakpoint(0x1B3B)
+        #debugger.setBreakpoint(0x100)
+        #debugger.setBreakpoint(0x1d42)
         debugger.setHook(0x5, self.systemFunction)
         debugger.setHook(0x0, self.stop)
-        debugger.setHook(-1, self.print)
+        debugger.setHook(HOOK_ADDR_ALL, self.print)
+        debugger.setHook(0x1d44, self.printIUT2B)
         rom = ROM(mapAt=0x100)
-        rom.loadFrom('zexall.com', False)
+        rom.loadFrom('zexall7.com', False)
         cpu = CPU(rom=rom,debugger=debugger)
         cpu.SP = 0xF000
         #cpu.logger = Logger(cpu)

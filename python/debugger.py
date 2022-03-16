@@ -5,6 +5,7 @@ from regs import ZF, SF, HF, PVF, NF, CF, A, B, C, D, E, H, L
 from utility import Bits
 from loggers import EmptyLogger, Logger
 
+HOOK_ADDR_ALL = -1
 
 class EmptyDebugger(object):
     def setBreakpoint(self, pc):

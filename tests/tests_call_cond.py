@@ -32,7 +32,7 @@ class tests_call_cond(unittest.TestCase):
         cpu.CFlag = True
         cpu.readOp()
 
-        self.assertEqual(0x1A49, cpu.PC)
+        self.assertEqual(0x1A4a, cpu.PC)
         self.assertEqual(0x3002, cpu.SP)
 
     def test_call_po_jumps_if_PVFlag_is_not_set(self):
@@ -53,7 +53,7 @@ class tests_call_cond(unittest.TestCase):
 
         cpu.PVFlag = True
         cpu.readOp()
-        self.assertEqual(0x1A49, cpu.PC)
+        self.assertEqual(0x1A4a, cpu.PC)
         self.assertEqual(0x3002, cpu.SP)
 
     def test_call_not_po_jumps_if_PVFlag_is_not_set(self):
