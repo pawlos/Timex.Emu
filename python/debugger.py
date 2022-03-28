@@ -24,6 +24,7 @@ class Debugger(object):
         self.breakpoints = {}
         self.hooks = {}
         self.lastInput = ""
+        self.stopOnError = True
 
     def setBreakpoint(self, pc):
         self.breakpoints[pc] = True

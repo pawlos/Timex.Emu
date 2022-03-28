@@ -217,7 +217,7 @@ class tests_adc(unittest.TestCase):
         cpu.A = 0x5
         cpu.CFlag = Bits.set()
         cpu.readOp()
-        self.assertEqual(0x1c, cpu.A)
+        self.assertEqual(0x1d, cpu.A)
 
     def test_adc_A_mem_HL_takes_2_m_cycles(self):
         cpu = CPU(ROM(b'\x8e\x05\x06\x07\x08'))

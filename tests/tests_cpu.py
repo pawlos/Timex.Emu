@@ -4,11 +4,11 @@ import unittest
 
 from cpu import CPU
 from rom import ROM
-from loggers import Logger
 from debugger import Debugger, HOOK_ADDR_ALL
 from opcodes import Opcodes
 
 ZEXALL_TESTS = os.environ.get('ZEXALL', False)
+ZEXDOC_TESTS = os.environ.get('ZEXDOC', False)
 
 class tests_cpu(unittest.TestCase):
     def test_init_zeros_registers(self):
@@ -109,41 +109,53 @@ class tests_cpu(unittest.TestCase):
         print(msg, end='', flush=True)
 
     def stop(self, cpu):
-        #print(f'Stop...')
-        pass
+        raise Exception('Stop')
 
     def printIUT(self, cpu):
         pc = cpu.prev_pc
-        opcode = cpu.ram[pc]
+        opcode = cpu.ram[pc-1]
         print('{:04x}: AF: {:04x}, {:02x}'.format(pc, cpu.AF, opcode))
     
     def printIUT2B(self, cpu):
         pc = cpu.prev_pc
-        opcode = cpu.ram[pc-1]
+        opcode1 = cpu.ram[pc-1]
         opcode2 = cpu.ram[pc-2]
-        print('{:04x}: AF: {:04x}, {:02x}{:02x}'.format(pc, cpu.AF, opcode2, opcode))
+        opcode3 = cpu.ram[pc-3]
+        opcode4 = cpu.ram[pc-4]
+        print('{:04x}: AF: {:04x}, opcode: {:02x}{:02x}{:02x}{:02x}'.format(pc, cpu.AF, opcode4, opcode3, opcode2, opcode1))
 
     def print(self, cpu):
-        #if cpu.prev_pc % 0x8 == 0:
-        #print('{:04x}: AF: {:04x}, BC: {:04x}, DE: {:04x}, HL: {:04x}, SP: {:04x}, IY: {:04x}'.format(
-        #        cpu.prev_pc, cpu.AF, cpu.BC, cpu.DE, cpu.HL, cpu.SP, cpu.IY))
-        print('{:04x}: AF: {:04x}'.format(cpu.prev_pc, cpu.AF))
+        print('{:04x}: AF: {:04x}, WZ: {:04x}, BC: {:04x}, DE: {:04x}, HL: {:04x}, SP: {:04x}, IX: {:04x}, IY: {:04x}'.format(
+            cpu.prev_pc, cpu.AF, cpu.WZ, cpu.BC, cpu.DE, cpu.HL, cpu.SP, cpu.IX, cpu.IY))
 
-    @unittest.skipUnless(ZEXALL_TESTS, "ZEXALL test")
+
+    @unittest.skipUnless(ZEXDOC_TESTS, "ZEXDOC_TEST is not set")
+    def test_zexdoc(self):
+        print(">>> RUNNING ZEXDOC")
+        debugger = Debugger()
+        debugger.stopOnError = False
+        debugger.setHook(0x5, self.systemFunction)
+        debugger.setHook(0x0, self.stop)
+        rom = ROM(mapAt=0x100)
+        rom.loadFrom('./zexdoc.com', False)
+        cpu = CPU(rom=rom,debugger=debugger)        
+        print(f'Value: {cpu.ram[0x120]:02x}')
+        cpu.SP = 0xF000
+        cpu.run(0x100)
+        self.assertTrue(True)
+
+    @unittest.skipUnless(ZEXALL_TESTS, "ZEXALL_TEST is not set")
     def test_zexall(self):
         print(">>> RUNNING ZEXALL")
         debugger = Debugger()
-        #debugger.setBreakpoint(0x100)
-        #debugger.setBreakpoint(0x1d42)
+        debugger.stopOnError = False
         debugger.setHook(0x5, self.systemFunction)
         debugger.setHook(0x0, self.stop)
-        debugger.setHook(HOOK_ADDR_ALL, self.print)
-        debugger.setHook(0x1d44, self.printIUT2B)
+
         rom = ROM(mapAt=0x100)
-        rom.loadFrom('zexall7.com', False)
-        cpu = CPU(rom=rom,debugger=debugger)
+        rom.loadFrom('./zexall.com', False)
+        cpu = CPU(rom=rom,debugger=debugger)        
         cpu.SP = 0xF000
-        #cpu.logger = Logger(cpu)
         cpu.run(0x100)
         self.assertTrue(True)
 

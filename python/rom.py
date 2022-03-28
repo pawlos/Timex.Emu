@@ -1,15 +1,14 @@
-#Z80 ROM
-import os
+#Z80 ROM implementation
+from os import path
 
 
 class ROM(object):
-
     def __init__(self, data=None, mapAt=0x0):
         self.mapAt = mapAt
         self.rom = bytearray() if data is None else bytearray(data)
 
     def loadFrom(self, file, validateSize = True):
-        if validateSize and os.path.getsize(file) != 16384:
+        if validateSize and path.getsize(file) != 16384:
             raise Exception('Wrong rom size. Should be 16K bytes long.')
         with open(file, 'rb') as f:
             self.rom = bytearray(f.read())
