@@ -3,22 +3,22 @@ import tests_suite
 import unittest
 from cpu import CPU
 from rom import ROM
-
+from utility import Bits
 
 class tests_ld_nn_a(unittest.TestCase):
 
     def test_ld_nn_a_correctly_stores_value_at_given_address(self):
-        cpu = CPU(ROM(b'\x32\x31\x41'))
+        cpu = CPU(ROM(b'\x32\x41\x31'))
         cpu.A = 0xD7
         cpu.readOp()
         self.assertEqual(0xD7, cpu.ram[0x3141])
 
     def test_ld_nn_a_does_not_affect_flags(self):
         cpu = CPU(ROM(b'\x32\xb2\x29'))
-        cpu.HFlag = False
-        cpu.ZFlag = True
-        cpu.PVFlag = False
-        cpu.SFlag = True
+        cpu.HFlag = Bits.reset()
+        cpu.ZFlag = Bits.set()
+        cpu.PVFlag = Bits.reset()
+        cpu.SFlag = Bits.set()
 
         self.assertFalse(cpu.HFlag)
         self.assertTrue(cpu.ZFlag)

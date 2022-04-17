@@ -11,8 +11,8 @@ class tests_ld_nn_hl(unittest.TestCase):
         cpu = CPU(ROM(b'\x22\xb2\x29'))
         cpu.HL = 0x483a
         cpu.readOp()
-        self.assertEqual(0x48, cpu.ram[0xb22a])
-        self.assertEqual(0x3a, cpu.ram[0xb229])
+        self.assertEqual(0x48, cpu.ram[0x29b3])
+        self.assertEqual(0x3a, cpu.ram[0x29b2])
 
     def test_ld_nn_hl_does_not_affect_flags(self):
         cpu = CPU(ROM(b'\x22\xb2\x29'))
