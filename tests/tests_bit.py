@@ -11,7 +11,7 @@ class tests_bit(unittest.TestCase):
 
     def test_bit_IY_plus_4_set_correctly_set_z_flag(self):
         ram = RAM()
-        ram[0x2004] = 1 << 6
+        ram[0x2004] = 0b10111111
         cpu = CPU(ROM(b'\xfd\xcb\x04\x76'), ram)
         cpu.ZFlag = Bits.reset()
         cpu.IY = 0x2000

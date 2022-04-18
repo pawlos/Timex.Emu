@@ -2229,7 +2229,6 @@ class Opcodes(object):
         new = 0 - cpuAfrom2s
         cpu.A = Bits.twos_comp(new)
 
-        #print(f'{old:02x} {new:02x} {cpuAfrom2s:02x} {cpu.A:02x}')
         Flags.sub_flags(cpu, 0, cpu.A, new, old)
         cpu.CFlag = Bits.set() if old != 0 else Bits.reset()
         cpu.m_cycles, cpu.t_states = 2, 8

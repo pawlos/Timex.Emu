@@ -11,6 +11,7 @@ class tests_im(unittest.TestCase):
         cpu.readOp()
         cpu.readOp()
         #generate interrupt
+        cpu.generateInterrupt()
         cpu.readOp()
         cpu._checkInterrupts()
         self.assertEqual(0x0038, cpu.PC)

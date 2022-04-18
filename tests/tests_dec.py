@@ -44,13 +44,6 @@ class tests_dec(unittest.TestCase):
         cpu.readOp()
         self.assertTrue(cpu.NFlag)
 
-    def test_dec_b_sets_PV_flag_if_borrow(self):
-        cpu = CPU(ROM(b'\x05'))
-        cpu.B = 0b00010000
-        cpu.PVFlag = False
-        cpu.readOp()
-        self.assertTrue(cpu.PVFlag)
-
     def test_dec_b_sets_h_flag_if_borrow_from_bit_4(self):
         cpu = CPU(ROM(b'\x05'))
         cpu.B = 0b00010000

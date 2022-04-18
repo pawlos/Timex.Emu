@@ -13,13 +13,6 @@ class tests_neg(unittest.TestCase):
         cpu.readOp()
         self.assertEqual(0b01101000, cpu.A)
 
-    def test_neg_does_reset_nflag(self):
-        cpu = CPU(ROM(b'\xed\x44'))
-        cpu.A = 0b10011000
-        cpu.NFlag = True
-        cpu.readOp()
-        self.assertFalse(cpu.NFlag)
-
     def test_neg_does_reset_zflag_if_result_is_not_zero(self):
         cpu = CPU(ROM(b'\xed\x44'))
         cpu.A = 0b10011000
@@ -61,20 +54,6 @@ class tests_neg(unittest.TestCase):
         cpu.PVFlag = True
         cpu.readOp()
         self.assertFalse(cpu.PVFlag)
-
-    def test_neg_does_set_cflag_if_A_was_0h(self):
-        cpu = CPU(ROM(b'\xed\x44'))
-        cpu.A = 0b00000000
-        cpu.CFlag = False
-        cpu.readOp()
-        self.assertTrue(cpu.CFlag)
-
-    def test_neg_does_reset_cflag_if_A_was_not_0h(self):
-        cpu = CPU(ROM(b'\xed\x44'))
-        cpu.A = 0b10000001
-        cpu.CFlag = True
-        cpu.readOp()
-        self.assertFalse(cpu.CFlag)
 
     def test_neg_does_set_hflag_if_there_was_a_borrow_on_4th_bit(self):
         cpu = CPU(ROM(b'\xed\x44'))
