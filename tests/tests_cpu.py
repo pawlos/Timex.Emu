@@ -139,7 +139,6 @@ class tests_cpu(unittest.TestCase):
         rom = ROM(mapAt=0x100)
         rom.loadFrom('./zexdoc.com', False)
         cpu = CPU(rom=rom,debugger=debugger)        
-        print(f'Value: {cpu.ram[0x120]:02x}')
         cpu.SP = 0xF000
         cpu.run(0x100)
         self.assertTrue(True)
