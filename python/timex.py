@@ -23,7 +23,7 @@ if __name__ == '__main__':
         if name == '--mapAt':
             mapAt = int(value, 16)
             rom = ROM(mapAt=mapAt)
-            print(f'[+] Mapping ROM at 0x{mapAt:4X}.')
+            print(f'[+] Mapping ROM at 0x{mapAt:04X}.')
         if name == '--rom':
             rom.loadFrom(value, False)
             print(f'[+] ROM loaded from {value}.')
@@ -35,7 +35,7 @@ if __name__ == '__main__':
     if not rom_loaded:
         rom.loadFrom('../rom/tc2048.rom')
 
-    timex = CPU(debugger=debugger,rom=rom)
+    timex = CPU(debugger=debugger, rom=rom)
 
     if attach_logger:
         timex.logger = Logger(timex)
