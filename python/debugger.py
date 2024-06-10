@@ -62,7 +62,6 @@ class Debugger(object):
         print("ir - print info about 8-bit registers")
         print("if - print info about flags")
         print("ir16 - print info about 16-bit registers")
-        print("prom 0x<addr> - print value from ROM at <addr>")
         print("pram 0x<addr> - print value from RAM at <addr>")
         print("b 0x<addr> - set a breakpoint at <addr>")
         print("bc 0x<addr> - clear a breakpoint at <addr>")
