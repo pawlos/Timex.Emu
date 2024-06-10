@@ -724,7 +724,7 @@ class CPU(object):
             0xcb34: Opcodes.sll_n,
             0xcb35: Opcodes.sll_n,
             0xcb36: Opcodes.sll_at_hl,
-            0xcb37: Opcodes.sll_n,            
+            0xcb37: Opcodes.sll_n,
             0xcb38: Opcodes.srl_r,
             0xcb39: Opcodes.srl_r,
             0xcb3a: Opcodes.srl_r,
@@ -924,7 +924,7 @@ class CPU(object):
             0xcbfc: Opcodes.set_r_n,
             0xcbfd: Opcodes.set_r_n,
             0xcbfe: Opcodes.set_r_at_hl,
-            0xcbff: Opcodes.set_r_n,      
+            0xcbff: Opcodes.set_r_n,
             0xdd09: Opcodes.add_ix_rr,
             0xdd19: Opcodes.add_ix_rr,
             0xdd21: Opcodes.ld_ix_nn,
@@ -947,7 +947,7 @@ class CPU(object):
             0xdd41: Opcodes.ld8, # fallback to regular instruction
             0xdd42: Opcodes.ld8, # fallback to regular instruction
             0xdd43: Opcodes.ld8, # fallback to regular instruction
-            0xdd44: Opcodes.ld_r_ixh, 
+            0xdd44: Opcodes.ld_r_ixh,
             0xdd45: Opcodes.ld_r_ixl,
             0xdd46: Opcodes.ld_r_ix_d,
             0xdd47: Opcodes.ld8, # fallback to regular instruction
@@ -1118,12 +1118,12 @@ class CPU(object):
             0xfd5d: Opcodes.ld_r_iyl,
             0xfd5e: Opcodes.ld_r_iy_d,
             0xfd5f: Opcodes.ld8, # fallback to regular instruction
-            0xfd60: Opcodes.ld_iyh_r, 
-            0xfd61: Opcodes.ld_iyh_r, 
-            0xfd62: Opcodes.ld_iyh_r, 
-            0xfd63: Opcodes.ld_iyh_r, 
+            0xfd60: Opcodes.ld_iyh_r,
+            0xfd61: Opcodes.ld_iyh_r,
+            0xfd62: Opcodes.ld_iyh_r,
+            0xfd63: Opcodes.ld_iyh_r,
             0xfd64: Opcodes.ld8, # fallback to regular instruction
-            0xfd65: Opcodes.ld_iyh_r, 
+            0xfd65: Opcodes.ld_iyh_r,
             0xfd66: Opcodes.ld_r_iy_d,
             0xfd67: Opcodes.ld_iyh_r,
             0xfd68: Opcodes.ld_iyl_r,
@@ -1185,7 +1185,7 @@ class CPU(object):
             0xddcb012e: Opcodes.sra_at_ix_n,
             0xddcb0136: Opcodes.sll_at_ix_n,
             0xddcb013e: Opcodes.srl_at_ix_n,
-            0xddcb0146: Opcodes.bit_bit_ix,            
+            0xddcb0146: Opcodes.bit_bit_ix,
             0xddcb014e: Opcodes.bit_bit_ix,
             0xddcb0156: Opcodes.bit_bit_ix,
             0xddcb015e: Opcodes.bit_bit_ix,
@@ -1216,7 +1216,7 @@ class CPU(object):
             0xfdcb0126: Opcodes.sla_at_iy_n,
             0xfdcb012e: Opcodes.sra_at_iy_n,
             0xfdcb0136: Opcodes.sll_at_iy_n,
-            0xfdcb013e: Opcodes.srl_at_iy_n,            
+            0xfdcb013e: Opcodes.srl_at_iy_n,
             0xfdcb0146: Opcodes.bit_bit_iy,
             0xfdcb3046: Opcodes.bit_bit_iy,
             0xfdcb014e: Opcodes.bit_bit_iy,
