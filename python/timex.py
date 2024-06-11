@@ -11,13 +11,14 @@ if __name__ == '__main__':
     options, args = getopt.getopt(argv, "",
                                ["attach-logger",
                                 "rom=",
-                                "mapAt="])
+                                "mapAt=",
+                                "breakAt="])
     debugger = Debugger()
-    debugger.setBreakpoint(0x100)
 
     attach_logger = False
     rom_file = None
     mapAt = 0x0
+    break_at = None
     rom = ROM()
     for name, value in options:
         if name == '--mapAt':
@@ -29,6 +30,9 @@ if __name__ == '__main__':
         if name =='--attach-logger':
             attach_logger = True
             print(f'[+] Logger attached.')
+        if name =="--breakAt":
+            break_at = int(value, 16)
+            print(f'[+] Setting breakpoint at 0x{break_at:04X}.')
 
     if mapAt != 0x0:
         rom = ROM(mapAt = mapAt)
@@ -36,6 +40,9 @@ if __name__ == '__main__':
         rom.loadFrom('../rom/tc2048.rom')
     else:
         rom.loadFrom(rom_file, False)
+
+    if break_at is not None:
+        debugger.setBreakpoint(break_at)
 
     timex = CPU(debugger=debugger, rom=rom)
 
