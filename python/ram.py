@@ -10,6 +10,11 @@ class RAM(object):
     def load(self, rom):
         self.ram = self.ram[0:rom.mapAt] + rom[:] + self.ram[rom.mapAt+len(rom):]
 
+    def loadProgramAt(self, program, startAt):
+        with open(program, 'rb') as f:
+            program_data = bytearray(f.read())
+            self.ram = self.ram[0:startAt] + program_data[:] + self.ram[startAt+len(program):]
+
     def __setitem__(self, addr, value):
         self.ram[addr] = Bits.limitTo8Bits(value)
 
