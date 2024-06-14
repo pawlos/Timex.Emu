@@ -4,13 +4,20 @@ from rom import ROM
 from ram import RAM
 from loggers import Logger
 from debugger import Debugger
+from opcodes import *
 import sys
 import getopt
+
+def systemFunction(cpu):
+    print('System function')
+    Opcodes.ret(cpu, 0xc9, cpu.logger)
+    return True
 
 if __name__ == '__main__':
     argv = sys.argv[1:]
     options, args = getopt.getopt(argv, "",
                                ["attach-logger",
+                                "hook-system",
                                 "rom=",
                                 "mapAt=",
                                 "startAt=",
@@ -18,7 +25,14 @@ if __name__ == '__main__':
                                 "breakAt="])
     debugger = Debugger()
 
-    params = {'debugger': False, 'rom_file': None, 'mapAt': 0x0, 'break_at': None, 'program': None, 'startAt': 0x0}
+    params = {
+        'debugger': False,
+        'rom_file': None,
+        'mapAt': 0x0,
+        'break_at': None,
+        'program': None,
+        'startAt': 0x0,
+        'hookSystem': False}
     rom = ROM()
     ram = RAM()
     for name, value in options:
@@ -43,6 +57,9 @@ if __name__ == '__main__':
         if name =='--program':
             params['program'] = value
             print(f'[+] Loading program: {value}')
+        if name =='--hook-system':
+            params['hookSystem'] = True
+            print(f'[+] Hooking system functions')
 
     if params['mapAt'] != 0x0:
         rom = ROM(mapAt = params['mapAt'])
@@ -56,6 +73,9 @@ if __name__ == '__main__':
 
     if params['program'] is not None:
         ram.loadProgramAt(params['program'], 0x8000)
+
+    if params['hookSystem']:
+        debugger.setHook(0x08, systemFunction)
 
     timex = CPU(debugger=debugger, rom=rom, ram=ram)
 
