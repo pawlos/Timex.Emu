@@ -129,7 +129,7 @@ class tests_add(unittest.TestCase):
 
     def test_add_A_n_correctly_set_Z_flag_when_value_is_0(self):
         cpu = CPU(ROM(b'\xC6\x33'))
-        cpu.A = 0x0-0x33
+        cpu.A = 0xcd #-0x33
         cpu.ZFlag = False
         cpu.readOp()
         self.assertTrue(cpu.ZFlag)

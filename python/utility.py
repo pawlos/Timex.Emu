@@ -56,9 +56,11 @@ class Bits(object):
 
     @staticmethod
     def twos_comp(val, bits=8):
+        if val >= 0:
+            return val
         """compute the 2's compliment of int value val"""
-        if ((val & (1 << bits)) != 0):
-            val = ((1 << bits) - 1) & val
+        if ((val & (1 << (bits - 1))) != 0):
+            val = val - (1 << bits)
         return val
 
     @staticmethod
@@ -105,14 +107,18 @@ class Bits(object):
 
     @staticmethod
     def limitTo16Bits(value):
+        if value < 0:
+            value &= 0xFFFF
         value = Bits.twos_comp(value, 16)
-        assert value >= 0
+        assert value >= 0, f'{value} should be >= 0'
         return value & 0xFFFF
 
     @staticmethod
     def limitTo8Bits(value):
+        if value < 0:
+            value &= 0xFF
         value = Bits.twos_comp(value)
-        assert value >= 0
+        assert value >= 0, f'{value} should be >= 0'
         return value & 0xFF
 
     @staticmethod
