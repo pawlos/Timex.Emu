@@ -361,7 +361,7 @@ class CPU(object):
         #Index registers
         self.ix = 0x00
         self.iy = 0x00
-        self.sp = 0x00
+        self.sp = 0x7FFF
         self.pc = 0x00
         #special registers
         self.i = 0x00
