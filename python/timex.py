@@ -8,9 +8,14 @@ from opcodes import *
 import sys
 import getopt
 
-def systemFunction(cpu):
-    print('System function')
-    Opcodes.ret(cpu, 0xc9, cpu.logger)
+def systemError(cpu):
+    print('System error')
+    Opcodes.hlt(cpu, 0x76, cpu.logger)
+    return True
+
+def systemPrintChar(cpu):
+    print(chr(cpu.A), end='')
+    Opcodes.ret(cpu, 0xC9, cpu.logger)
     return True
 
 if __name__ == '__main__':
@@ -75,7 +80,8 @@ if __name__ == '__main__':
         ram.loadProgramAt(params['program'], 0x8000)
 
     if params['hookSystem']:
-        debugger.setHook(0x08, systemFunction)
+        debugger.setHook(0x08, systemError)
+        debugger.setHook(0x10, systemPrintChar)
 
     timex = CPU(debugger=debugger, rom=rom, ram=ram)
 
