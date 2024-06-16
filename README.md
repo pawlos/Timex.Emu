@@ -20,6 +20,13 @@ tests:
   - a suite of unit tests
     - running tests: `python3 -m unittest discover`.
 
+  > [!NOTE]
+  > To run zexall or zexdoc tests suite set ZEXALL or ZEXDOC environment variable to True respectivly
+  >
+  > `export ZEXALL=True`
+  >
+  > `python3 -m unittest`
+
 Links
 =====
   - [http://pl.wikipedia.org/wiki/Zilog_Z80](http://pl.wikipedia.org/wiki/Zilog_Z80)
