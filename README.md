@@ -25,7 +25,8 @@ tests:
   >
   > `export ZEXALL=True`
   >
-  > `python3 -m unittest`
+  > `python3 -m unittest tests_cpu.tests_cpu.test_zexall`
+  > `python3 -m unittest tests_cpu.tests_cpu.test_zexdoc`
 
 Links
 =====
