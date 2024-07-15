@@ -13,6 +13,12 @@ docs:
 python:
   - timex.py - main entry to the emulator
 
+  Example command to load a user program:
+
+  `python3 timex.py --program=helloworld.bin --startAt=8000 --breakAt=8000 --mapAt=8000 --hook-system`
+
+  This loads user program `helloworld.bin` (`--program`) at `0x8000` (`--mapAt`), putting a break point at `0x8000` (`--breakAt`) and starting execution from `0x8000` too (`--startAt`). Additionally system function (i.e. `print`) are being hooked with python replacement.
+
 rom:
   - Binary file containing ROM of actual machine
 
