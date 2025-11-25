@@ -218,7 +218,7 @@ class Opcodes(object):
     def cp(cpu, opcode, logger):
         regInd = opcode & 7
         sub = cpu.regs[regInd]
-        value = (cpu.A - sub) & 0xFF
+        value = cpu.A - sub
         valueIn2s = Bits.twos_comp(value)
 
         Flags.cp_flags(cpu, sub, cpu.A, value, valueIn2s)
@@ -860,8 +860,7 @@ class Opcodes(object):
         displacement = Bits.from_twos_comp(cpu.ram[cpu.PC])
         cpu.WZ = cpu.IY + displacement
         value = cpu.ram[cpu.WZ]
-        v = (value - 1) & 0xFF
-        new_value = Bits.twos_comp(v)
+        new_value = Bits.twos_comp(value-1)
         cpu.ram[cpu.WZ] = new_value
 
         Flags.dec_flags(cpu, value, new_value)
@@ -2478,8 +2477,7 @@ class Opcodes(object):
     def dec8b(cpu, opcode, logger):
         reg_index = (opcode >> 3) & 7
         old_val = cpu.regs[reg_index]
-        v = cpu.regs[reg_index] - 1
-        cpu.regs[reg_index] = Bits.twos_comp(v & 0xff)
+        cpu.regs[reg_index] = Bits.twos_comp(cpu.regs[reg_index]-1)
 
         Flags.dec_flags(cpu, old_val, cpu.regs[reg_index])
 
@@ -3032,8 +3030,8 @@ class Opcodes(object):
     def cp_n(cpu, _, logger):
         n = cpu.ram[cpu.PC]
         old = cpu.A
-        new = (old - n) & 0xff
-        newIn2s = Bits.twos_comp(new)
+        new = old - n
+        newIn2s = Bits.twos_comp(old - n)
 
         Flags.cp_flags(cpu, n, old, new, newIn2s)
 
@@ -3248,7 +3246,7 @@ class Opcodes(object):
     @staticmethod
     def cp_hl(cpu, _, logger):
         n = cpu.ram[cpu.HL]
-        value = (cpu.A - n) & 0xFF
+        value = cpu.A - n
         valueIn2s = Bits.twos_comp(value)
 
         Flags.cp_flags(cpu, n, cpu.A, value, valueIn2s)
