@@ -1123,7 +1123,7 @@ class CPU(object):
             0xfd61: Opcodes.ld_iyh_r,
             0xfd62: Opcodes.ld_iyh_r,
             0xfd63: Opcodes.ld_iyh_r,
-            0xfd64: Opcodes.ld8, # fallback to regular instruction
+            0xfd64: Opcodes.ld_iyh_r,
             0xfd65: Opcodes.ld_iyh_r,
             0xfd66: Opcodes.ld_r_iy_d,
             0xfd67: Opcodes.ld_iyh_r,
