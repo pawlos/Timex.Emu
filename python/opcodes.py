@@ -2928,15 +2928,16 @@ class Opcodes(object):
 
     @staticmethod
     def jr_c(cpu, _, logger):
-        pc = cpu.PC + 1
-        jumpOffset = Bits.twos_comp(cpu.ram[pc]) - 2
+        pc = cpu.PC
+        jumpOffset = Bits.from_twos_comp(cpu.ram[pc])
         no_jump = cpu.CFlag is False
-        cpu.WZ = pc + jumpOffset
+        cpu.WZ = pc + jumpOffset + 1
         if not no_jump:
             cpu.PC = cpu.WZ
             cpu.m_cycles, cpu.t_states = 1, 5
-        cpu.m_cycles, cpu.t_states = 2, 7
-        logger.info("JP C {0:04X}".format(cpu.WZ))
+        else:
+            cpu.m_cycles, cpu.t_states = 2, 7
+        logger.info("JR C, {0:04X}".format(cpu.WZ))
 
     @staticmethod
     def portIn(cpu, _, logger):
