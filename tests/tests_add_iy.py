@@ -90,13 +90,13 @@ class tests_add_iy(unittest.TestCase):
         cpu.IY = 0x100
         cpu.A = 0x11
         cpu.readOp()
-        self.assertEqual(4, cpu.m_cycles)
+        self.assertEqual(5, cpu.m_cycles)
 
-    def test_add_iy_a_takes_15_t_states(self):
+    def test_add_iy_a_takes_19_t_states(self):
         ram = RAM()
         ram[0x109] = 0x11
         cpu = CPU(ROM(b'\xfd\x86\x09'), ram)
         cpu.IY = 0x100
         cpu.A = 0x11
         cpu.readOp()
-        self.assertEqual(15, cpu.t_states)
+        self.assertEqual(19, cpu.t_states)

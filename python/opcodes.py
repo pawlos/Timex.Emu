@@ -92,12 +92,14 @@ class Opcodes(object):
     def ld_ixl_ixh(cpu, _, logger):
         ixh = cpu.IX >> 8
         cpu.IX = Bits.make16bit(ixh, ixh)
+        cpu.m_cycles, cpu.t_states = 2, 8
         logger.info("LD IXL, IXH")
 
     @staticmethod
     def ld_iyl_iyh(cpu, _, logger):
         iyh = cpu.IY >> 8
         cpu.IY = Bits.make16bit(iyh, iyh)
+        cpu.m_cycles, cpu.t_states = 2, 8
         logger.info("LD IYL, IYH")
 
     @staticmethod
@@ -583,6 +585,7 @@ class Opcodes(object):
         cpu.WZ += 1
         cpu.ram[cpu.WZ] = value >> 8
 
+        cpu.m_cycles, cpu.t_states = 6, 20
         logger.info("LD ({:04X}), IX")
 
     @staticmethod
@@ -596,6 +599,7 @@ class Opcodes(object):
         cpu.WZ += 1
         cpu.ram[cpu.WZ] = value >> 8
 
+        cpu.m_cycles, cpu.t_states = 6, 20
         logger.info("LD ({:04X}), IY")
 
     @staticmethod
@@ -609,6 +613,7 @@ class Opcodes(object):
 
         Flags.inc_flags(cpu, old_high, new_high)
 
+        cpu.m_cycles, cpu.t_states = 2, 8
         logger.info("INC IXH")
 
     @staticmethod
@@ -621,6 +626,7 @@ class Opcodes(object):
 
         Flags.dec_flags(cpu, old_high, new_high)
 
+        cpu.m_cycles, cpu.t_states = 2, 8
         logger.info("DEC IXH")
 
     @staticmethod
@@ -633,6 +639,7 @@ class Opcodes(object):
 
         Flags.dec_flags(cpu, old_low, new_low)
 
+        cpu.m_cycles, cpu.t_states = 2, 8
         logger.info("DEC IXL")
 
     @staticmethod
@@ -644,6 +651,7 @@ class Opcodes(object):
         cpu.IX = Bits.make16bit(high, new_low)
         Flags.inc_flags(cpu, old_low, new_low)
 
+        cpu.m_cycles, cpu.t_states = 2, 8
         logger.info("INC IXL")
 
     @staticmethod
@@ -860,6 +868,7 @@ class Opcodes(object):
         cpu.ram[cpu.WZ] = new_value
 
         Flags.dec_flags(cpu, value, new_value)
+        cpu.m_cycles, cpu.t_states = 6, 23
         logger.info("DEC (IY+{:2X})".format(displacement))
 
     @staticmethod
@@ -871,6 +880,7 @@ class Opcodes(object):
         cpu.ram[cpu.WZ] = new_value
 
         Flags.inc_flags(cpu, value, new_value)
+        cpu.m_cycles, cpu.t_states = 6, 23
         logger.info("INC (IY+{:2X})".format(displacement))
 
     @staticmethod
@@ -1499,7 +1509,7 @@ class Opcodes(object):
         cpu.A = new
 
         Flags.add_flags(cpu, old, cpu.A, new, val)
-        cpu.m_cycles, cpu.t_states = 4, 15
+        cpu.m_cycles, cpu.t_states = 5, 19
         logger.info("ADD A, (IY+{:02X})".format(d))
 
     @staticmethod
@@ -2575,6 +2585,7 @@ class Opcodes(object):
 
         Flags.add_flags(cpu, oldA, cpu.A, new, value)
 
+        cpu.m_cycles, cpu.t_states = 2, 8
         logger.info("ADD A, HX")
 
     @staticmethod
@@ -2586,6 +2597,7 @@ class Opcodes(object):
 
         Flags.add_flags(cpu, oldA, cpu.A, new, value)
 
+        cpu.m_cycles, cpu.t_states = 2, 8
         logger.info("ADC A, HX")
 
     @staticmethod
@@ -2597,6 +2609,7 @@ class Opcodes(object):
 
         Flags.add_flags(cpu, oldA, cpu.A, new, value)
 
+        cpu.m_cycles, cpu.t_states = 2, 8
         logger.info("ADC A, LX")
 
     @staticmethod
@@ -2610,6 +2623,7 @@ class Opcodes(object):
 
         Flags.add_flags(cpu, oldA, cpu.A, new, value)
 
+        cpu.m_cycles, cpu.t_states = 5, 19
         logger.info("ADC A, (IX+{:02X})".format(d))
 
     @staticmethod
@@ -2623,6 +2637,7 @@ class Opcodes(object):
 
         Flags.add_flags(cpu, oldA, cpu.A, new, value)
 
+        cpu.m_cycles, cpu.t_states = 5, 19
         logger.info("ADC A, (IY+{:02X})".format(d))
 
     @staticmethod
@@ -2634,6 +2649,7 @@ class Opcodes(object):
 
         Flags.add_flags(cpu, oldA, cpu.A, new, value)
 
+        cpu.m_cycles, cpu.t_states = 2, 8
         logger.info("ADC A, LY")
 
     @staticmethod
@@ -2647,6 +2663,7 @@ class Opcodes(object):
 
         Flags.sub_flags(cpu, oldA, cpu.A, new, value)
 
+        cpu.m_cycles, cpu.t_states = 5, 19
         logger.info("SUB A, (IX+{:02X})".format(d))
 
     @staticmethod
@@ -2660,6 +2677,7 @@ class Opcodes(object):
 
         Flags.sub_flags(cpu, oldA, cpu.A, new, value)
 
+        cpu.m_cycles, cpu.t_states = 5, 19
         logger.info("SUB A, (IY+{:02X})".format(d))
 
     @staticmethod
@@ -2673,6 +2691,7 @@ class Opcodes(object):
 
         Flags.sub_flags(cpu, oldA, cpu.A, new, value)
 
+        cpu.m_cycles, cpu.t_states = 5, 19
         logger.info("SBC A, (IX+{:02X})".format(d))
 
     @staticmethod
@@ -2686,6 +2705,7 @@ class Opcodes(object):
 
         Flags.sub_flags(cpu, oldA, cpu.A, new, value)
 
+        cpu.m_cycles, cpu.t_states = 5, 19
         logger.info("SBC A, (IY+{:02X})".format(d))
 
     @staticmethod
@@ -2699,6 +2719,7 @@ class Opcodes(object):
 
         Flags.and_flags(cpu, cpu.A)
 
+        cpu.m_cycles, cpu.t_states = 5, 19
         logger.info("AND A, (IX+{:02X})".format(d))
 
     @staticmethod
@@ -2712,6 +2733,7 @@ class Opcodes(object):
 
         Flags.or_flags(cpu, cpu.A)
 
+        cpu.m_cycles, cpu.t_states = 5, 19
         logger.info("OR A, (IX+{:02X})".format(d))
 
     @staticmethod
@@ -2725,6 +2747,7 @@ class Opcodes(object):
 
         Flags.xor_flags(cpu, cpu.A)
 
+        cpu.m_cycles, cpu.t_states = 5, 19
         logger.info("XOR A, (IX+{:02X})".format(d))
 
     @staticmethod
@@ -2739,6 +2762,7 @@ class Opcodes(object):
 
         Flags.cp_flags(cpu, value, oldA, new, newIn2s)
 
+        cpu.m_cycles, cpu.t_states = 5, 19
         logger.info("CP A, (IX+{:02X})".format(d))
 
     @staticmethod
@@ -2753,6 +2777,7 @@ class Opcodes(object):
 
         Flags.and_flags(cpu, cpu.A)
 
+        cpu.m_cycles, cpu.t_states = 5, 19
         logger.info("AND A, (IY+{:02X})".format(d))
 
     @staticmethod
@@ -2766,6 +2791,7 @@ class Opcodes(object):
 
         Flags.or_flags(cpu, cpu.A)
 
+        cpu.m_cycles, cpu.t_states = 5, 19
         logger.info("OR A, (IY+{:02X})".format(d))
 
     @staticmethod
@@ -2779,6 +2805,7 @@ class Opcodes(object):
 
         Flags.xor_flags(cpu, cpu.A)
 
+        cpu.m_cycles, cpu.t_states = 5, 19
         logger.info("XOR A, (IY+{:02X})".format(d))
 
     @staticmethod
@@ -2793,6 +2820,7 @@ class Opcodes(object):
 
         Flags.cp_flags(cpu, value, oldA, new, newIn2s)
 
+        cpu.m_cycles, cpu.t_states = 5, 19
         logger.info("CP A, (IY+{:02X})".format(d))
 
     @staticmethod
@@ -2803,6 +2831,7 @@ class Opcodes(object):
         cpu.A = new
         Flags.add_flags(cpu, oldA, cpu.A, new, value)
 
+        cpu.m_cycles, cpu.t_states = 2, 8
         logger.info("ADD A, LX")
 
     @staticmethod
@@ -2814,6 +2843,7 @@ class Opcodes(object):
 
         Flags.add_flags(cpu, oldA, cpu.A, new, value)
 
+        cpu.m_cycles, cpu.t_states = 2, 8
         logger.info("ADD A, HY")
 
     @staticmethod
@@ -2825,6 +2855,7 @@ class Opcodes(object):
 
         Flags.add_flags(cpu, oldA, cpu.A, new, value)
 
+        cpu.m_cycles, cpu.t_states = 2, 8
         logger.info("ADC A, HY")
 
     @staticmethod
@@ -2836,6 +2867,7 @@ class Opcodes(object):
 
         Flags.add_flags(cpu, oldA, cpu.A, new, value)
 
+        cpu.m_cycles, cpu.t_states = 2, 8
         logger.info("ADD A, LY")
 
     @staticmethod
@@ -2847,6 +2879,7 @@ class Opcodes(object):
         new = cpu.A + val
         cpu.A = new
         Flags.add_flags(cpu, old, cpu.A, new, val)
+        cpu.m_cycles, cpu.t_states = 5, 19
         logger.info("ADD A, (IX+{})".format(d))
 
     @staticmethod
