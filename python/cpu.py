@@ -1297,8 +1297,10 @@ class CPU(object):
             self.halted = Bits.reset()
             self.iff1 = Bits.reset()
             self.iff2 = Bits.reset()
-            self.ram[--self.SP] = Bits.limitTo8Bits(self.pc)
-            self.ram[--self.SP] = self.pc >> 8
+            self.SP -= 1
+            self.ram[self.SP] = self.pc >> 8
+            self.SP -= 1
+            self.ram[self.SP] = Bits.limitTo8Bits(self.pc)
             self.R += 1
             if self.im == 0 or self.im == 1:
                 self.PC = 0x0038
