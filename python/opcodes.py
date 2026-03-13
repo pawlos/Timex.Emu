@@ -1382,7 +1382,7 @@ class Opcodes(object):
 
         cpu.XFlag = Bits.set() if (val & 0x08) != 0 else Bits.reset()
         cpu.YFlag = Bits.set() if (val & 0x02) != 0 else Bits.reset()
-        cpu.WZ = cpu.WZ + 1
+        cpu.WZ = cpu.WZ - 1
         cpu.m_cycles, cpu.t_states = 4 if wasZero else 5, 16 if wasZero else 21
         logger.info("CPDR")
 
