@@ -903,7 +903,7 @@ class Opcodes(object):
         cpu.regs[r] = Bits.limitTo8Bits(regVal)
 
         cpu.m_cycles, cpu.t_states = 2, 8
-        logger.info("BIT {}, {}".format(b, IndexToReg.translate8Bit(r)))
+        logger.info("SET {}, {}".format(b, IndexToReg.translate8Bit(r)))
 
     @staticmethod
     def bit_res(cpu, opcode, logger):
