@@ -1003,8 +1003,8 @@ class CPU(object):
             0xdd79: Opcodes.ld8, # fallback to regular instruction
             0xdd7a: Opcodes.ld8, # fallback to regular instruction
             0xdd7b: Opcodes.ld8, # fallback to regular instruction
-            0xdd7c: Opcodes.ld8, # fallback to regular instruction
-            0xdd7d: Opcodes.ld8, # fallback to regular instruction
+            0xdd7c: Opcodes.ld_r_ixh,
+            0xdd7d: Opcodes.ld_r_ixl,
             0xdd7e: Opcodes.ld_r_ix_d,
             0xdd7f: Opcodes.ld8, # fallback to regular instruction
             0xdda4: Opcodes.and_ixh,
@@ -1146,8 +1146,8 @@ class CPU(object):
             0xfd79: Opcodes.ld8, # fallback to regular instruction
             0xfd7a: Opcodes.ld8, # fallback to regular instruction
             0xfd7b: Opcodes.ld8, # fallback to regular instruction
-            0xfd7c: Opcodes.ld8, # fallback to regular instruction
-            0xfd7d: Opcodes.ld8, # fallback to regular instruction
+            0xfd7c: Opcodes.ld_r_iyh,
+            0xfd7d: Opcodes.ld_r_iyl,
             0xfd7e: Opcodes.ld_r_iy_d,
             0xfd7f: Opcodes.ld8, # fallback to regular instruction
             0xfd84: Opcodes.add_a_iyh,
