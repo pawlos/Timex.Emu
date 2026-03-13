@@ -82,7 +82,13 @@ class Opcodes(object):
     def ld_ixl_r(cpu, opcode, logger):
         regInd = (opcode & 7)
         high_val = cpu.IX >> 8
-        cpu.IX = Bits.make16bit(high_val, cpu.regs[regInd])
+        if regInd == 4:
+            value = cpu.IX >> 8
+        elif regInd == 5:
+            value = cpu.IX & 255
+        else:
+            value = cpu.regs[regInd]
+        cpu.IX = Bits.make16bit(high_val, value)
 
         cpu.m_cycles, cpu.t_states = 1, 4
         logger.info("LD IXL, {}".format(
@@ -106,7 +112,13 @@ class Opcodes(object):
     def ld_ixh_r(cpu, opcode, logger):
         regInd = (opcode & 7)
         low_val = cpu.IX & 255
-        cpu.IX = Bits.make16bit(cpu.regs[regInd], low_val)
+        if regInd == 4:
+            value = cpu.IX >> 8
+        elif regInd == 5:
+            value = cpu.IX & 255
+        else:
+            value = cpu.regs[regInd]
+        cpu.IX = Bits.make16bit(value, low_val)
 
         cpu.m_cycles, cpu.t_states = 1, 4
         logger.info("LD IXH, {}".format(
@@ -116,7 +128,13 @@ class Opcodes(object):
     def ld_iyl_r(cpu, opcode, logger):
         regInd = (opcode & 7)
         high_val = cpu.IY >> 8
-        cpu.IY = Bits.make16bit(high_val, cpu.regs[regInd])
+        if regInd == 4:
+            value = cpu.IY >> 8
+        elif regInd == 5:
+            value = cpu.IY & 255
+        else:
+            value = cpu.regs[regInd]
+        cpu.IY = Bits.make16bit(high_val, value)
 
         cpu.m_cycles, cpu.t_states = 1, 4
         logger.info("LD IYL, {}".format(
@@ -126,7 +144,13 @@ class Opcodes(object):
     def ld_iyh_r(cpu, opcode, logger):
         regInd = (opcode & 7)
         low_val = cpu.IY & 255
-        cpu.IY = Bits.make16bit(cpu.regs[regInd], low_val)
+        if regInd == 4:
+            value = cpu.IY >> 8
+        elif regInd == 5:
+            value = cpu.IY & 255
+        else:
+            value = cpu.regs[regInd]
+        cpu.IY = Bits.make16bit(value, low_val)
 
         cpu.m_cycles, cpu.t_states = 1, 4
         logger.info("LD IYH, {}".format(
