@@ -9,6 +9,19 @@ from utility import Bits
 
 class tests_bit(unittest.TestCase):
 
+    def test_res_iy_plus_1_uses_IY_not_IX(self):
+        # RES 2,(IY+1) -- opcode FD CB 01 96
+        # Bug #4: dispatch table maps 0xfdcb0196 to bit_res_ix instead of bit_res_iy
+        ram = RAM()
+        ram[0x3001] = 0b00001111  # IY+1 target: bit 2 should be reset
+        ram[0x2001] = 0b11111111  # IX+1 decoy: should NOT be touched
+        cpu = CPU(ROM(b'\xfd\xcb\x01\x96'), ram)
+        cpu.IY = 0x3000
+        cpu.IX = 0x2000
+        cpu.readOp()
+        self.assertEqual(0b00001011, ram[0x3001])  # bit 2 reset at IY+1
+        self.assertEqual(0b11111111, ram[0x2001])  # IX+1 untouched
+
     def test_bit_IY_plus_4_set_correctly_set_z_flag(self):
         ram = RAM()
         ram[0x2004] = 0b10111111
