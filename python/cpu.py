@@ -1050,6 +1050,7 @@ class CPU(object):
             0xed52: Opcodes.sbc,
             0xed53: Opcodes.ldNnRr,
             0xed55: Opcodes.retn,
+            0xed57: Opcodes.ldai,
             0xed56: Opcodes.im1,
             0xed5a: Opcodes.add_Hl_rr_c,
             0xed5b: Opcodes.ld16_nn,
@@ -1320,6 +1321,10 @@ class CPU(object):
             self.tstates -= 69888
             self._interruptPending = True
             self.display.update(self.ram)
+            self._frame_count = getattr(self, '_frame_count', 0) + 1
+            if self._frame_count % 50 == 0:
+                print("PC=0x{:04X} halted={} iff1={} im={} SP=0x{:04X}".format(
+                    self.pc, self.halted, self.iff1, self.im, self.SP))
 
     def run(self, pc=0x0):
         self.pc = pc

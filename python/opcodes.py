@@ -2414,6 +2414,19 @@ class Opcodes(object):
         logger.info("LD A, R")
 
     @staticmethod
+    def ldai(cpu, _, logger):
+        cpu.A = cpu.I
+
+        cpu.SFlag = Bits.isNegative(cpu.I)
+        cpu.ZFlag = Bits.isZero(cpu.I)
+        cpu.HFlag = Bits.reset()
+        cpu.PVFlag = Bits.set() if cpu.iff2 == 1 else Bits.reset()
+        cpu.NFlag = Bits.reset()
+
+        cpu.m_cycles, cpu.t_states = 2, 9
+        logger.info("LD A, I")
+
+    @staticmethod
     def im2(cpu, _, logger):
         cpu.im = 2
 
