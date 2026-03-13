@@ -87,3 +87,16 @@ class tests_rst(unittest.TestCase):
         cpu.SP = 0x2000
         cpu.readOp()
         self.assertEqual(11, cpu.t_states)
+
+    def test_rst_pushes_correct_return_address(self):
+        ram = RAM()
+        # RST 18h (0xDF) at address 0x15B3
+        # After reading opcode, PC = 0x15B4, which is the return address
+        cpu = CPU(ROM(b'\x00'*0x15b3+b'\xdf'), ram)
+        cpu.PC = 0x15B3
+        cpu.SP = 0x2000
+        cpu.readOp()
+        # return address 0x15B4 should be on the stack
+        # low byte at SP, high byte at SP+1
+        self.assertEqual(0xB4, ram[0x1FFE])  # low byte of 0x15B4
+        self.assertEqual(0x15, ram[0x1FFF])  # high byte of 0x15B4

@@ -1970,7 +1970,7 @@ class Opcodes(object):
         index = (opcode >> 3) & 7
         pc = cpu.PC
         cpu.ram[cpu.SP - 1] = pc >> 8
-        cpu.ram[cpu.SP - 2] = pc & 8
+        cpu.ram[cpu.SP - 2] = pc & 0xFF
         cpu.SP -= 2
 
         cpu.WZ = cpu.rst_jumps[index]
