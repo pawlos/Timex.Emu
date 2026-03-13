@@ -1955,7 +1955,7 @@ class Opcodes(object):
         cpu.SP += 2
         cpu.PC = addr
 
-        cpu.m_cycles = 14
+        cpu.m_cycles, cpu.t_states = 4, 14
         cpu.iff1 = cpu.iff2
         logger.info("RETN")
 
