@@ -3366,10 +3366,7 @@ class Opcodes(object):
 
         oldCF = cpu.CFlag
         cpu.CFlag = Bits.set() if oldA > 0x99 else oldCF
-        if cpu.NFlag:
-            cpu.HFlag = Bits.set() if (cpu.HFlag and (reg_a & 0x0F) < 0x06) else Bits.reset()
-        else:
-            cpu.HFlag = Bits.set() if (oldA & 0x0F) > 0x09 else Bits.reset()
+        cpu.HFlag = Bits.set() if Bits.getNthBit(oldA ^ reg_a, HF) != 0 else Bits.reset()
         cpu.PVFlag = Bits.set() if Bits.count(reg_a) & 1 == 0 else Bits.reset()
         cpu.ZFlag = Bits.set() if reg_a == 0 else Bits.reset()
         cpu.XFlag = Bits.getNthBit(reg_a, XF)
