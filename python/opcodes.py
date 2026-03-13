@@ -3025,7 +3025,10 @@ class Opcodes(object):
 
     @staticmethod
     def portIn(cpu, _, logger):
-        cpu.A = cpu.io[cpu.C]
+        if cpu.C == 0xFE and cpu.display:
+            cpu.A = cpu.display.read_keyboard(cpu.B)
+        else:
+            cpu.A = cpu.io[cpu.C]
 
         cpu.m_cycles, cpu.t_states = 3, 12
         logger.info("IN A, (C)")

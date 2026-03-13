@@ -1323,8 +1323,8 @@ class CPU(object):
             self.display.update(self.ram)
             self._frame_count = getattr(self, '_frame_count', 0) + 1
             if self._frame_count % 50 == 0:
-                print("PC=0x{:04X} halted={} iff1={} im={} SP=0x{:04X}".format(
-                    self.pc, self.halted, self.iff1, self.im, self.SP))
+                print("PC=0x{:04X} iff1={} im={} IY=0x{:04X}".format(
+                    self.pc, self.iff1, self.im, self.IY))
 
     def run(self, pc=0x0):
         self.pc = pc
