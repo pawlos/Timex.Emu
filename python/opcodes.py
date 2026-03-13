@@ -569,6 +569,7 @@ class Opcodes(object):
     def inc_ix(cpu, _, logger):
         cpu.IX += 1
 
+        cpu.m_cycles, cpu.t_states = 2, 10
         logger.info("INC IX")
 
     @staticmethod
@@ -649,6 +650,7 @@ class Opcodes(object):
     def inc_iy(cpu, _, logger):
         cpu.IY += 1
 
+        cpu.m_cycles, cpu.t_states = 2, 10
         logger.info("INC IY")
 
     @staticmethod
@@ -1510,7 +1512,7 @@ class Opcodes(object):
 
         Flags.sub_flags(cpu, old, cpu.A, new, n)
 
-
+        cpu.m_cycles, cpu.t_states = 2, 7
         logger.info("SUB A, {:02X}".format(n))
 
     @staticmethod
@@ -2275,6 +2277,7 @@ class Opcodes(object):
 
         cpu.WZ = cpu.IX + d
         cpu.regs[r] = cpu.ram[cpu.WZ]
+        cpu.m_cycles, cpu.t_states = 5, 19
         logger.info("LD {}, (IX+{})".format(IndexToReg.translate8Bit(r), d))
 
     @staticmethod
@@ -2284,6 +2287,7 @@ class Opcodes(object):
 
         cpu.WZ = cpu.IX + d
         cpu.ram[cpu.WZ] = n
+        cpu.m_cycles, cpu.t_states = 5, 19
         logger.info("LD (IX+{}), {}".format(d,n))
 
     @staticmethod
@@ -2292,6 +2296,7 @@ class Opcodes(object):
         r = opcode & 7
         cpu.WZ = cpu.IX + d
         cpu.ram[cpu.WZ] = cpu.regs[r]
+        cpu.m_cycles, cpu.t_states = 5, 19
         logger.info("LD (IX+{}), {}".format(d, IndexToReg.translate8Bit(r)))
 
     @staticmethod
@@ -3265,6 +3270,7 @@ class Opcodes(object):
         cpu.XFlag = Bits.getNthBit(cpu.A, XF)
         cpu.YFlag = Bits.getNthBit(cpu.A, YF)
 
+        cpu.m_cycles, cpu.t_states = 2, 7
         logger.info("ADC A, {:02X}".format(n))
 
     @staticmethod
@@ -3312,4 +3318,5 @@ class Opcodes(object):
         cpu.XFlag = Bits.getNthBit(reg_a, XF)
         cpu.YFlag = Bits.getNthBit(reg_a, YF)
         cpu.SFlag = Bits.isNegative(cpu.A)
+        cpu.m_cycles, cpu.t_states = 1, 4
         logger.info("DAA")
