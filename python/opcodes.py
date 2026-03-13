@@ -287,15 +287,15 @@ class Opcodes(object):
     @staticmethod
     def jpnc(cpu, _, logger):
         pc = cpu.PC
-        jumpOffset = Bits.twos_comp(cpu.ram[pc])
+        jumpOffset = Bits.from_twos_comp(cpu.ram[pc])
 
         no_jump = cpu.CFlag
 
         if not no_jump:
             cpu.PC = pc + jumpOffset+1
-            cpu.m_cycles, cpu.t_states = 1, 5
-
-        cpu.m_cycles, cpu.t_states = 2, 7
+            cpu.m_cycles, cpu.t_states = 3, 12
+        else:
+            cpu.m_cycles, cpu.t_states = 2, 7
         logger.info("JR NC, {0:04X}".format(pc+jumpOffset+1))
 
     @staticmethod
