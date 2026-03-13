@@ -1461,7 +1461,7 @@ class Opcodes(object):
     @staticmethod
     def ldiy_d_r(cpu, opcode, logger):
         regInd = opcode & 7
-        d = cpu.ram[cpu.PC]
+        d = Bits.from_twos_comp(cpu.ram[cpu.PC])
         cpu.ram[cpu.IY + d] = cpu.regs[regInd]
         cpu.m_cycles, cpu.t_states = 5, 19
         logger.info("LD (IY+{:02X}), {}".format(d, IndexToReg.translate8Bit(regInd)))
@@ -1488,7 +1488,7 @@ class Opcodes(object):
 
     @staticmethod
     def add_a_iy_d(cpu, _, logger):
-        d = cpu.ram[cpu.PC]
+        d = Bits.from_twos_comp(cpu.ram[cpu.PC])
         cpu.WZ = cpu.IY + d
         old = cpu.A
         val = cpu.ram[cpu.WZ]
@@ -1987,7 +1987,7 @@ class Opcodes(object):
 
     @staticmethod
     def ldiy_d_n(cpu, _, logger):
-        d = cpu.ram[cpu.PC]
+        d = Bits.from_twos_comp(cpu.ram[cpu.PC])
         n = cpu.ram[cpu.PC]
 
         cpu.WZ = cpu.IY + d
@@ -2221,7 +2221,7 @@ class Opcodes(object):
     @staticmethod
     def ld_r_iy_d(cpu, opcode, logger):
         index = (opcode >> 3) & 7
-        d = cpu.ram[cpu.PC]
+        d = Bits.from_twos_comp(cpu.ram[cpu.PC])
         cpu.WZ = cpu.IY + d
         cpu.regs[index] = cpu.ram[cpu.WZ]
 
@@ -2271,7 +2271,7 @@ class Opcodes(object):
     @staticmethod
     def ld_r_ix_d(cpu, opcode, logger):
         r = (opcode >> 3) & 7
-        d = cpu.ram[cpu.PC]
+        d = Bits.from_twos_comp(cpu.ram[cpu.PC])
 
         cpu.WZ = cpu.IX + d
         cpu.regs[r] = cpu.ram[cpu.WZ]
@@ -2279,7 +2279,7 @@ class Opcodes(object):
 
     @staticmethod
     def ld_at_ix_d_nn(cpu, _, logger):
-        d = cpu.ram[cpu.PC]
+        d = Bits.from_twos_comp(cpu.ram[cpu.PC])
         n = cpu.ram[cpu.PC]
 
         cpu.WZ = cpu.IX + d
@@ -2288,7 +2288,7 @@ class Opcodes(object):
 
     @staticmethod
     def ld_at_ix_d_r(cpu, opcode, logger):
-        d = cpu.ram[cpu.PC]
+        d = Bits.from_twos_comp(cpu.ram[cpu.PC])
         r = opcode & 7
         cpu.WZ = cpu.IX + d
         cpu.ram[cpu.WZ] = cpu.regs[r]
@@ -2296,7 +2296,7 @@ class Opcodes(object):
 
     @staticmethod
     def ld_at_iy_d_r(cpu, opcode, logger):
-        d = cpu.ram[cpu.PC]
+        d = Bits.from_twos_comp(cpu.ram[cpu.PC])
         r = opcode & 7
         cpu.WZ = cpu.IY + d
         cpu.ram[cpu.WZ] = cpu.regs[r]
@@ -2480,7 +2480,7 @@ class Opcodes(object):
 
     @staticmethod
     def dec_at_ix_d(cpu, _, logger):
-        d = cpu.ram[cpu.PC]
+        d = Bits.from_twos_comp(cpu.ram[cpu.PC])
         cpu.WZ = cpu.IX + d
         old_val = Bits.from_twos_comp(cpu.ram[cpu.WZ])
         new_val = Bits.twos_comp(old_val - 1)
@@ -2492,7 +2492,7 @@ class Opcodes(object):
 
     @staticmethod
     def inc_at_ix_d(cpu, _, logger):
-        d = cpu.ram[cpu.PC]
+        d = Bits.from_twos_comp(cpu.ram[cpu.PC])
         cpu.WZ = cpu.IX + d
         old_val = Bits.from_twos_comp(cpu.ram[cpu.WZ])
         new_val = Bits.twos_comp(old_val + 1)
@@ -2597,7 +2597,7 @@ class Opcodes(object):
     @staticmethod
     def adc_a_ix_d(cpu, _, logger):
         oldA = cpu.A
-        d = cpu.ram[cpu.PC]
+        d = Bits.from_twos_comp(cpu.ram[cpu.PC])
         cpu.WZ = cpu.IX + d
         value = cpu.ram[cpu.WZ]
         new = oldA + value + (1 if cpu.CFlag else 0)
@@ -2610,7 +2610,7 @@ class Opcodes(object):
     @staticmethod
     def adc_a_iy_d(cpu, _, logger):
         oldA = cpu.A
-        d = cpu.ram[cpu.PC]
+        d = Bits.from_twos_comp(cpu.ram[cpu.PC])
         cpu.WZ = cpu.IY + d
         value = cpu.ram[cpu.WZ]
         new = oldA + value + (1 if cpu.CFlag else 0)
@@ -2633,7 +2633,7 @@ class Opcodes(object):
 
     @staticmethod
     def sub_ix_d(cpu, _, logger):
-        d = cpu.ram[cpu.PC]
+        d = Bits.from_twos_comp(cpu.ram[cpu.PC])
         oldA = cpu.A
         cpu.WZ = cpu.IX + d
         value = cpu.ram[cpu.WZ]
@@ -2646,7 +2646,7 @@ class Opcodes(object):
 
     @staticmethod
     def sub_iy_d(cpu, _, logger):
-        d = cpu.ram[cpu.PC]
+        d = Bits.from_twos_comp(cpu.ram[cpu.PC])
         oldA = cpu.A
         cpu.WZ = cpu.IY + d
         value = cpu.ram[cpu.WZ]
@@ -2659,7 +2659,7 @@ class Opcodes(object):
 
     @staticmethod
     def sbc_a_ix_d(cpu, _, logger):
-        d = cpu.ram[cpu.PC]
+        d = Bits.from_twos_comp(cpu.ram[cpu.PC])
         oldA = cpu.A
         cpu.WZ = cpu.IX + d
         value = cpu.ram[cpu.WZ]
@@ -2672,7 +2672,7 @@ class Opcodes(object):
 
     @staticmethod
     def sbc_a_iy_d(cpu, _, logger):
-        d = cpu.ram[cpu.PC]
+        d = Bits.from_twos_comp(cpu.ram[cpu.PC])
         oldA = cpu.A
         cpu.WZ = cpu.IY + d
         value = cpu.ram[cpu.WZ]
@@ -2685,7 +2685,7 @@ class Opcodes(object):
 
     @staticmethod
     def and_ix_d(cpu, _, logger):
-        d = cpu.ram[cpu.PC]
+        d = Bits.from_twos_comp(cpu.ram[cpu.PC])
         oldA = cpu.A
         cpu.WZ = cpu.IX + d
         value = cpu.ram[cpu.WZ]
@@ -2698,7 +2698,7 @@ class Opcodes(object):
 
     @staticmethod
     def or_ix_d(cpu, _, logger):
-        d = cpu.ram[cpu.PC]
+        d = Bits.from_twos_comp(cpu.ram[cpu.PC])
         oldA = cpu.A
         cpu.WZ = cpu.IX + d
         value = cpu.ram[cpu.WZ]
@@ -2711,7 +2711,7 @@ class Opcodes(object):
 
     @staticmethod
     def xor_ix_d(cpu, _, logger):
-        d = cpu.ram[cpu.PC]
+        d = Bits.from_twos_comp(cpu.ram[cpu.PC])
         oldA = cpu.A
         cpu.WZ = cpu.IX + d
         value = cpu.ram[cpu.WZ]
@@ -2724,7 +2724,7 @@ class Opcodes(object):
 
     @staticmethod
     def cp_ix_d(cpu, _, logger):
-        d = cpu.ram[cpu.PC]
+        d = Bits.from_twos_comp(cpu.ram[cpu.PC])
         oldA = cpu.A
         cpu.WZ = cpu.IX + d
         value = cpu.ram[cpu.WZ]
@@ -2738,7 +2738,7 @@ class Opcodes(object):
 
     @staticmethod
     def and_iy_d(cpu, _, logger):
-        d = cpu.ram[cpu.PC]
+        d = Bits.from_twos_comp(cpu.ram[cpu.PC])
         oldA = cpu.A
 
         cpu.WZ = cpu.IY + d
@@ -2752,7 +2752,7 @@ class Opcodes(object):
 
     @staticmethod
     def or_iy_d(cpu, _, logger):
-        d = cpu.ram[cpu.PC]
+        d = Bits.from_twos_comp(cpu.ram[cpu.PC])
         oldA = cpu.A
         cpu.WZ = cpu.IY + d
         value = cpu.ram[cpu.WZ]
@@ -2765,7 +2765,7 @@ class Opcodes(object):
 
     @staticmethod
     def xor_iy_d(cpu, _, logger):
-        d = cpu.ram[cpu.PC]
+        d = Bits.from_twos_comp(cpu.ram[cpu.PC])
         oldA = cpu.A
         cpu.WZ = cpu.IY + d
         value = cpu.ram[cpu.WZ]
@@ -2778,7 +2778,7 @@ class Opcodes(object):
 
     @staticmethod
     def cp_iy_d(cpu, _, logger):
-        d = cpu.ram[cpu.PC]
+        d = Bits.from_twos_comp(cpu.ram[cpu.PC])
         oldA = cpu.A
 
         cpu.WZ = cpu.IY + d
@@ -2835,7 +2835,7 @@ class Opcodes(object):
 
     @staticmethod
     def add_a_ix_d(cpu, _, logger):
-        d = cpu.ram[cpu.PC]
+        d = Bits.from_twos_comp(cpu.ram[cpu.PC])
         cpu.WZ = cpu.IX + d
         old = cpu.A
         val = cpu.ram[cpu.WZ]
