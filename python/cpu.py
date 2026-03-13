@@ -1326,5 +1326,7 @@ class CPU(object):
         while True:
             if not self.halted:
                 self.readOp()
+            else:
+                self.m_cycles, self.t_states = 1, 4
             self._checkInterrupts()
             self._checkTimers()
