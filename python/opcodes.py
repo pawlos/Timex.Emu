@@ -660,15 +660,15 @@ class Opcodes(object):
     @staticmethod
     def jr_z(cpu, _, logger):
         pc = cpu.PC
-        jumpTo = pc + Bits.twos_comp(cpu.ram[pc]) + 1
+        jumpTo = pc + Bits.from_twos_comp(cpu.ram[pc]) + 1
 
         no_jump = cpu.ZFlag is False
 
         if not no_jump:
             cpu.PC = jumpTo
-            cpu.m_cycles, cpu.t_states = 1, 5
-
-        cpu.m_cycles, cpu.t_states = 2, 7
+            cpu.m_cycles, cpu.t_states = 3, 12
+        else:
+            cpu.m_cycles, cpu.t_states = 2, 7
         logger.info("JR Z, {:04X}".format(jumpTo))
 
     @staticmethod

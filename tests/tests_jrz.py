@@ -2,11 +2,23 @@ import tests_suite
 
 import unittest
 from cpu import CPU
+from ram import RAM
 from rom import ROM
 from utility import Bits
 
 
 class tests_jrz(unittest.TestCase):
+
+    def test_jr_z_jumps_backward_when_z_set(self):
+        # JR Z, -4 at address 0x0010
+        # opcode 0x28, displacement 0xFC (-4)
+        # Jump target = 0x0012 + (-4) = 0x000E
+        ram = RAM()
+        cpu = CPU(ROM(b'\x00' * 0x10 + b'\x28\xfc'), ram)
+        cpu.PC = 0x0010
+        cpu.ZFlag = Bits.set()
+        cpu.readOp()
+        self.assertEqual(0x000E, cpu.PC)
 
     def test_jr_z_jumps_if_ZFlag_is_set(self):
         rom = b'\x00' * 0x0300+b'\x28\x03'
