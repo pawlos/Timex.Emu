@@ -4,6 +4,7 @@ from rom import ROM
 from ram import RAM
 from loggers import Logger
 from debugger import Debugger
+from display import Display
 from opcodes import *
 import sys
 import getopt
@@ -40,6 +41,7 @@ if __name__ == '__main__':
                                 "startAt=",
                                 "program=",
                                 "breakAt=",
+                                "no-display",
                                 "help"])
     debugger = Debugger()
 
@@ -50,7 +52,8 @@ if __name__ == '__main__':
         'break_at': None,
         'program': None,
         'startAt': 0x0,
-        'hookSystem': False}
+        'hookSystem': False,
+        'noDisplay': False}
     rom = ROM()
     ram = RAM()
     for name, value in options:
@@ -78,6 +81,9 @@ if __name__ == '__main__':
         if name =='--hook-system':
             params['hookSystem'] = True
             print(f'[+] Hooking system functions')
+        if name == '--no-display':
+            params['noDisplay'] = True
+            print(f'[+] Display disabled.')
         if name == "--help":
             usage()
             sys.exit()
@@ -99,11 +105,19 @@ if __name__ == '__main__':
         debugger.setHook(0x08, systemError)
         debugger.setHook(0x10, systemPrintChar)
 
-    timex = CPU(debugger=debugger, rom=rom, ram=ram)
+    display = None if params['noDisplay'] else Display()
+
+    timex = CPU(debugger=debugger, rom=rom, ram=ram, display=display)
 
     if params['debugger']:
         timex.logger = Logger(timex)
 
     print("Starting execution...")
-    timex.run(params['startAt'])
+    try:
+        timex.run(params['startAt'])
+    except (SystemExit, KeyboardInterrupt):
+        pass
+    finally:
+        if display:
+            display.close()
     print("Ending...")

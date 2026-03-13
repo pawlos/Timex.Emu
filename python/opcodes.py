@@ -198,6 +198,8 @@ class Opcodes(object):
     def out(cpu, _, logger):
         value = cpu.ram[cpu.PC]
         cpu.io[value] = cpu.A
+        if value == 0xFE and cpu.display:
+            cpu.display.set_border(cpu.A & 0x07)
         cpu.m_cycles, cpu.t_states = 3, 11
         logger.info("OUT ({:02X}), A".format(value))
 
@@ -3116,7 +3118,10 @@ class Opcodes(object):
     @staticmethod
     def in_a_n(cpu, _, logger):
         n = cpu.ram[cpu.PC]
-        cpu.A = cpu.io[n]
+        if n == 0xFE and cpu.display:
+            cpu.A = cpu.display.read_keyboard(cpu.A)
+        else:
+            cpu.A = cpu.io[n]
 
         cpu.m_cycles, cpu.t_states = 3, 11
         logger.info("IN A, ({:02X}".format(n))

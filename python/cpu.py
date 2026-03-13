@@ -402,10 +402,12 @@ class CPU(object):
                  rom=ROM(),
                  ram=RAM(),
                  logger=EmptyLogger(),
-                 debugger=EmptyDebugger()):
+                 debugger=EmptyDebugger(),
+                 display=None):
 
         self.logger = logger
         self.debugger = debugger
+        self.display = display
 
         self.io = IOPorts()
 
@@ -1307,7 +1309,10 @@ class CPU(object):
                 self.PC = 0x0038
 
     def _checkTimers(self):
-        pass
+        if self.display and self.tstates >= 69888:
+            self.tstates -= 69888
+            self._interruptPending = True
+            self.display.update(self.ram)
 
     def run(self, pc=0x0):
         self.pc = pc
