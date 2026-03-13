@@ -370,6 +370,7 @@ class CPU(object):
         self.z = 0x00
 
         self.halted = Bits.reset()
+        self._interruptPending = False
         self.iff1 = 0x00
         self.iff2 = 0x00
 
@@ -1250,7 +1251,7 @@ class CPU(object):
         }
 
     def generateInterrupt(self):
-        self.generateInterrupt = True
+        self._interruptPending = True
 
     def readOp(self):
         self.prev_pc = self.PC
@@ -1292,8 +1293,8 @@ class CPU(object):
         print("Missing opcode key: {1:x}, PC = 0x{0:x}".format(pc, opcode))
 
     def _checkInterrupts(self):
-        if self.iff1 and self.generateInterrupt:
-            self.generateInterrupt = False
+        if self.iff1 and self._interruptPending:
+            self._interruptPending = False
             self.halted = Bits.reset()
             self.iff1 = Bits.reset()
             self.iff2 = Bits.reset()

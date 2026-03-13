@@ -36,3 +36,24 @@ class tests_interrupts(unittest.TestCase):
         self.assertEqual(0x12, ram[0x5FFF])  # high byte
         # should jump to 0x0038 in IM 1
         self.assertEqual(0x0038, cpu.pc)
+
+    def test_generateInterrupt_can_be_called_twice(self):
+        ram = RAM()
+        cpu = CPU(ROM(b'\x00' * 0x4000), ram)
+        cpu.im = 1
+        cpu.SP = 0x6000
+
+        # first interrupt cycle
+        cpu.iff1 = 1
+        cpu.pc = 0x1000
+        cpu.generateInterrupt()
+        cpu._checkInterrupts()
+        self.assertEqual(0x0038, cpu.pc)
+
+        # re-enable interrupts and trigger again
+        cpu.iff1 = 1
+        cpu.pc = 0x2000
+        cpu.SP = 0x6000
+        cpu.generateInterrupt()  # should still be callable
+        cpu._checkInterrupts()
+        self.assertEqual(0x0038, cpu.pc)
