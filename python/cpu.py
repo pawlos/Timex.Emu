@@ -644,6 +644,7 @@ class CPU(object):
             0xe0: Opcodes.ret_cc,
             0xe1: Opcodes.pop,
             0xe2: Opcodes.jp_cond,
+            0xe3: Opcodes.ex_sp_hl,
             0xe4: Opcodes.call_cond,
             0xe5: Opcodes.push,
             0xe6: Opcodes.and_n,

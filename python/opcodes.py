@@ -761,6 +761,19 @@ class Opcodes(object):
         logger.info("EX DE, HL")
 
     @staticmethod
+    def ex_sp_hl(cpu, _, logger):
+        low = cpu.ram[cpu.SP]
+        high = cpu.ram[cpu.SP + 1]
+        cpu.ram[cpu.SP] = cpu.L
+        cpu.ram[cpu.SP + 1] = cpu.H
+        cpu.L = low
+        cpu.H = high
+        cpu.WZ = cpu.HL
+
+        cpu.m_cycles, cpu.t_states = 5, 19
+        logger.info("EX (SP), HL")
+
+    @staticmethod
     def ex_af_afprim(cpu, _, logger):
         cpu.AF, cpu.AFPrim = cpu.AFPrim, cpu.AF
         cpu.m_cycles, cpu.t_states = 1, 4
