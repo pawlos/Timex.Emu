@@ -104,7 +104,7 @@ class Display:
         if self.frame_count % 16 == 0:
             self.flash_state = not self.flash_state
 
-        pixels = pygame.surfarray.pixels2d(self.surface)
+        set_at = self.surface.set_at
 
         for y in range(SCREEN_HEIGHT):
             addr = (BITMAP_START
@@ -124,14 +124,12 @@ class Display:
                 if (attr & 0x80) and self.flash_state:
                     ink, paper = paper, ink
 
+                x = col * 8
                 for bit in range(8):
-                    x = col * 8 + bit
                     if byte & (0x80 >> bit):
-                        pixels[x, y] = self.surface.map_rgb(ink)
+                        set_at((x + bit, y), ink)
                     else:
-                        pixels[x, y] = self.surface.map_rgb(paper)
-
-        del pixels
+                        set_at((x + bit, y), paper)
 
         self.screen.fill(self.border_color)
         scaled = pygame.transform.scale(
