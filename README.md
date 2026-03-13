@@ -19,6 +19,29 @@ python:
 
   This loads user program `helloworld.bin` (`--program`) at `0x8000` (`--mapAt`), putting a break point at `0x8000` (`--breakAt`) and starting execution from `0x8000` too (`--startAt`). Additionally system function (i.e. `print`) are being hooked with python replacement.
 
+  To run with display (requires pygame-ce):
+
+  `python3 timex.py`
+
+  To run without display:
+
+  `python3 timex.py --no-display`
+
+  Keyboard mapping (PC → Timex 2048):
+
+  | PC Key | Timex 2048 |
+  |--------|------------|
+  | A-Z, 0-9 | Same |
+  | Enter | ENTER |
+  | Space | SPACE |
+  | Left/Right Shift | CAPS SHIFT |
+  | Left/Right Ctrl | SYMBOL SHIFT |
+
+  Common combinations:
+  - `Shift + 0` — DELETE (backspace)
+  - `Ctrl + P` — " (double quote)
+  - `Ctrl + Z` — : (colon)
+
 rom:
   - Binary file containing ROM of actual machine
 
