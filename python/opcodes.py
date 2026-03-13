@@ -911,7 +911,7 @@ class Opcodes(object):
 
     @staticmethod
     def bit_set_iy(cpu, opcode, logger):
-        index = (opcode >> 8) & 255
+        index = Bits.from_twos_comp((opcode >> 8) & 255)
         bit = (opcode >> 3) & 7
         cpu.WZ = cpu.IY + index
         val = cpu.ram[cpu.WZ]
@@ -923,7 +923,7 @@ class Opcodes(object):
 
     @staticmethod
     def bit_set_ix(cpu, opcode, logger):
-        index = (opcode >> 8) & 255
+        index = Bits.from_twos_comp((opcode >> 8) & 255)
         bit = (opcode >> 3) & 7
         val = cpu.ram[cpu.IX+index]
         val |= (1 << bit)
@@ -945,7 +945,7 @@ class Opcodes(object):
 
     @staticmethod
     def bit_res(cpu, opcode, logger):
-        index = (opcode >> 8) & 255
+        index = Bits.from_twos_comp((opcode >> 8) & 255)
         bit = (opcode >> 3) & 7
         cpu.WZ = cpu.IY + index
         val = cpu.ram[cpu.WZ]
@@ -957,7 +957,7 @@ class Opcodes(object):
 
     @staticmethod
     def bit_bit_iy(cpu, opcode, logger):
-        index = (opcode >> 8) & 255
+        index = Bits.from_twos_comp((opcode >> 8) & 255)
         bit = (opcode >> 3) & 7
 
         cpu.WZ = cpu.IY + index
@@ -968,7 +968,7 @@ class Opcodes(object):
 
     @staticmethod
     def bit_bit_ix(cpu, opcode, logger):
-        index = (opcode >> 8) & 255
+        index = Bits.from_twos_comp((opcode >> 8) & 255)
         bit = (opcode >> 3) & 7
 
         cpu.WZ = cpu.IX + index
@@ -1009,7 +1009,7 @@ class Opcodes(object):
 
     @staticmethod
     def sla_at_ix_n(cpu, opcode, logger):
-        index = (opcode >> 8) & 255
+        index = Bits.from_twos_comp((opcode >> 8) & 255)
         cpu.WZ = cpu.IX + index
         val = cpu.ram[cpu.WZ]
         cflag = Bits.getNthBit(val, 7)
@@ -1029,7 +1029,7 @@ class Opcodes(object):
 
     @staticmethod
     def sla_at_iy_n(cpu, opcode, logger):
-        index = (opcode >> 8) & 255
+        index = Bits.from_twos_comp((opcode >> 8) & 255)
         cpu.WZ = cpu.IY + index
         val = cpu.ram[cpu.WZ]
         cflag = Bits.getNthBit(val, 7)
@@ -1050,7 +1050,7 @@ class Opcodes(object):
 
     @staticmethod
     def sra_at_ix_n(cpu, opcode, logger):
-        index = (opcode >> 8) & 255
+        index = Bits.from_twos_comp((opcode >> 8) & 255)
         cpu.WZ = cpu.IX + index
         val = cpu.ram[cpu.WZ]
         bit7 = Bits.getNthBit(val, 7)
@@ -1071,7 +1071,7 @@ class Opcodes(object):
 
     @staticmethod
     def sra_at_iy_n(cpu, opcode, logger):
-        index = (opcode >> 8) & 255
+        index = Bits.from_twos_comp((opcode >> 8) & 255)
         cpu.WZ = cpu.IY + index
         val = cpu.ram[cpu.WZ]
         bit7 = Bits.getNthBit(val, 7)
@@ -1311,27 +1311,27 @@ class Opcodes(object):
     @staticmethod
     def bit_res_ix(cpu, opcode, logger):
         b = (opcode >> 3) & 7
-        n = (opcode >> 8) & 0xff
+        n = Bits.from_twos_comp((opcode >> 8) & 0xff)
 
         cpu.WZ = cpu.IX + n
         val = cpu.ram[cpu.WZ]
         val = Bits.setNthBit(val, b, 0)
         cpu.ram[cpu.WZ] = val
 
-        cpu.m_cycles, cpu.t_states = 5, 20
+        cpu.m_cycles, cpu.t_states = 6, 23
         logger.info("RES {}, (IX+{:02X})".format(b, n))
 
     @staticmethod
     def bit_res_iy(cpu, opcode, logger):
         b = (opcode >> 3) & 7
-        n = (opcode >> 8) & 0xff
+        n = Bits.from_twos_comp((opcode >> 8) & 0xff)
 
         cpu.WZ = cpu.IY + n
         val = cpu.ram[cpu.WZ]
         val = Bits.setNthBit(val, b, 0)
         cpu.ram[cpu.WZ] = val
 
-        cpu.m_cycles, cpu.t_states = 5, 20
+        cpu.m_cycles, cpu.t_states = 6, 23
         logger.info("RES {}, (IY+{:02X})".format(b, n))
 
     @staticmethod
