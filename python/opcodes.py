@@ -599,55 +599,49 @@ class Opcodes(object):
 
     @staticmethod
     def inc_ixh(cpu, _, logger):
-        old_val = cpu.IX
-        high = cpu.IX >> 8
+        old_high = cpu.IX >> 8
         low = cpu.IX & 255
 
-        high += 1
+        new_high = (old_high + 1) & 0xFF
 
-        cpu.IX = Bits.make16bit(high, low)
+        cpu.IX = Bits.make16bit(new_high, low)
 
-        Flags.inc_flags(cpu, old_val, cpu.IX)
+        Flags.inc_flags(cpu, old_high, new_high)
 
         logger.info("INC IXH")
 
     @staticmethod
     def dec_ixh(cpu, _, logger):
-        old = cpu.IX
-        high = cpu.IX >> 8
+        old_high = cpu.IX >> 8
         low = cpu.IX & 255
-        high -= 1
+        new_high = (old_high - 1) & 0xFF
 
-        cpu.IX = Bits.make16bit(Bits.twos_comp(high), low)
+        cpu.IX = Bits.make16bit(new_high, low)
 
-        Flags.dec_flags(cpu, old, cpu.IX)
+        Flags.dec_flags(cpu, old_high, new_high)
 
         logger.info("DEC IXH")
 
     @staticmethod
     def dec_ixl(cpu, _, logger):
-        old = cpu.IX
         high = cpu.IX >> 8
-        low = cpu.IX & 255
+        old_low = cpu.IX & 255
+        new_low = (old_low - 1) & 0xFF
 
-        low -= 1
+        cpu.IX = Bits.make16bit(high, new_low)
 
-        cpu.IX = Bits.make16bit(high, Bits.twos_comp(low))
-
-        Flags.dec_flags(cpu, old, cpu.IX)
+        Flags.dec_flags(cpu, old_low, new_low)
 
         logger.info("DEC IXL")
 
     @staticmethod
     def inc_ixl(cpu, _, logger):
-        old = cpu.IX
         high = cpu.IX >> 8
-        low = cpu.IX & 255
+        old_low = cpu.IX & 255
+        new_low = (old_low + 1) & 0xFF
 
-        low += 1
-
-        cpu.IX = Bits.make16bit(high, low)
-        Flags.inc_flags(cpu, old, cpu.IX)
+        cpu.IX = Bits.make16bit(high, new_low)
+        Flags.inc_flags(cpu, old_low, new_low)
 
         logger.info("INC IXL")
 
@@ -2934,7 +2928,7 @@ class Opcodes(object):
         cpu.WZ = pc + jumpOffset + 1
         if not no_jump:
             cpu.PC = cpu.WZ
-            cpu.m_cycles, cpu.t_states = 1, 5
+            cpu.m_cycles, cpu.t_states = 3, 12
         else:
             cpu.m_cycles, cpu.t_states = 2, 7
         logger.info("JR C, {0:04X}".format(cpu.WZ))

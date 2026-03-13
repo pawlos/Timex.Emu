@@ -13,7 +13,7 @@ class tests_jpc(unittest.TestCase):
         cpu.PC = 0x480
         cpu.CFlag = True
         cpu.readOp()
-        self.assertEqual(0x480, cpu.PC)
+        self.assertEqual(0x482, cpu.PC)
 
     def test_jp_c_does_not_jump_if_CFlag_is_reset(self):
         cpu = CPU(ROM(b'\x38\x00'))
