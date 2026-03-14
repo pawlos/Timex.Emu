@@ -26,6 +26,7 @@ class OpsMisc(object):
         cpu.io[value] = cpu.A
         if value == 0xFE and cpu.display:
             cpu.display.set_border(cpu.A & 0x07)
+            cpu.display.set_speaker((cpu.A >> 4) & 1, cpu.tstates)
         cpu.m_cycles, cpu.t_states = 3, 11
         logger.info("OUT ({:02X}), A".format(value))
 

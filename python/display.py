@@ -1,5 +1,6 @@
 # ZX Spectrum / Timex 2048 Display Emulation
 import pygame
+import array
 
 # Screen constants
 SCREEN_WIDTH = 256
@@ -75,9 +76,16 @@ KEY_MAP = {
 }
 
 
+# Audio constants
+SAMPLE_RATE = 44100
+SAMPLES_PER_FRAME = SAMPLE_RATE // 50  # 882 samples per 20ms frame
+SPEAKER_VOLUME = 8000  # 16-bit signed amplitude
+
+
 class Display:
     def __init__(self):
         pygame.init()
+        pygame.mixer.init(frequency=SAMPLE_RATE, size=-16, channels=1, buffer=1024)
         total_w = (SCREEN_WIDTH + BORDER_SIZE * 2) * SCALE
         total_h = (SCREEN_HEIGHT + BORDER_SIZE * 2) * SCALE
         self.screen = pygame.display.set_mode((total_w, total_h))
@@ -88,9 +96,36 @@ class Display:
         self.flash_state = False
         # Keyboard state: 8 half-rows, all keys released (0xFF = no keys pressed)
         self.key_rows = [0xFF] * 8
+        # Speaker state for beeper audio
+        self.speaker_state = 0
+        self.speaker_toggles = []  # list of (tstates, state) pairs per frame
+        self.frame_tstates = 0  # current T-state counter within frame
 
     def set_border(self, color_index):
         self.border_color = COLORS[color_index & 7]
+
+    def set_speaker(self, state, tstates):
+        self.speaker_state = state
+        self.speaker_toggles.append((tstates, state))
+
+    def _render_audio(self):
+        if not self.speaker_toggles:
+            return
+        samples = array.array('h')  # signed 16-bit
+        toggles = self.speaker_toggles
+        tstates_per_sample = 69888 / SAMPLES_PER_FRAME
+        toggle_idx = 0
+        current_state = toggles[0][1] if toggles else 0
+        for i in range(SAMPLES_PER_FRAME):
+            sample_tstate = i * tstates_per_sample
+            while toggle_idx < len(toggles) and toggles[toggle_idx][0] <= sample_tstate:
+                current_state = toggles[toggle_idx][1]
+                toggle_idx += 1
+            samples.append(SPEAKER_VOLUME if current_state else -SPEAKER_VOLUME)
+        self.speaker_toggles = []
+        sound = pygame.mixer.Sound(buffer=samples)
+        sound.play()
+
 
     def read_keyboard(self, high_byte):
         result = 0xFF
@@ -157,6 +192,7 @@ class Display:
     def update(self, ram):
         self.handle_events()
         self.render(ram)
+        self._render_audio()
 
     def close(self):
         pygame.quit()
