@@ -85,7 +85,12 @@ SPEAKER_VOLUME = 8000  # 16-bit signed amplitude
 class Display:
     def __init__(self):
         pygame.init()
-        pygame.mixer.init(frequency=SAMPLE_RATE, size=-16, channels=1, buffer=1024)
+        self.audio_enabled = False
+        try:
+            pygame.mixer.init(frequency=SAMPLE_RATE, size=-16, channels=1, buffer=1024)
+            self.audio_enabled = True
+        except Exception:
+            print("[!] Audio init failed, running without sound")
         total_w = (SCREEN_WIDTH + BORDER_SIZE * 2) * SCALE
         total_h = (SCREEN_HEIGHT + BORDER_SIZE * 2) * SCALE
         self.screen = pygame.display.set_mode((total_w, total_h))
@@ -109,7 +114,7 @@ class Display:
         self.speaker_toggles.append((tstates, state))
 
     def _render_audio(self):
-        if not self.speaker_toggles:
+        if not self.audio_enabled or not self.speaker_toggles:
             return
         samples = array.array('h')  # signed 16-bit
         toggles = self.speaker_toggles
