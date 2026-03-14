@@ -41,6 +41,22 @@ python:
   - `Shift + 0` — DELETE (backspace)
   - `Ctrl + P` — " (double quote)
   - `Ctrl + Z` — : (colon)
+  - `Ctrl + N` — , (comma)
+  - `Ctrl + Symbol` — ; (semicolon)
+
+  BASIC input modes:
+  - **K mode** (cursor shows `K`) — default after ENTER. Single keypress gives keywords (e.g. `P` = PRINT, `G` = GOTO). Switches to L mode after first keyword.
+  - **L mode** (cursor shows `L`) — lowercase letter input. Entered automatically after typing a keyword in K mode.
+  - **C mode** (cursor shows `C`) — uppercase letters. Toggle with CAPS LOCK (`Shift + 2`).
+  - **E mode** (cursor shows `E`) — extended keywords. Enter by pressing `Shift + Ctrl` together. Then press a key (with or without `Ctrl`) to get extended keywords like BEEP, INK, PAPER, etc.
+  - **G mode** (cursor shows `G`) — graphics characters. Enter with `Shift + 9`.
+
+  Example — typing `BEEP 1,0`:
+  1. Make sure you're in K mode (press ENTER if needed)
+  2. `Shift + Ctrl` (enter E mode)
+  3. `Ctrl + Z` (BEEP keyword)
+  4. `Space`, `1`, `Ctrl + N` (comma), `0`
+  5. `Enter` (execute)
 
 rom:
   - Binary file containing ROM of actual machine
