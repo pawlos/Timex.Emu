@@ -184,6 +184,11 @@ class Display:
                 pygame.quit()
                 raise SystemExit
             elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_F12:
+                    filename = "screenshot_{}.png".format(self.frame_count)
+                    pygame.image.save(self.screen, filename)
+                    print("[+] Screenshot saved: {}".format(filename))
+                    continue
                 mapping = KEY_MAP.get(event.key)
                 if mapping:
                     row, bit = mapping

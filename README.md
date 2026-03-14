@@ -51,6 +51,9 @@ python:
   - **E mode** (cursor shows `E`) — extended keywords. Enter by pressing `Shift + Ctrl` together. Then press a key (with or without `Ctrl`) to get extended keywords like BEEP, INK, PAPER, etc.
   - **G mode** (cursor shows `G`) — graphics characters. Enter with `Shift + 9`.
 
+  Emulator keys:
+  - `F12` — save screenshot as PNG
+
   Example — typing `BEEP 1,0`:
   1. Make sure you're in K mode (press ENTER if needed)
   2. `Shift + Ctrl` (enter E mode)
