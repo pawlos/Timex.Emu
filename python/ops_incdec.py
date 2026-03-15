@@ -112,6 +112,45 @@ class OpsIncdec(object):
         cpu.m_cycles, cpu.t_states = 2, 10
         logger.info("INC IY")
 
+    @staticmethod
+    def inc_iyh(cpu, _, logger):
+        old_high = cpu.IY >> 8
+        low = cpu.IY & 255
+        new_high = (old_high + 1) & 0xFF
+        cpu.IY = Bits.make16bit(new_high, low)
+        Flags.inc_flags(cpu, old_high, new_high)
+        cpu.m_cycles, cpu.t_states = 2, 8
+        logger.info("INC IYH")
+
+    @staticmethod
+    def dec_iyh(cpu, _, logger):
+        old_high = cpu.IY >> 8
+        low = cpu.IY & 255
+        new_high = (old_high - 1) & 0xFF
+        cpu.IY = Bits.make16bit(new_high, low)
+        Flags.dec_flags(cpu, old_high, new_high)
+        cpu.m_cycles, cpu.t_states = 2, 8
+        logger.info("DEC IYH")
+
+    @staticmethod
+    def inc_iyl(cpu, _, logger):
+        high = cpu.IY >> 8
+        old_low = cpu.IY & 255
+        new_low = (old_low + 1) & 0xFF
+        cpu.IY = Bits.make16bit(high, new_low)
+        Flags.inc_flags(cpu, old_low, new_low)
+        cpu.m_cycles, cpu.t_states = 2, 8
+        logger.info("INC IYL")
+
+    @staticmethod
+    def dec_iyl(cpu, _, logger):
+        high = cpu.IY >> 8
+        old_low = cpu.IY & 255
+        new_low = (old_low - 1) & 0xFF
+        cpu.IY = Bits.make16bit(high, new_low)
+        Flags.dec_flags(cpu, old_low, new_low)
+        cpu.m_cycles, cpu.t_states = 2, 8
+        logger.info("DEC IYL")
 
     @staticmethod
     def inc8(cpu, opcode, logger):

@@ -271,6 +271,41 @@ class OpsLoad(object):
         cpu.m_cycles, cpu.t_states = 5, 19
         logger.info("EX (SP), HL")
 
+    @staticmethod
+    def ex_sp_ix(cpu, _, logger):
+        low = cpu.ram[cpu.SP]
+        high = cpu.ram[cpu.SP + 1]
+        cpu.ram[cpu.SP] = cpu.IX & 0xFF
+        cpu.ram[cpu.SP + 1] = cpu.IX >> 8
+        cpu.IX = (high << 8) | low
+        cpu.WZ = cpu.IX
+
+        cpu.m_cycles, cpu.t_states = 6, 23
+        logger.info("EX (SP), IX")
+
+    @staticmethod
+    def ex_sp_iy(cpu, _, logger):
+        low = cpu.ram[cpu.SP]
+        high = cpu.ram[cpu.SP + 1]
+        cpu.ram[cpu.SP] = cpu.IY & 0xFF
+        cpu.ram[cpu.SP + 1] = cpu.IY >> 8
+        cpu.IY = (high << 8) | low
+        cpu.WZ = cpu.IY
+
+        cpu.m_cycles, cpu.t_states = 6, 23
+        logger.info("EX (SP), IY")
+
+    @staticmethod
+    def ld_sp_ix(cpu, _, logger):
+        cpu.SP = cpu.IX
+        cpu.m_cycles, cpu.t_states = 2, 10
+        logger.info("LD SP, IX")
+
+    @staticmethod
+    def ld_sp_iy(cpu, _, logger):
+        cpu.SP = cpu.IY
+        cpu.m_cycles, cpu.t_states = 2, 10
+        logger.info("LD SP, IY")
 
     @staticmethod
     def ex_af_afprim(cpu, _, logger):

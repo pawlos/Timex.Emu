@@ -114,6 +114,130 @@ class OpsMisc(object):
         cpu.m_cycles, cpu.t_states = 3, 12
         logger.info("IN A, (C)")
 
+    @staticmethod
+    def in_r_c(cpu, opcode, logger):
+        reg = (opcode >> 3) & 7
+        value = cpu.io.read(cpu.C, cpu.B)
+        if reg != 6:  # reg 6 = (HL) slot, affects flags only
+            cpu.regs[reg] = value
+        cpu.SFlag = Bits.isNegative(value)
+        cpu.ZFlag = Bits.isZero(value)
+        cpu.HFlag = Bits.reset()
+        cpu.NFlag = Bits.reset()
+        cpu.PVFlag = Bits.set() if Bits.count(value) & 1 == 0 else Bits.reset()
+
+        cpu.m_cycles, cpu.t_states = 3, 12
+        logger.info("IN {}, (C)".format(IndexToReg.translate8Bit(reg)))
+
+    @staticmethod
+    def out_c_r(cpu, opcode, logger):
+        reg = (opcode >> 3) & 7
+        value = cpu.regs[reg] if reg != 6 else 0
+        cpu.io[cpu.C] = value
+
+        cpu.m_cycles, cpu.t_states = 3, 12
+        logger.info("OUT (C), {}".format(IndexToReg.translate8Bit(reg)))
+
+
+    @staticmethod
+    def ini(cpu, _, logger):
+        value = cpu.io.read(cpu.C, cpu.B)
+        cpu.ram[cpu.HL] = value
+        cpu.B = (cpu.B - 1) & 0xFF
+        cpu.HL = (cpu.HL + 1) & 0xFFFF
+        cpu.ZFlag = Bits.isZero(cpu.B)
+        cpu.NFlag = Bits.set()
+        cpu.m_cycles, cpu.t_states = 4, 16
+        logger.info("INI")
+
+    @staticmethod
+    def inir(cpu, _, logger):
+        while True:
+            value = cpu.io.read(cpu.C, cpu.B)
+            cpu.ram[cpu.HL] = value
+            cpu.B = (cpu.B - 1) & 0xFF
+            cpu.HL = (cpu.HL + 1) & 0xFFFF
+            if cpu.B == 0:
+                break
+        cpu.ZFlag = Bits.set()
+        cpu.NFlag = Bits.set()
+        cpu.m_cycles, cpu.t_states = 4, 16
+        logger.info("INIR")
+
+    @staticmethod
+    def ind(cpu, _, logger):
+        value = cpu.io.read(cpu.C, cpu.B)
+        cpu.ram[cpu.HL] = value
+        cpu.B = (cpu.B - 1) & 0xFF
+        cpu.HL = (cpu.HL - 1) & 0xFFFF
+        cpu.ZFlag = Bits.isZero(cpu.B)
+        cpu.NFlag = Bits.set()
+        cpu.m_cycles, cpu.t_states = 4, 16
+        logger.info("IND")
+
+    @staticmethod
+    def indr(cpu, _, logger):
+        while True:
+            value = cpu.io.read(cpu.C, cpu.B)
+            cpu.ram[cpu.HL] = value
+            cpu.B = (cpu.B - 1) & 0xFF
+            cpu.HL = (cpu.HL - 1) & 0xFFFF
+            if cpu.B == 0:
+                break
+        cpu.ZFlag = Bits.set()
+        cpu.NFlag = Bits.set()
+        cpu.m_cycles, cpu.t_states = 4, 16
+        logger.info("INDR")
+
+    @staticmethod
+    def outi(cpu, _, logger):
+        value = cpu.ram[cpu.HL]
+        cpu.B = (cpu.B - 1) & 0xFF
+        cpu.io[cpu.C] = value
+        cpu.HL = (cpu.HL + 1) & 0xFFFF
+        cpu.ZFlag = Bits.isZero(cpu.B)
+        cpu.NFlag = Bits.set()
+        cpu.m_cycles, cpu.t_states = 4, 16
+        logger.info("OUTI")
+
+    @staticmethod
+    def otir(cpu, _, logger):
+        while True:
+            value = cpu.ram[cpu.HL]
+            cpu.B = (cpu.B - 1) & 0xFF
+            cpu.io[cpu.C] = value
+            cpu.HL = (cpu.HL + 1) & 0xFFFF
+            if cpu.B == 0:
+                break
+        cpu.ZFlag = Bits.set()
+        cpu.NFlag = Bits.set()
+        cpu.m_cycles, cpu.t_states = 4, 16
+        logger.info("OTIR")
+
+    @staticmethod
+    def outd(cpu, _, logger):
+        value = cpu.ram[cpu.HL]
+        cpu.B = (cpu.B - 1) & 0xFF
+        cpu.io[cpu.C] = value
+        cpu.HL = (cpu.HL - 1) & 0xFFFF
+        cpu.ZFlag = Bits.isZero(cpu.B)
+        cpu.NFlag = Bits.set()
+        cpu.m_cycles, cpu.t_states = 4, 16
+        logger.info("OUTD")
+
+    @staticmethod
+    def otdr(cpu, _, logger):
+        while True:
+            value = cpu.ram[cpu.HL]
+            cpu.B = (cpu.B - 1) & 0xFF
+            cpu.io[cpu.C] = value
+            cpu.HL = (cpu.HL - 1) & 0xFFFF
+            if cpu.B == 0:
+                break
+        cpu.ZFlag = Bits.set()
+        cpu.NFlag = Bits.set()
+        cpu.m_cycles, cpu.t_states = 4, 16
+        logger.info("OTDR")
 
     @staticmethod
     def in_a_n(cpu, _, logger):
