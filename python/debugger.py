@@ -25,6 +25,9 @@ class Debugger(object):
         self.hooks = {}
         self.lastInput = ""
         self.stopOnError = True
+        self.trace_buffer = []
+        self.trace_enabled = False
+        self.trace_size = 1000
 
     def setBreakpoint(self, pc):
         self.breakpoints[pc] = True
@@ -159,6 +162,8 @@ class Debugger(object):
         print("bc 0x<addr> - clear a breakpoint at <addr>")
         print("bd 0x<addr> - disable a breakpoint at <addr>")
         print("bl - list all breakpoints")
+        print("trace on/off - enable/disable execution trace")
+        print("trace [n] - show last n traced instructions (default 20)")
         print("log - attach/detach logger")
         print("s - single step")
         print("c - continue")
@@ -221,8 +226,13 @@ class Debugger(object):
                       self.state(cpu.F, NF, "N"),
                       self.state(cpu.F, CF, "C")))
 
-    def stop(self, cpu):
+    def print_status(self, cpu):
+        self.print16bitregs(cpu)
+        self.printflags(cpu)
         self.disasm_at(cpu, cpu.pc, 1)
+
+    def stop(self, cpu):
+        self.print_status(cpu)
         while True:
             cmd = input("> ")
             if cmd == "":
@@ -273,6 +283,16 @@ class Debugger(object):
             elif "t" == cmd:
                 print("m-cycles: {}, t-states: {}".format(cpu.m_cycles,
                                                           cpu.t_states))
+            elif cmd == "trace on":
+                self.trace_enabled = True
+                print("Trace recording enabled ({} entries max)".format(self.trace_size))
+            elif cmd == "trace off":
+                self.trace_enabled = False
+                print("Trace recording disabled")
+            elif cmd == "trace" or cmd.startswith("trace "):
+                parts = cmd.split()
+                count = int(parts[1]) if len(parts) > 1 and parts[1].isdigit() else 20
+                self.print_trace(cpu, count)
             elif "log" == cmd:
                 self.attachDetachLogger(cpu)
             elif "?" == cmd:
@@ -293,9 +313,34 @@ class Debugger(object):
     def getHookAddr(self, pc):
         return -1 if pc not in self.hooks else pc
 
+    def record_trace(self, pc, cpu):
+        if self.trace_enabled:
+            self.trace_buffer.append((pc, cpu.AF, cpu.BC, cpu.DE, cpu.HL, cpu.SP))
+            if len(self.trace_buffer) > self.trace_size:
+                self.trace_buffer.pop(0)
+
+    def print_trace(self, cpu, count=20):
+        entries = self.trace_buffer[-count:]
+        if not entries:
+            print("Trace buffer empty. Use 'trace on' to enable.")
+            return
+        for pc, af, bc, de, hl, sp in entries:
+            op = cpu.ram[pc]
+            if op in self._OPCODES:
+                mnemonic = self._OPCODES[op]
+            elif 0x40 <= op <= 0x7F and op != 0x76:
+                mnemonic = 'LD {},{}'.format(self._REG8[(op>>3)&7], self._REG8[op&7])
+            elif 0x80 <= op <= 0xBF:
+                mnemonic = '{}{}'.format(self._ALU[(op>>3)&7], self._REG8[op&7])
+            else:
+                mnemonic = '{:02X}'.format(op)
+            print('{:04X}  {:<16s} AF={:04X} BC={:04X} DE={:04X} HL={:04X} SP={:04X}'.format(
+                pc, mnemonic, af, bc, de, hl, sp))
+
     def next_opcode(self, pc, cpu):
         if self.isHook(pc):
             return self.hooks[self.getHookAddr(pc)](cpu)
+        self.record_trace(pc, cpu)
         if (self.isBreakpoint(pc)) or self.isSingleStepping:
             if self.isSingleStepping is False:
                 print("Stopped...@ 0x{:04X}".format(pc))
