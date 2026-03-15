@@ -6,8 +6,51 @@ from loggers import Logger
 from debugger import Debugger
 from display import Display
 from opcodes import *
+from tape import TapeFile
 import sys
 import getopt
+
+
+LD_BYTES = 0x0556
+
+
+def make_tape_load_hook(tape):
+    def tape_load_hook(cpu):
+        # At 0x0556 entry: A = flag byte, F carry = LOAD(1)/VERIFY(0)
+        # (EX AF,AF' hasn't executed yet when hook fires)
+        # DE = expected length, IX = destination address
+        expected_flag = cpu.A
+        is_load = cpu.CFlag
+
+        block = tape.next_block()
+        if block is None:
+            print("[!] Tape: no more blocks")
+            cpu.CFlag = False  # signal failure
+            Opcodes.ret(cpu, 0xC9, cpu.logger)
+            return True
+
+        if block.flag != expected_flag:
+            print("[!] Tape: flag mismatch (expected 0x{:02X}, got 0x{:02X})".format(
+                expected_flag, block.flag))
+            cpu.CFlag = False
+            Opcodes.ret(cpu, 0xC9, cpu.logger)
+            return True
+
+        if is_load:
+            # Copy data to RAM at IX, up to DE bytes
+            length = min(len(block.data), cpu.DE)
+            for i in range(length):
+                cpu.ram[cpu.IX + i] = block.data[i]
+            print("[+] Tape: loaded {} bytes at 0x{:04X} (flag=0x{:02X})".format(
+                length, cpu.IX, block.flag))
+        else:
+            print("[+] Tape: verified block (flag=0x{:02X})".format(block.flag))
+
+        cpu.CFlag = True  # signal success
+        Opcodes.ret(cpu, 0xC9, cpu.logger)
+        return True
+
+    return tape_load_hook
 
 def systemError(cpu):
     print('System error')
@@ -43,6 +86,7 @@ if __name__ == '__main__':
                                 "breakAt=",
                                 "no-display",
                                 "scale=",
+                                "tape=",
                                 "help"])
     debugger = Debugger()
 
@@ -55,7 +99,8 @@ if __name__ == '__main__':
         'startAt': 0x0,
         'hookSystem': False,
         'noDisplay': False,
-        'scale': 2}
+        'scale': 2,
+        'tape': None}
     rom = ROM()
     ram = RAM()
     for name, value in options:
@@ -86,6 +131,9 @@ if __name__ == '__main__':
         if name == '--scale':
             params['scale'] = int(value)
             print(f'[+] Display scale: {value}x.')
+        if name == '--tape':
+            params['tape'] = value
+            print(f'[+] Tape file: {value}')
         if name == '--no-display':
             params['noDisplay'] = True
             print(f'[+] Display disabled.')
@@ -109,6 +157,10 @@ if __name__ == '__main__':
     if params['hookSystem']:
         debugger.setHook(0x08, systemError)
         debugger.setHook(0x10, systemPrintChar)
+
+    if params['tape'] is not None:
+        tape = TapeFile(params['tape'])
+        debugger.setHook(LD_BYTES, make_tape_load_hook(tape))
 
     display = None if params['noDisplay'] else Display(scale=params['scale'])
 
