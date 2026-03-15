@@ -11,12 +11,14 @@ TSTATES_PER_FRAME = 69888
 
 
 class Machine:
-    def __init__(self, cpu, scale=2):
+    def __init__(self, cpu, scale=2, debug=False):
         self.cpu = cpu
         self.screen = Screen(scale)
         self.keyboard = Keyboard()
         self.beeper = Beeper()
         self.joystick = Joystick()
+        self.debug = debug
+        self.paused = False
 
         # Register port handlers on CPU's I/O
         cpu.io.on_read(0xFE, self.keyboard.read)
@@ -31,7 +33,7 @@ class Machine:
         self.beeper.set_speaker((value >> 4) & 1, self.cpu.tstates)
 
     def update(self):
-        self.keyboard.handle_events(self.screen, self.joystick)
+        self.keyboard.handle_events(self.screen, self.joystick, self)
         self.screen.render(self.cpu.ram)
         self.beeper.render_audio()
 
@@ -39,6 +41,10 @@ class Machine:
         cpu = self.cpu
         cpu.pc = pc
         while True:
+            if self.paused:
+                self.keyboard.handle_events(self.screen, self.joystick, self)
+                self._clock.tick(50)
+                continue
             if not cpu.halted:
                 cpu.readOp()
             else:
@@ -50,7 +56,7 @@ class Machine:
                 self.update()
                 self._clock.tick(50)
                 self._frame_count += 1
-                if self._frame_count % 50 == 0:
+                if self.debug and self._frame_count % 50 == 0:
                     print("PC=0x{:04X} iff1={} im={} IY=0x{:04X}".format(
                         cpu.pc, cpu.iff1, cpu.im, cpu.IY))
 

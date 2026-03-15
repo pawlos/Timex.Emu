@@ -87,6 +87,7 @@ if __name__ == '__main__':
                                 "no-display",
                                 "scale=",
                                 "tape=",
+                                "debug",
                                 "help"])
     debugger = Debugger()
 
@@ -100,7 +101,8 @@ if __name__ == '__main__':
         'hookSystem': False,
         'noDisplay': False,
         'scale': 2,
-        'tape': None}
+        'tape': None,
+        'debug': False}
     rom = ROM()
     ram = RAM()
     for name, value in options:
@@ -137,6 +139,9 @@ if __name__ == '__main__':
         if name == '--no-display':
             params['noDisplay'] = True
             print(f'[+] Display disabled.')
+        if name == '--debug':
+            params['debug'] = True
+            print(f'[+] Debug output enabled.')
         if name == "--help":
             usage()
             sys.exit()
@@ -174,7 +179,7 @@ if __name__ == '__main__':
         except (SystemExit, KeyboardInterrupt):
             pass
     else:
-        machine = Machine(cpu, scale=params['scale'])
+        machine = Machine(cpu, scale=params['scale'], debug=params['debug'])
         print("Starting execution...")
         try:
             machine.run(params['startAt'])

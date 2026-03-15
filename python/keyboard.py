@@ -54,7 +54,7 @@ class Keyboard:
             row, bit = mapping
             self.key_rows[row] |= (1 << bit)
 
-    def handle_events(self, screen, joystick):
+    def handle_events(self, screen, joystick, machine=None):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -62,6 +62,11 @@ class Keyboard:
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_F12:
                     screen.screenshot()
+                    continue
+                if event.key == pygame.K_F1 and machine:
+                    machine.paused = not machine.paused
+                    state = "PAUSED" if machine.paused else "RESUMED"
+                    print("[+] {}".format(state))
                     continue
                 joystick.key_down(event.key)
                 self.key_down(event.key)
