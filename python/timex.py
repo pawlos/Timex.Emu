@@ -42,6 +42,7 @@ if __name__ == '__main__':
                                 "program=",
                                 "breakAt=",
                                 "no-display",
+                                "scale=",
                                 "help"])
     debugger = Debugger()
 
@@ -53,7 +54,8 @@ if __name__ == '__main__':
         'program': None,
         'startAt': 0x0,
         'hookSystem': False,
-        'noDisplay': False}
+        'noDisplay': False,
+        'scale': 2}
     rom = ROM()
     ram = RAM()
     for name, value in options:
@@ -81,6 +83,9 @@ if __name__ == '__main__':
         if name =='--hook-system':
             params['hookSystem'] = True
             print(f'[+] Hooking system functions')
+        if name == '--scale':
+            params['scale'] = int(value)
+            print(f'[+] Display scale: {value}x.')
         if name == '--no-display':
             params['noDisplay'] = True
             print(f'[+] Display disabled.')
@@ -105,7 +110,7 @@ if __name__ == '__main__':
         debugger.setHook(0x08, systemError)
         debugger.setHook(0x10, systemPrintChar)
 
-    display = None if params['noDisplay'] else Display()
+    display = None if params['noDisplay'] else Display(scale=params['scale'])
 
     timex = CPU(debugger=debugger, rom=rom, ram=ram, display=display)
 

@@ -83,7 +83,7 @@ SPEAKER_VOLUME = 8000  # 16-bit signed amplitude
 
 
 class Display:
-    def __init__(self):
+    def __init__(self, scale=SCALE):
         pygame.init()
         self.audio_enabled = False
         try:
@@ -91,8 +91,9 @@ class Display:
             self.audio_enabled = True
         except Exception:
             print("[!] Audio init failed, running without sound")
-        total_w = (SCREEN_WIDTH + BORDER_SIZE * 2) * SCALE
-        total_h = (SCREEN_HEIGHT + BORDER_SIZE * 2) * SCALE
+        self.scale = scale
+        total_w = (SCREEN_WIDTH + BORDER_SIZE * 2) * scale
+        total_h = (SCREEN_HEIGHT + BORDER_SIZE * 2) * scale
         self.screen = pygame.display.set_mode((total_w, total_h))
         pygame.display.set_caption("Timex 2048")
         self.surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -174,8 +175,8 @@ class Display:
         self.screen.fill(self.border_color)
         scaled = pygame.transform.scale(
             self.surface,
-            (SCREEN_WIDTH * SCALE, SCREEN_HEIGHT * SCALE))
-        self.screen.blit(scaled, (BORDER_SIZE * SCALE, BORDER_SIZE * SCALE))
+            (SCREEN_WIDTH * self.scale, SCREEN_HEIGHT * self.scale))
+        self.screen.blit(scaled, (BORDER_SIZE * self.scale, BORDER_SIZE * self.scale))
         pygame.display.flip()
 
     def handle_events(self):
