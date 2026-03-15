@@ -114,6 +114,8 @@ class OpsMisc(object):
     def portIn(cpu, _, logger):
         if cpu.C == 0xFE and cpu.display:
             cpu.A = cpu.display.read_keyboard(cpu.B)
+        elif cpu.C == 0x1F and cpu.display:
+            cpu.A = cpu.display.read_kempston()
         else:
             cpu.A = cpu.io[cpu.C]
 
@@ -126,6 +128,8 @@ class OpsMisc(object):
         n = cpu.ram[cpu.PC]
         if n == 0xFE and cpu.display:
             cpu.A = cpu.display.read_keyboard(cpu.A)
+        elif n == 0x1F and cpu.display:
+            cpu.A = cpu.display.read_kempston()
         else:
             cpu.A = cpu.io[n]
 

@@ -106,6 +106,8 @@ class Display:
         self.speaker_state = 0
         self.speaker_toggles = []  # list of (tstates, state) pairs per frame
         self.frame_tstates = 0  # current T-state counter within frame
+        # Kempston joystick state (active high)
+        self.kempston_state = 0x00
 
     def set_border(self, color_index):
         self.border_color = COLORS[color_index & 7]
@@ -132,6 +134,9 @@ class Display:
         sound = pygame.mixer.Sound(buffer=samples)
         sound.play()
 
+
+    def read_kempston(self):
+        return self.kempston_state
 
     def read_keyboard(self, high_byte):
         result = 0xFF
@@ -190,11 +195,32 @@ class Display:
                     pygame.image.save(self.screen, filename)
                     print("[+] Screenshot saved: {}".format(filename))
                     continue
+                # Kempston joystick (arrow keys + RAlt fire)
+                if event.key == pygame.K_RIGHT:
+                    self.kempston_state |= 0x01
+                elif event.key == pygame.K_LEFT:
+                    self.kempston_state |= 0x02
+                elif event.key == pygame.K_DOWN:
+                    self.kempston_state |= 0x04
+                elif event.key == pygame.K_UP:
+                    self.kempston_state |= 0x08
+                elif event.key == pygame.K_RALT:
+                    self.kempston_state |= 0x10
                 mapping = KEY_MAP.get(event.key)
                 if mapping:
                     row, bit = mapping
                     self.key_rows[row] &= ~(1 << bit)
             elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_RIGHT:
+                    self.kempston_state &= ~0x01
+                elif event.key == pygame.K_LEFT:
+                    self.kempston_state &= ~0x02
+                elif event.key == pygame.K_DOWN:
+                    self.kempston_state &= ~0x04
+                elif event.key == pygame.K_UP:
+                    self.kempston_state &= ~0x08
+                elif event.key == pygame.K_RALT:
+                    self.kempston_state &= ~0x10
                 mapping = KEY_MAP.get(event.key)
                 if mapping:
                     row, bit = mapping

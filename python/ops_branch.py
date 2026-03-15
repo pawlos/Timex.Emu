@@ -115,6 +115,17 @@ class OpsBranch(object):
         cpu.iff1 = cpu.iff2
         logger.info("RETN")
 
+    @staticmethod
+    def reti(cpu, _, logger):
+        low = cpu.ram[cpu.SP]
+        high = cpu.ram[cpu.SP+1]
+        addr = Bits.make16bit(high, low)
+        cpu.SP += 2
+        cpu.PC = addr
+
+        cpu.m_cycles, cpu.t_states = 4, 14
+        cpu.iff1 = cpu.iff2
+        logger.info("RETI")
 
     @staticmethod
     def rst(cpu, opcode, logger):

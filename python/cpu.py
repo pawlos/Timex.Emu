@@ -286,7 +286,7 @@ class CPU(object):
     @property
     def PC(self):
         value = self.pc
-        self.pc += 1
+        self.pc = (self.pc + 1) & 0xFFFF
         return value
 
     @PC.setter
@@ -521,6 +521,12 @@ class CPU(object):
             self.R += 1
             if self.im == 0 or self.im == 1:
                 self.PC = 0x0038
+            elif self.im == 2:
+                vector_addr = (self.i << 8) | 0xFF
+                low = self.ram[vector_addr]
+                high = self.ram[(vector_addr + 1) & 0xFFFF]
+                target = (high << 8) | low
+                self.PC = target
 
     def _checkTimers(self):
         if self.display and self.tstates >= 69888:

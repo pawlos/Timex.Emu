@@ -642,6 +642,7 @@ def build_ed_table():
         0x44: Opcodes.neg,
         0x45: Opcodes.retn,
         0x46: Opcodes.im0,
+        0x4D: Opcodes.reti,
         0x47: Opcodes.ldExt,
         0x4A: Opcodes.add_Hl_rr_c,
         0x4B: Opcodes.ld16_nn,
