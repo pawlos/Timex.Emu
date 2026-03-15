@@ -39,15 +39,6 @@ class Bits(object):
                        & 0x10 == 0x10 else False
 
     @staticmethod
-    def halfCarrySub16(firstWord, secondWord):
-        return True if max(firstWord, secondWord) \
-                       - max(secondWord, 1) == 1 else False
-
-    @staticmethod
-    def carryFlagAdd16(oldValue, newValue):
-        return oldValue <= 0xfff and newValue >= 0x1000
-
-    @staticmethod
     def overflow(oldValue, newValue, bits=8):
         prev = Bits.from_twos_comp(oldValue, bits)
         curr = Bits.from_twos_comp(newValue, bits)
