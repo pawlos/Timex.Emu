@@ -1,6 +1,7 @@
 # Timex 2048 / ZX Spectrum Machine
 # Coordinates CPU, screen, keyboard, beeper, and joystick
 
+import pygame
 from screen import Screen
 from keyboard import Keyboard
 from beeper import Beeper
@@ -23,6 +24,7 @@ class Machine:
         cpu.io.on_write(0xFE, self._write_port_fe)
 
         self._frame_count = 0
+        self._clock = pygame.time.Clock()
 
     def _write_port_fe(self, value):
         self.screen.set_border(value & 0x07)
@@ -46,6 +48,7 @@ class Machine:
                 cpu.tstates -= TSTATES_PER_FRAME
                 cpu._interruptPending = True
                 self.update()
+                self._clock.tick(50)
                 self._frame_count += 1
                 if self._frame_count % 50 == 0:
                     print("PC=0x{:04X} iff1={} im={} IY=0x{:04X}".format(

@@ -26,8 +26,8 @@ class Screen:
         total_h = (SCREEN_HEIGHT + BORDER_SIZE * 2) * scale
         self.window = pygame.display.set_mode((total_w, total_h))
         pygame.display.set_caption("Timex 2048")
-        self.surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.border_color = COLORS[7]
+        self._pixel_buf = bytearray(SCREEN_WIDTH * SCREEN_HEIGHT * 3)
         self.frame_count = 0
         self.flash_state = False
 
@@ -44,7 +44,10 @@ class Screen:
         if self.frame_count % 16 == 0:
             self.flash_state = not self.flash_state
 
-        set_at = self.surface.set_at
+        # Build pixel buffer in pure Python (3 bytes per pixel, RGB)
+        buf = self._pixel_buf
+        flash = self.flash_state
+        idx = 0
 
         for y in range(SCREEN_HEIGHT):
             addr = (BITMAP_START
@@ -61,19 +64,25 @@ class Screen:
                 ink = COLORS[(attr & 0x07) + bright]
                 paper = COLORS[((attr >> 3) & 0x07) + bright]
 
-                if (attr & 0x80) and self.flash_state:
+                if (attr & 0x80) and flash:
                     ink, paper = paper, ink
 
-                x = col * 8
                 for bit in range(8):
                     if byte & (0x80 >> bit):
-                        set_at((x + bit, y), ink)
+                        r, g, b = ink
                     else:
-                        set_at((x + bit, y), paper)
+                        r, g, b = paper
+                    buf[idx] = r
+                    buf[idx+1] = g
+                    buf[idx+2] = b
+                    idx += 3
+
+        # One C call to create surface from buffer
+        frame = pygame.image.frombuffer(buf, (SCREEN_WIDTH, SCREEN_HEIGHT), 'RGB')
 
         self.window.fill(self.border_color)
         scaled = pygame.transform.scale(
-            self.surface,
+            frame,
             (SCREEN_WIDTH * self.scale, SCREEN_HEIGHT * self.scale))
         self.window.blit(scaled, (BORDER_SIZE * self.scale, BORDER_SIZE * self.scale))
         pygame.display.flip()

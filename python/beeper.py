@@ -1,4 +1,5 @@
 # ZX Spectrum Beeper Sound Emulation
+import platform
 import pygame
 import array
 
@@ -6,15 +7,20 @@ SAMPLE_RATE = 44100
 SAMPLES_PER_FRAME = SAMPLE_RATE // 50
 SPEAKER_VOLUME = 8000
 
+_is_pypy = platform.python_implementation() == 'PyPy'
+
 
 class Beeper:
     def __init__(self):
         self.audio_enabled = False
-        try:
-            pygame.mixer.init(frequency=SAMPLE_RATE, size=-16, channels=1, buffer=1024)
-            self.audio_enabled = True
-        except Exception:
-            print("[!] Audio init failed, running without sound")
+        if not _is_pypy:
+            try:
+                pygame.mixer.init(frequency=SAMPLE_RATE, size=-16, channels=1, buffer=1024)
+                self.audio_enabled = True
+            except Exception:
+                print("[!] Audio init failed, running without sound")
+        else:
+            print("[!] PyPy detected, audio disabled")
         self.speaker_state = 0
         self.speaker_toggles = []
 
