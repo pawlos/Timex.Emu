@@ -68,6 +68,9 @@ class Keyboard:
                     state = "PAUSED" if machine.paused else "RESUMED"
                     print("[+] {}".format(state))
                     continue
+                if event.key == pygame.K_F2 and machine:
+                    machine.enter_debugger()
+                    continue
                 joystick.key_down(event.key)
                 self.key_down(event.key)
             elif event.type == pygame.KEYUP:

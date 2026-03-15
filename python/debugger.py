@@ -57,11 +57,103 @@ class Debugger(object):
             print("Attaching logger")
             cpu.logger = Logger(cpu)
 
+    # Simple Z80 opcode name table for disassembly
+    _OPCODES = {
+        0x00:'NOP',0x01:'LD BC,nn',0x02:'LD (BC),A',0x03:'INC BC',0x04:'INC B',
+        0x05:'DEC B',0x06:'LD B,n',0x07:'RLCA',0x08:"EX AF,AF'",0x09:'ADD HL,BC',
+        0x0A:'LD A,(BC)',0x0B:'DEC BC',0x0C:'INC C',0x0D:'DEC C',0x0E:'LD C,n',
+        0x0F:'RRCA',0x10:'DJNZ d',0x11:'LD DE,nn',0x12:'LD (DE),A',0x13:'INC DE',
+        0x14:'INC D',0x15:'DEC D',0x16:'LD D,n',0x17:'RLA',0x18:'JR d',
+        0x19:'ADD HL,DE',0x1A:'LD A,(DE)',0x1B:'DEC DE',0x1C:'INC E',0x1D:'DEC E',
+        0x1E:'LD E,n',0x1F:'RRA',0x20:'JR NZ,d',0x21:'LD HL,nn',0x22:'LD (nn),HL',
+        0x23:'INC HL',0x24:'INC H',0x25:'DEC H',0x26:'LD H,n',0x27:'DAA',
+        0x28:'JR Z,d',0x29:'ADD HL,HL',0x2A:'LD HL,(nn)',0x2B:'DEC HL',0x2C:'INC L',
+        0x2D:'DEC L',0x2E:'LD L,n',0x2F:'CPL',0x30:'JR NC,d',0x31:'LD SP,nn',
+        0x32:'LD (nn),A',0x33:'INC SP',0x34:'INC (HL)',0x35:'DEC (HL)',
+        0x36:'LD (HL),n',0x37:'SCF',0x38:'JR C,d',0x39:'ADD HL,SP',
+        0x3A:'LD A,(nn)',0x3B:'DEC SP',0x3C:'INC A',0x3D:'DEC A',0x3E:'LD A,n',
+        0x3F:'CCF',0x76:'HALT',
+        0xC0:'RET NZ',0xC1:'POP BC',0xC2:'JP NZ,nn',0xC3:'JP nn',
+        0xC4:'CALL NZ,nn',0xC5:'PUSH BC',0xC6:'ADD A,n',0xC7:'RST 00',
+        0xC8:'RET Z',0xC9:'RET',0xCA:'JP Z,nn',0xCC:'CALL Z,nn',
+        0xCD:'CALL nn',0xCE:'ADC A,n',0xCF:'RST 08',
+        0xD0:'RET NC',0xD1:'POP DE',0xD2:'JP NC,nn',0xD3:'OUT (n),A',
+        0xD4:'CALL NC,nn',0xD5:'PUSH DE',0xD6:'SUB n',0xD7:'RST 10',
+        0xD8:'RET C',0xD9:'EXX',0xDA:'JP C,nn',0xDB:'IN A,(n)',
+        0xDC:'CALL C,nn',0xDE:'SBC A,n',0xDF:'RST 18',
+        0xE0:'RET PO',0xE1:'POP HL',0xE2:'JP PO,nn',0xE3:'EX (SP),HL',
+        0xE4:'CALL PO,nn',0xE5:'PUSH HL',0xE6:'AND n',0xE7:'RST 20',
+        0xE8:'RET PE',0xE9:'JP (HL)',0xEA:'JP PE,nn',0xEB:'EX DE,HL',
+        0xEC:'CALL PE,nn',0xEE:'XOR n',0xEF:'RST 28',
+        0xF0:'RET P',0xF1:'POP AF',0xF2:'JP P,nn',0xF3:'DI',
+        0xF4:'CALL P,nn',0xF5:'PUSH AF',0xF6:'OR n',0xF7:'RST 30',
+        0xF8:'RET M',0xF9:'LD SP,HL',0xFA:'JP M,nn',0xFB:'EI',
+        0xFC:'CALL M,nn',0xFE:'CP n',0xFF:'RST 38',
+    }
+    _REG8 = ['B','C','D','E','H','L','(HL)','A']
+    _ALU = ['ADD A,','ADC A,','SUB ','SBC A,','AND ','XOR ','OR ','CP ']
+
+    def disasm_at(self, cpu, addr, count=8):
+        for _ in range(count):
+            op = cpu.ram[addr]
+            if op in self._OPCODES:
+                mnemonic = self._OPCODES[op]
+                size = 1
+                if 'nn' in mnemonic:
+                    lo = cpu.ram[(addr+1) & 0xFFFF]
+                    hi = cpu.ram[(addr+2) & 0xFFFF]
+                    mnemonic = mnemonic.replace('nn', '{:04X}'.format((hi<<8)|lo))
+                    size = 3
+                elif 'n' in mnemonic:
+                    mnemonic = mnemonic.replace('n', '{:02X}'.format(cpu.ram[(addr+1) & 0xFFFF]))
+                    size = 2
+                elif 'd' in mnemonic:
+                    d = cpu.ram[(addr+1) & 0xFFFF]
+                    offset = Bits.from_twos_comp(d)
+                    target = (addr + 2 + offset) & 0xFFFF
+                    mnemonic = mnemonic.replace('d', '{:04X}'.format(target))
+                    size = 2
+            elif 0x40 <= op <= 0x7F and op != 0x76:
+                dst = self._REG8[(op >> 3) & 7]
+                src = self._REG8[op & 7]
+                mnemonic = 'LD {},{}'.format(dst, src)
+                size = 1
+            elif 0x80 <= op <= 0xBF:
+                alu = self._ALU[(op >> 3) & 7]
+                src = self._REG8[op & 7]
+                mnemonic = '{}{}'.format(alu, src)
+                size = 1
+            elif op == 0xCB:
+                mnemonic = 'CB {:02X}'.format(cpu.ram[(addr+1) & 0xFFFF])
+                size = 2
+            elif op in (0xDD, 0xFD):
+                prefix = 'IX' if op == 0xDD else 'IY'
+                mnemonic = '{} {:02X}'.format(prefix, cpu.ram[(addr+1) & 0xFFFF])
+                size = 2
+            elif op == 0xED:
+                mnemonic = 'ED {:02X}'.format(cpu.ram[(addr+1) & 0xFFFF])
+                size = 2
+            else:
+                mnemonic = '???'
+                size = 1
+            hexbytes = ' '.join('{:02X}'.format(cpu.ram[(addr+i) & 0xFFFF]) for i in range(size))
+            print('{:04X}  {:<12s} {}'.format(addr, hexbytes, mnemonic))
+            addr = (addr + size) & 0xFFFF
+
+    def hexdump(self, cpu, addr, lines=8):
+        for _ in range(lines):
+            hexpart = ' '.join('{:02X}'.format(cpu.ram[(addr+i) & 0xFFFF]) for i in range(16))
+            ascpart = ''.join(chr(cpu.ram[(addr+i) & 0xFFFF]) if 32 <= cpu.ram[(addr+i) & 0xFFFF] < 127 else '.' for i in range(16))
+            print('{:04X}  {}  {}'.format(addr, hexpart, ascpart))
+            addr = (addr + 16) & 0xFFFF
+
     def help(self):
         print("available commands")
         print("ir - print info about 8-bit registers")
         print("if - print info about flags")
         print("ir16 - print info about 16-bit registers")
+        print("d [0x<addr>] - disassemble at addr (default: PC)")
+        print("m 0x<addr> - hex dump memory at addr")
         print("pram 0x<addr> - print value from RAM at <addr>")
         print("b 0x<addr> - set a breakpoint at <addr>")
         print("bc 0x<addr> - clear a breakpoint at <addr>")
@@ -130,6 +222,7 @@ class Debugger(object):
                       self.state(cpu.F, CF, "C")))
 
     def stop(self, cpu):
+        self.disasm_at(cpu, cpu.pc, 1)
         while True:
             cmd = input("> ")
             if cmd == "":
@@ -144,6 +237,15 @@ class Debugger(object):
             elif "ir16" == cmd:
                 self.print16bitregs(cpu)
                 self.print16bitregsprim(cpu)
+            elif cmd == "d" or cmd.startswith("d "):
+                if " " in cmd:
+                    addr = self.getAddr(cmd)
+                else:
+                    addr = cpu.pc
+                self.disasm_at(cpu, addr)
+            elif cmd.startswith("m "):
+                addr = self.getAddr(cmd)
+                self.hexdump(cpu, addr)
             elif "pram " in cmd:
                 addr = self.getAddr(cmd)
                 print("RAM value at: 0x{:04X} is 0x{:02X}"

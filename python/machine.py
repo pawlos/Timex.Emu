@@ -60,5 +60,9 @@ class Machine:
                     print("PC=0x{:04X} iff1={} im={} IY=0x{:04X}".format(
                         cpu.pc, cpu.iff1, cpu.im, cpu.IY))
 
+    def enter_debugger(self):
+        print("[+] Debugger break at PC=0x{:04X}".format(self.cpu.pc))
+        self.cpu.debugger.stop(self.cpu)
+
     def close(self):
         self.screen.close()
