@@ -4,7 +4,7 @@ from rom import ROM
 from ram import RAM
 from loggers import Logger
 from debugger import Debugger
-from display import Display
+from machine import Machine
 from opcodes import *
 from tape import TapeFile
 import sys
@@ -162,19 +162,24 @@ if __name__ == '__main__':
         tape = TapeFile(params['tape'])
         debugger.setHook(LD_BYTES, make_tape_load_hook(tape))
 
-    display = None if params['noDisplay'] else Display(scale=params['scale'])
-
-    timex = CPU(debugger=debugger, rom=rom, ram=ram, display=display)
+    cpu = CPU(debugger=debugger, rom=rom, ram=ram)
 
     if params['debugger']:
-        timex.logger = Logger(timex)
+        cpu.logger = Logger(cpu)
 
-    print("Starting execution...")
-    try:
-        timex.run(params['startAt'])
-    except (SystemExit, KeyboardInterrupt):
-        pass
-    finally:
-        if display:
-            display.close()
+    if params['noDisplay']:
+        print("Starting execution...")
+        try:
+            cpu.run(params['startAt'])
+        except (SystemExit, KeyboardInterrupt):
+            pass
+    else:
+        machine = Machine(cpu, scale=params['scale'])
+        print("Starting execution...")
+        try:
+            machine.run(params['startAt'])
+        except (SystemExit, KeyboardInterrupt):
+            pass
+        finally:
+            machine.close()
     print("Ending...")

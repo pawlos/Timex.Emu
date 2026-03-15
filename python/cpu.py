@@ -405,12 +405,10 @@ class CPU(object):
                  rom=ROM(),
                  ram=RAM(),
                  logger=EmptyLogger(),
-                 debugger=EmptyDebugger(),
-                 display=None):
+                 debugger=EmptyDebugger()):
 
         self.logger = logger
         self.debugger = debugger
-        self.display = display
 
         self.io = IOPorts()
 
@@ -528,16 +526,6 @@ class CPU(object):
                 target = (high << 8) | low
                 self.PC = target
 
-    def _checkTimers(self):
-        if self.display and self.tstates >= 69888:
-            self.tstates -= 69888
-            self._interruptPending = True
-            self.display.update(self.ram)
-            self._frame_count = getattr(self, '_frame_count', 0) + 1
-            if self._frame_count % 50 == 0:
-                print("PC=0x{:04X} iff1={} im={} IY=0x{:04X}".format(
-                    self.pc, self.iff1, self.im, self.IY))
-
     def run(self, pc=0x0):
         self.pc = pc
         while True:
@@ -546,4 +534,3 @@ class CPU(object):
             else:
                 self.m_cycles, self.t_states = 1, 4
             self._checkInterrupts()
-            self._checkTimers()

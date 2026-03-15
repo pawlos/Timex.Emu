@@ -24,9 +24,6 @@ class OpsMisc(object):
     def out(cpu, _, logger):
         value = cpu.ram[cpu.PC]
         cpu.io[value] = cpu.A
-        if value == 0xFE and cpu.display:
-            cpu.display.set_border(cpu.A & 0x07)
-            cpu.display.set_speaker((cpu.A >> 4) & 1, cpu.tstates)
         cpu.m_cycles, cpu.t_states = 3, 11
         logger.info("OUT ({:02X}), A".format(value))
 
@@ -112,12 +109,7 @@ class OpsMisc(object):
 
     @staticmethod
     def portIn(cpu, _, logger):
-        if cpu.C == 0xFE and cpu.display:
-            cpu.A = cpu.display.read_keyboard(cpu.B)
-        elif cpu.C == 0x1F and cpu.display:
-            cpu.A = cpu.display.read_kempston()
-        else:
-            cpu.A = cpu.io[cpu.C]
+        cpu.A = cpu.io.read(cpu.C, cpu.B)
 
         cpu.m_cycles, cpu.t_states = 3, 12
         logger.info("IN A, (C)")
@@ -126,12 +118,7 @@ class OpsMisc(object):
     @staticmethod
     def in_a_n(cpu, _, logger):
         n = cpu.ram[cpu.PC]
-        if n == 0xFE and cpu.display:
-            cpu.A = cpu.display.read_keyboard(cpu.A)
-        elif n == 0x1F and cpu.display:
-            cpu.A = cpu.display.read_kempston()
-        else:
-            cpu.A = cpu.io[n]
+        cpu.A = cpu.io.read(n, cpu.A)
 
         cpu.m_cycles, cpu.t_states = 3, 11
         logger.info("IN A, ({:02X}".format(n))
