@@ -52,7 +52,11 @@ python:
   - **G mode** (cursor shows `G`) — graphics characters. Enter with `Shift + 9`.
 
   Emulator keys:
+  - `F1` — pause / resume
+  - `F2` — open interactive debugger (in terminal)
   - `F12` — save screenshot as PNG
+  - `Arrow keys` — Kempston joystick directions
+  - `Right Alt` — Kempston joystick fire
 
   Example — typing `BEEP 1,0`:
   1. Make sure you're in K mode (press ENTER if needed)
@@ -60,6 +64,35 @@ python:
   3. `Ctrl + Z` (BEEP keyword)
   4. `Space`, `1`, `Ctrl + N` (comma), `0`
   5. `Enter` (execute)
+
+  Loading games from .tap files:
+
+  `python3 timex.py --tape=game.tap`
+
+  Then type `LOAD ""` (press `J` then `Ctrl+P` twice) and press `Enter`.
+
+  Additional options:
+  - `--scale=3` — scale display (default 2x, use 3 or 4 for hi-res monitors)
+  - `--debug` — enable periodic PC/register logging to terminal
+  - `--no-display` — run headless (no pygame window)
+
+  Debugger commands (press F2 to enter):
+  | Command | Description |
+  |---------|-------------|
+  | `ir` | 8-bit registers |
+  | `ir16` | 16-bit registers |
+  | `if` | CPU flags |
+  | `d [0xADDR]` | disassemble at address (default: PC) |
+  | `m 0xADDR` | hex dump memory |
+  | `b 0xADDR` | set breakpoint |
+  | `bc 0xADDR` | clear breakpoint |
+  | `bl` | list breakpoints |
+  | `s` | single step |
+  | `c` | continue |
+  | `trace on/off` | enable/disable execution trace |
+  | `trace [n]` | show last n executed instructions |
+  | `stack [n]` | show stack entries (default 8) |
+  | `q` | quit |
 
 rom:
   - Binary file containing ROM of actual machine

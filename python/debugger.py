@@ -162,6 +162,7 @@ class Debugger(object):
         print("bc 0x<addr> - clear a breakpoint at <addr>")
         print("bd 0x<addr> - disable a breakpoint at <addr>")
         print("bl - list all breakpoints")
+        print("stack [n] - show n stack entries (default 8)")
         print("trace on/off - enable/disable execution trace")
         print("trace [n] - show last n traced instructions (default 20)")
         print("log - attach/detach logger")
@@ -226,6 +227,16 @@ class Debugger(object):
                       self.state(cpu.F, NF, "N"),
                       self.state(cpu.F, CF, "C")))
 
+    def print_stack(self, cpu, count=8):
+        sp = cpu.SP
+        for i in range(count):
+            addr = (sp + i * 2) & 0xFFFF
+            lo = cpu.ram[addr]
+            hi = cpu.ram[(addr + 1) & 0xFFFF]
+            value = (hi << 8) | lo
+            marker = " <-- SP" if i == 0 else ""
+            print("  {:04X}: {:04X}{}".format(addr, value, marker))
+
     def print_status(self, cpu):
         self.print16bitregs(cpu)
         self.printflags(cpu)
@@ -283,6 +294,10 @@ class Debugger(object):
             elif "t" == cmd:
                 print("m-cycles: {}, t-states: {}".format(cpu.m_cycles,
                                                           cpu.t_states))
+            elif cmd == "stack" or cmd.startswith("stack "):
+                parts = cmd.split()
+                count = int(parts[1]) if len(parts) > 1 else 8
+                self.print_stack(cpu, count)
             elif cmd == "trace on":
                 self.trace_enabled = True
                 print("Trace recording enabled ({} entries max)".format(self.trace_size))
