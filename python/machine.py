@@ -22,6 +22,7 @@ class Machine:
         self.joystick = Joystick()
         self.debug = debug
         self.paused = False
+        self.turbo = False
 
         # Register port handlers on CPU's I/O
         cpu.io.on_read(0xFE, self.keyboard.read)
@@ -56,8 +57,13 @@ class Machine:
             if cpu.tstates >= TSTATES_PER_FRAME:
                 cpu.tstates -= TSTATES_PER_FRAME
                 cpu._interruptPending = True
-                self.update()
-                self._clock.tick(50)
+                if self.turbo and self._frame_count % 10 != 0:
+                    # In turbo: only render every 10th frame
+                    self.keyboard.handle_events(self.screen, self.joystick, self)
+                else:
+                    self.update()
+                    if not self.turbo:
+                        self._clock.tick(50)
                 self._frame_count += 1
                 if self.debug and self._frame_count % 50 == 0:
                     print("PC=0x{:04X} iff1={} im={} IY=0x{:04X}".format(

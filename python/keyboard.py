@@ -77,8 +77,13 @@ class Keyboard:
                 if event.key == pygame.K_F5 and machine:
                     machine.reset()
                     continue
+                if event.key == pygame.K_TAB and machine:
+                    machine.turbo = True
+                    continue
                 joystick.key_down(event.key)
                 self.key_down(event.key)
             elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_TAB and machine:
+                    machine.turbo = False
                 joystick.key_up(event.key)
                 self.key_up(event.key)
