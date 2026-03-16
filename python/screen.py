@@ -30,9 +30,18 @@ class Screen:
         self._pixel_buf = bytearray(SCREEN_WIDTH * SCREEN_HEIGHT * 3)
         self.frame_count = 0
         self.flash_state = False
+        self.loading_stripes = None  # (color1, color2) when active
 
     def set_border(self, color_index):
         self.border_color = COLORS[color_index & 7]
+
+    def _draw_striped_border(self):
+        c1, c2 = self.loading_stripes
+        win_w, win_h = self.window.get_size()
+        stripe_h = self.scale * 8
+        for y in range(0, win_h, stripe_h):
+            color = c1 if (y // stripe_h) % 2 == 0 else c2
+            self.window.fill(color, (0, y, win_w, stripe_h))
 
     def screenshot(self):
         filename = "screenshot_{}.png".format(self.frame_count)
@@ -80,7 +89,10 @@ class Screen:
         # One C call to create surface from buffer
         frame = pygame.image.frombuffer(buf, (SCREEN_WIDTH, SCREEN_HEIGHT), 'RGB')
 
-        self.window.fill(self.border_color)
+        if self.loading_stripes:
+            self._draw_striped_border()
+        else:
+            self.window.fill(self.border_color)
         scaled = pygame.transform.scale(
             frame,
             (SCREEN_WIDTH * self.scale, SCREEN_HEIGHT * self.scale))
