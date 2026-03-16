@@ -31,6 +31,8 @@ class Screen:
         self.frame_count = 0
         self.flash_state = False
         self.loading_stripes = None  # (color1, color2) when active
+        self.scanlines = False
+        self._scanline_overlay = None
 
     def set_border(self, color_index):
         self.border_color = COLORS[color_index & 7]
@@ -97,7 +99,23 @@ class Screen:
             frame,
             (SCREEN_WIDTH * self.scale, SCREEN_HEIGHT * self.scale))
         self.window.blit(scaled, (BORDER_SIZE * self.scale, BORDER_SIZE * self.scale))
+        if self.scanlines:
+            self.window.blit(self._get_scanline_overlay(), (0, 0))
         pygame.display.flip()
+
+    def toggle_scanlines(self):
+        self.scanlines = not self.scanlines
+        state = "ON" if self.scanlines else "OFF"
+        print("[+] Scanlines: {}".format(state))
+
+    def _get_scanline_overlay(self):
+        if self._scanline_overlay is None:
+            win_w, win_h = self.window.get_size()
+            self._scanline_overlay = pygame.Surface((win_w, win_h), pygame.SRCALPHA)
+            step = max(2, self.scale)
+            for y in range(0, win_h, step):
+                self._scanline_overlay.fill((0, 0, 0, 128), (0, y, win_w, step // 2))
+        return self._scanline_overlay
 
     def close(self):
         pygame.quit()

@@ -63,6 +63,9 @@ class Keyboard:
                 if event.key == pygame.K_F12:
                     screen.screenshot()
                     continue
+                if event.key == pygame.K_F11:
+                    screen.toggle_scanlines()
+                    continue
                 if event.key == pygame.K_F1 and machine:
                     machine.paused = not machine.paused
                     state = "PAUSED" if machine.paused else "RESUMED"
