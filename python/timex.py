@@ -7,6 +7,7 @@ from debugger import Debugger
 from machine import Machine
 from opcodes import *
 from tape import TapeFile
+from snapshot import load_z80
 import sys
 import getopt
 
@@ -87,6 +88,7 @@ if __name__ == '__main__':
                                 "no-display",
                                 "scale=",
                                 "tape=",
+                                "z80=",
                                 "debug",
                                 "help"])
     debugger = Debugger()
@@ -102,6 +104,7 @@ if __name__ == '__main__':
         'noDisplay': False,
         'scale': 2,
         'tape': None,
+        'z80': None,
         'debug': False}
     rom = ROM()
     ram = RAM()
@@ -136,6 +139,9 @@ if __name__ == '__main__':
         if name == '--tape':
             params['tape'] = value
             print(f'[+] Tape file: {value}')
+        if name == '--z80':
+            params['z80'] = value
+            print(f'[+] Z80 snapshot: {value}')
         if name == '--no-display':
             params['noDisplay'] = True
             print(f'[+] Display disabled.')
@@ -172,17 +178,30 @@ if __name__ == '__main__':
     if params['debugger']:
         cpu.logger = Logger(cpu)
 
+    start_pc = params['startAt']
+    border = None
+
+    if params['z80'] is not None:
+        try:
+            border = load_z80(params['z80'], cpu)
+            start_pc = cpu.pc  # snapshot sets PC
+        except FileNotFoundError:
+            print("[!] File not found: {}".format(params['z80']))
+            sys.exit(1)
+
     if params['noDisplay']:
         print("Starting execution...")
         try:
-            cpu.run(params['startAt'])
+            cpu.run(start_pc)
         except (SystemExit, KeyboardInterrupt):
             pass
     else:
         machine = Machine(cpu, scale=params['scale'], debug=params['debug'])
+        if border is not None:
+            machine.screen.set_border(border)
         print("Starting execution...")
         try:
-            machine.run(params['startAt'])
+            machine.run(start_pc)
         except (SystemExit, KeyboardInterrupt):
             pass
         finally:
