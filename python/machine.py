@@ -11,8 +11,11 @@ TSTATES_PER_FRAME = 69888
 
 
 class Machine:
-    def __init__(self, cpu, scale=2, debug=False):
+    def __init__(self, cpu, scale=2, debug=False, rom=None, tape=None, tape_hook=None):
         self.cpu = cpu
+        self.rom = rom
+        self.tape = tape
+        self.tape_hook = tape_hook
         self.screen = Screen(scale)
         self.keyboard = Keyboard()
         self.beeper = Beeper()
@@ -59,6 +62,23 @@ class Machine:
                 if self.debug and self._frame_count % 50 == 0:
                     print("PC=0x{:04X} iff1={} im={} IY=0x{:04X}".format(
                         cpu.pc, cpu.iff1, cpu.im, cpu.IY))
+
+    def reset(self):
+        LD_BYTES = 0x0556
+        # Disable tape hook during ROM init
+        if self.tape_hook:
+            self.cpu.debugger.setHook(LD_BYTES, None)
+        self.cpu.reset()
+        # Clear RAM and reload ROM
+        self.cpu.ram.clear()
+        if self.rom:
+            self.cpu.ram.load(self.rom)
+        # Rewind tape and re-enable hook
+        if self.tape:
+            self.tape.rewind()
+        if self.tape_hook:
+            self.cpu.debugger.setHook(LD_BYTES, self.tape_hook)
+        print("[+] Reset")
 
     def enter_debugger(self):
         print("[+] Debugger break at PC=0x{:04X}".format(self.cpu.pc))

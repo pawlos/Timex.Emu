@@ -74,6 +74,9 @@ class Keyboard:
                 if event.key == pygame.K_F2 and machine:
                     machine.enter_debugger()
                     continue
+                if event.key == pygame.K_F5 and machine:
+                    machine.reset()
+                    continue
                 joystick.key_down(event.key)
                 self.key_down(event.key)
             elif event.type == pygame.KEYUP:

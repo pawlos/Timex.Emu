@@ -15,6 +15,9 @@ class RAM(object):
             program_data = bytearray(f.read())
             self.ram = self.ram[0:startAt] + program_data[:] + self.ram[startAt+len(program_data):]
 
+    def clear(self):
+        self.ram = bytearray([0] * 65536)
+
     def __setitem__(self, addr, value):
         self.ram[addr] = Bits.limitTo8Bits(value)
 

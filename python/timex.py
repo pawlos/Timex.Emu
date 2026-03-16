@@ -185,6 +185,7 @@ if __name__ == '__main__':
         debugger.setHook(0x10, systemPrintChar)
 
     machine_ref = [None]  # mutable ref, set after Machine is created
+    tape = None
 
     if params['tape'] is not None:
         try:
@@ -217,7 +218,9 @@ if __name__ == '__main__':
         except (SystemExit, KeyboardInterrupt):
             pass
     else:
-        machine = Machine(cpu, scale=params['scale'], debug=params['debug'])
+        tape_obj = tape if params['tape'] else None
+        tape_hook_fn = debugger.hooks.get(LD_BYTES) if tape_obj else None
+        machine = Machine(cpu, scale=params['scale'], debug=params['debug'], rom=rom, tape=tape_obj, tape_hook=tape_hook_fn)
         machine_ref[0] = machine
         if border is not None:
             machine.screen.set_border(border)
