@@ -55,6 +55,7 @@ python:
   - `F1` — pause / resume
   - `F2` — open interactive debugger (in terminal)
   - `F5` — soft reset (clears RAM, reloads ROM, rewinds tape)
+  - `F8` — save state to .z80 file (load back with `--z80=state_xxxx.z80`)
   - `F11` — toggle CRT scanline filter
   - `F12` — save screenshot as PNG
   - `Tab` (hold) — turbo mode (fast-forward)
@@ -73,6 +74,10 @@ python:
   `python3 timex.py --tape=game.tap`
 
   Then type `LOAD ""` (press `J` then `Ctrl+P` twice) and press `Enter`.
+
+  Loading .z80 snapshots (instant, no LOAD needed):
+
+  `python3 timex.py --z80=game.z80`
 
   Additional options:
   - `--scale=3` — scale display (default 2x, use 3 or 4 for hi-res monitors)
