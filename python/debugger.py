@@ -57,7 +57,7 @@ class Debugger(object):
                   .format(pc, state))
 
     def attachDetachLogger(self, cpu):
-        if type(cpu.logger) is not EmptyLogger:
+        if not isinstance(cpu.logger, EmptyLogger):
             print("Detaching logger")
             cpu.logger = EmptyLogger()
         else:
