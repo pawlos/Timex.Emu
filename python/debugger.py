@@ -167,6 +167,7 @@ class Debugger(object):
         print("trace [n] - show last n traced instructions (default 20)")
         print("log - attach/detach logger")
         print("s - single step")
+        print("n - step over (skip into CALL/RST)")
         print("c - continue")
         print("t - print timing info (m-cycles, t-states)")
         print("? - this help")
@@ -289,6 +290,25 @@ class Debugger(object):
             elif "s" == cmd:
                 self.isSingleStepping = True
                 break
+            elif "n" == cmd:
+                # Step over: if current instruction is CALL/RST, run until return
+                op = cpu.ram[cpu.pc]
+                is_call = op == 0xCD or (op & 0xC7) == 0xC4  # CALL nn / CALL cc,nn
+                is_rst = (op & 0xC7) == 0xC7                  # RST xx
+                if is_call:
+                    next_pc = (cpu.pc + 3) & 0xFFFF
+                    self._step_over_bp = next_pc
+                    self.setBreakpoint(next_pc)
+                    break
+                elif is_rst:
+                    next_pc = (cpu.pc + 1) & 0xFFFF
+                    self._step_over_bp = next_pc
+                    self.setBreakpoint(next_pc)
+                    break
+                else:
+                    # Not a call — behave like single step
+                    self.isSingleStepping = True
+                    break
             elif "c" == cmd:
                 break
             elif "t" == cmd:
@@ -311,12 +331,12 @@ class Debugger(object):
             elif "log" == cmd:
                 self.attachDetachLogger(cpu)
             elif "?" == cmd:
-                print(self.help())
+                self.help()
             elif "exit" == cmd or "q" == cmd:
                 sys.exit()
             else:
                 print("unknown command")
-                print(self.help())
+                self.help()
 
     def isBreakpoint(self, pc):
         return pc in self.breakpoints and self.breakpoints[pc]
@@ -356,6 +376,11 @@ class Debugger(object):
         if self.isHook(pc):
             return self.hooks[self.getHookAddr(pc)](cpu)
         self.record_trace(pc, cpu)
+        # Clean up step-over breakpoint
+        step_over = getattr(self, '_step_over_bp', None)
+        if step_over is not None and pc == step_over:
+            self.clearBreakpoint(step_over)
+            self._step_over_bp = None
         if (self.isBreakpoint(pc)) or self.isSingleStepping:
             if self.isSingleStepping is False:
                 print("Stopped...@ 0x{:04X}".format(pc))
