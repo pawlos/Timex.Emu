@@ -96,6 +96,7 @@ python:
   | `bc 0xADDR` | clear breakpoint |
   | `bl` | list breakpoints |
   | `s` | single step |
+  | `n` | step over (skip into CALL/RST) |
   | `c` | continue |
   | `trace on/off` | enable/disable execution trace |
   | `trace [n]` | show last n executed instructions |
