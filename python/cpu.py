@@ -477,29 +477,23 @@ class CPU(object):
     def _dispatchFD(self, cpu, opcode, logger):
         self._dispatchPrefix(self.fdTable, self.pc, 0xFD)
 
-    def _dispatchDDCB(self, cpu, opcode, logger):
+    def _dispatchIndexedCB(self, table, cpu, opcode, logger):
         pc = self.PC  # consume displacement byte (auto-increments)
         displacement = cpu.ram[pc]
         fourthbyte = cpu.ram[cpu.PC]  # consume operation byte
         fullOpcode = (opcode << 16) + (displacement << 8) + fourthbyte
-        handler = self.ddcbTable[fourthbyte]
+        handler = table[fourthbyte]
         if handler is None:
             self._missingOpcode(pc, fullOpcode)
             return
         self.debugger.next_opcode(pc, self)
         handler(self, fullOpcode, self.logger)
 
+    def _dispatchDDCB(self, cpu, opcode, logger):
+        self._dispatchIndexedCB(self.ddcbTable, cpu, opcode, logger)
+
     def _dispatchFDCB(self, cpu, opcode, logger):
-        pc = self.PC  # consume displacement byte (auto-increments)
-        displacement = cpu.ram[pc]
-        fourthbyte = cpu.ram[cpu.PC]  # consume operation byte
-        fullOpcode = (opcode << 16) + (displacement << 8) + fourthbyte
-        handler = self.fdcbTable[fourthbyte]
-        if handler is None:
-            self._missingOpcode(pc, fullOpcode)
-            return
-        self.debugger.next_opcode(pc, self)
-        handler(self, fullOpcode, self.logger)
+        self._dispatchIndexedCB(self.fdcbTable, cpu, opcode, logger)
 
     def _missingOpcode(self, pc, opcode):
         print("Missing opcode key: {1:x}, PC = 0x{0:x}".format(pc, opcode))
