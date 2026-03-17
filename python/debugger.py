@@ -44,7 +44,11 @@ class Debugger(object):
         self.hooks[pc] = function
 
     def getAddr(self, input):
-        return int(re.search('0x([0-9a-fA-F]+)$', input).group(1), base=16)
+        match = re.search('0x([0-9a-fA-F]+)$', input)
+        if not match:
+            print("Invalid address. Use 0x followed by hex digits (e.g. 0x4000)")
+            return None
+        return int(match.group(1), base=16)
 
     def printBreakpoints(self):
         for pc in self.breakpoints:
@@ -246,7 +250,10 @@ class Debugger(object):
     def stop(self, cpu):
         self.print_status(cpu)
         while True:
-            cmd = input("> ")
+            try:
+                cmd = input("> ")
+            except EOFError:
+                break
             if cmd == "":
                 cmd = self.lastInput
 
@@ -262,31 +269,37 @@ class Debugger(object):
             elif cmd == "d" or cmd.startswith("d "):
                 if " " in cmd:
                     addr = self.getAddr(cmd)
+                    if addr is None: continue
                 else:
                     addr = cpu.pc
                 self.disasm_at(cpu, addr)
             elif cmd.startswith("m "):
                 addr = self.getAddr(cmd)
-                self.hexdump(cpu, addr)
+                if addr is not None:
+                    self.hexdump(cpu, addr)
             elif "pram " in cmd:
                 addr = self.getAddr(cmd)
-                print("RAM value at: 0x{:04X} is 0x{:02X}"
-                      .format(addr, cpu.ram[addr]))
+                if addr is not None:
+                    print("RAM value at: 0x{:04X} is 0x{:02X}"
+                          .format(addr, cpu.ram[addr]))
             elif "bl" == cmd:
                 print("List of breakpoints:")
                 self.printBreakpoints()
             elif "bc " in cmd:
                 addr = self.getAddr(cmd)
-                self.clearBreakpoint(addr)
-                print("Breakpoint cleared at: {:04X}".format(addr))
+                if addr is not None:
+                    self.clearBreakpoint(addr)
+                    print("Breakpoint cleared at: {:04X}".format(addr))
             elif "bd " in cmd:
                 addr = self.getAddr(cmd)
-                self.disableBreakpoint(addr)
-                print("Breakpoint disabled at: {:04X}".format(addr))
+                if addr is not None:
+                    self.disableBreakpoint(addr)
+                    print("Breakpoint disabled at: {:04X}".format(addr))
             elif "b " in cmd:
                 addr = self.getAddr(cmd)
-                self.setBreakpoint(addr)
-                print("Breakpoint set at: {:04X}".format(addr))
+                if addr is not None:
+                    self.setBreakpoint(addr)
+                    print("Breakpoint set at: {:04X}".format(addr))
             elif "s" == cmd:
                 self.isSingleStepping = True
                 break
