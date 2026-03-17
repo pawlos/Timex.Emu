@@ -1,7 +1,5 @@
 #known_addresses
 
-Interrupt = 0xFF0F
-LCDC = 0xFF40
-TIMA = 0xFF05
-TMA = 0xFF06
-TAC = 0XFF07
+# ZX Spectrum ROM entry points
+LD_BYTES = 0x0556   # Tape load routine
+SA_BYTES = 0x04C2   # Tape save routine

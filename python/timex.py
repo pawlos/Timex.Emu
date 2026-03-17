@@ -8,11 +8,9 @@ from machine import Machine
 from opcodes import *
 from tape import TapeFile
 from snapshot import load_z80
+from known_addresses import LD_BYTES
 import sys
 import getopt
-
-
-LD_BYTES = 0x0556
 
 
 def make_tape_load_hook(tape, machine_ref):

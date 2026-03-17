@@ -7,6 +7,7 @@ from keyboard import Keyboard
 from beeper import Beeper
 from joystick import Joystick
 from snapshot import save_z80
+from known_addresses import LD_BYTES
 
 TSTATES_PER_FRAME = 69888
 
@@ -71,7 +72,6 @@ class Machine:
                         cpu.pc, cpu.iff1, cpu.im, cpu.IY))
 
     def reset(self):
-        LD_BYTES = 0x0556
         # Disable tape hook during ROM init
         if self.tape_hook:
             self.cpu.debugger.setHook(LD_BYTES, None)
