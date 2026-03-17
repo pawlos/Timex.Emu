@@ -7,64 +7,12 @@ from debugger import Debugger
 from machine import Machine
 from opcodes import *
 from tape import TapeFile
+from tape_loader import TapeLoader
 from snapshot import load_z80
 from known_addresses import LD_BYTES
 import sys
 import getopt
 
-
-def make_tape_load_hook(tape, machine_ref):
-    # machine_ref is a list so we can set it after Machine is created
-    from screen import COLORS
-    BYTES_PER_FRAME = 256
-    # Stripe color pairs: (color1, color2)
-    STRIPE_PAIRS = [
-        (COLORS[2], COLORS[5]),  # red / cyan
-        (COLORS[1], COLORS[6]),  # blue / yellow
-    ]
-
-    def tape_load_hook(cpu):
-        expected_flag = cpu.A
-        is_load = cpu.CFlag
-
-        block = tape.next_block()
-        if block is None:
-            print("[!] Tape: no more blocks")
-            cpu.CFlag = False
-            Opcodes.ret(cpu, 0xC9, cpu.logger)
-            return True
-
-        if block.flag != expected_flag:
-            print("[!] Tape: flag mismatch (expected 0x{:02X}, got 0x{:02X})".format(
-                expected_flag, block.flag))
-            cpu.CFlag = False
-            Opcodes.ret(cpu, 0xC9, cpu.logger)
-            return True
-
-        if is_load:
-            length = min(len(block.data), cpu.DE)
-            machine = machine_ref[0] if machine_ref else None
-            for i in range(length):
-                cpu.ram[cpu.IX + i] = block.data[i]
-                if machine and i % BYTES_PER_FRAME == 0:
-                    pair_idx = (block.data[i] >> 4) & 1
-                    machine.screen.loading_stripes = STRIPE_PAIRS[pair_idx]
-                    machine.screen.render(cpu.ram)
-                    machine.keyboard.handle_events(machine.screen, machine.joystick, machine)
-                    machine._clock.tick(50)
-            if machine:
-                machine.screen.loading_stripes = None
-                machine.screen.set_border(7)
-            print("[+] Tape: loaded {} bytes at 0x{:04X} (flag=0x{:02X})".format(
-                length, cpu.IX, block.flag))
-        else:
-            print("[+] Tape: verified block (flag=0x{:02X})".format(block.flag))
-
-        cpu.CFlag = True
-        Opcodes.ret(cpu, 0xC9, cpu.logger)
-        return True
-
-    return tape_load_hook
 
 def systemError(cpu):
     print('System error')
@@ -182,8 +130,7 @@ if __name__ == '__main__':
         debugger.setHook(0x08, systemError)
         debugger.setHook(0x10, systemPrintChar)
 
-    machine_ref = [None]  # mutable ref, set after Machine is created
-    tape = None
+    tape_loader = None
 
     if params['tape'] is not None:
         try:
@@ -191,7 +138,8 @@ if __name__ == '__main__':
         except FileNotFoundError:
             print("[!] File not found: {}".format(params['tape']))
             sys.exit(1)
-        debugger.setHook(LD_BYTES, make_tape_load_hook(tape, machine_ref))
+        tape_loader = TapeLoader(tape)
+        debugger.setHook(LD_BYTES, tape_loader.hook)
 
     cpu = CPU(debugger=debugger, rom=rom, ram=ram)
 
@@ -216,10 +164,8 @@ if __name__ == '__main__':
         except (SystemExit, KeyboardInterrupt):
             pass
     else:
-        tape_obj = tape if params['tape'] else None
-        tape_hook_fn = debugger.hooks.get(LD_BYTES) if tape_obj else None
-        machine = Machine(cpu, scale=params['scale'], debug=params['debug'], rom=rom, tape=tape_obj, tape_hook=tape_hook_fn)
-        machine_ref[0] = machine
+        machine = Machine(cpu, scale=params['scale'], debug=params['debug'],
+                         rom=rom, tape_loader=tape_loader)
         if border is not None:
             machine.screen.set_border(border)
         print("Starting execution...")
