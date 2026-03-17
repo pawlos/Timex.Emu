@@ -77,6 +77,9 @@ class Keyboard:
                 if event.key == pygame.K_F5 and machine:
                     machine.reset()
                     continue
+                if event.key == pygame.K_F8 and machine:
+                    machine.save_state()
+                    continue
                 if event.key == pygame.K_TAB and machine:
                     machine.turbo = True
                     continue

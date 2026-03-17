@@ -6,6 +6,7 @@ from screen import Screen
 from keyboard import Keyboard
 from beeper import Beeper
 from joystick import Joystick
+from snapshot import save_z80
 
 TSTATES_PER_FRAME = 69888
 
@@ -85,6 +86,13 @@ class Machine:
         if self.tape_hook:
             self.cpu.debugger.setHook(LD_BYTES, self.tape_hook)
         print("[+] Reset")
+
+    def save_state(self):
+        import time
+        filename = "state_{}.z80".format(int(time.time()))
+        from screen import COLORS
+        border_idx = next((i for i, c in enumerate(COLORS) if c == self.screen.border_color), 7)
+        save_z80(filename, self.cpu, border_idx)
 
     def enter_debugger(self):
         print("[+] Debugger break at PC=0x{:04X}".format(self.cpu.pc))

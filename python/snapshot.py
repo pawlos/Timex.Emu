@@ -133,3 +133,46 @@ def load_z80(filename, cpu):
 
     print("[+] Z80: PC=0x{:04X} SP=0x{:04X} IM={} border={}".format(pc, sp, im, border))
     return border
+
+
+def save_z80(filename, cpu, border=7):
+    header = bytearray(30)
+
+    header[0] = cpu.A
+    header[1] = cpu.F
+    header[2] = cpu.C
+    header[3] = cpu.B
+    header[4] = cpu.L
+    header[5] = cpu.H
+    header[6] = cpu.pc & 0xFF
+    header[7] = cpu.pc >> 8
+    header[8] = cpu.SP & 0xFF
+    header[9] = cpu.SP >> 8
+    header[10] = cpu.I
+    header[11] = cpu.R & 0x7F
+    # Byte 12: bit 0 = R bit 7, bits 1-3 = border, bit 5 = compressed
+    header[12] = ((cpu.R >> 7) & 1) | ((border & 7) << 1)
+    header[13] = cpu.E
+    header[14] = cpu.D
+    header[15] = cpu.BCPrim & 0xFF
+    header[16] = cpu.BCPrim >> 8
+    header[17] = cpu.DEPrim & 0xFF
+    header[18] = cpu.DEPrim >> 8
+    header[19] = cpu.HLPrim & 0xFF
+    header[20] = cpu.HLPrim >> 8
+    header[21] = cpu.AFPrim >> 8
+    header[22] = cpu.AFPrim & 0xFF
+    header[23] = cpu.IY & 0xFF
+    header[24] = cpu.IY >> 8
+    header[25] = cpu.IX & 0xFF
+    header[26] = cpu.IX >> 8
+    header[27] = 1 if cpu.iff1 else 0
+    header[28] = 1 if cpu.iff2 else 0
+    header[29] = cpu.im & 3
+
+    # Write uncompressed v1 format (49152 bytes of RAM from 0x4000-0xFFFF)
+    with open(filename, 'wb') as f:
+        f.write(header)
+        f.write(bytes(cpu.ram[addr] for addr in range(0x4000, 0x10000)))
+
+    print("[+] State saved: {}".format(filename))
