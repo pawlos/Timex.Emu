@@ -14,274 +14,79 @@ from dispatch_tables import (build_base_table, build_cb_table,
     build_ddcb_table, build_fdcb_table)
 
 
+def _reg8(index):
+    def getter(self): return self.regs[index]
+    def setter(self, value): self.regs[index] = Bits.limitTo8Bits(value)
+    return property(getter, setter)
+
+def _reg8_attr(attr):
+    def getter(self): return getattr(self, attr)
+    def setter(self, value): setattr(self, attr, Bits.limitTo8Bits(value))
+    return property(getter, setter)
+
+def _reg16(hi, lo):
+    def getter(self): return (self.regs[hi] << 8) + self.regs[lo]
+    def setter(self, value):
+        value = Bits.limitTo16Bits(value)
+        self.regs[hi] = value >> 8
+        self.regs[lo] = Bits.limitTo8Bits(value)
+    return property(getter, setter)
+
+def _reg16_prim(hi, lo):
+    def getter(self): return (self.regsPri[hi] << 8) + self.regsPri[lo]
+    def setter(self, value):
+        value = Bits.limitTo16Bits(value)
+        self.regsPri[hi] = value >> 8
+        self.regsPri[lo] = Bits.limitTo8Bits(value)
+    return property(getter, setter)
+
+def _reg16_attr(attr):
+    def getter(self): return getattr(self, attr)
+    def setter(self, value): setattr(self, attr, Bits.limitTo16Bits(value))
+    return property(getter, setter)
+
+def _flag(bit):
+    def getter(self): return Bits.getNthBit(self.F, bit) == 1
+    def setter(self, value): self.F = Bits.setNthBit(self.F, bit, 1 if value else 0)
+    return property(getter, setter)
+
+
 class CPU(object):
 
     rst_jumps = {0: 0x00, 1: 0x08, 2: 0x10, 3: 0x18, 4: 0x20,
                  5: 0x28, 6: 0x30, 7: 0x38}
 
-    @property
-    def A(self):
-        return self.regs[A]
+    # 16-bit register pairs (must be defined before 8-bit to avoid name collision)
+    # Using raw indices: B=0,C=1,D=2,E=3,H=4,L=5,A=7,F=8
+    HL = _reg16(4, 5); BC = _reg16(0, 1)
+    DE = _reg16(2, 3); AF = _reg16(7, 8)
 
-    @A.setter
-    def A(self, value):
-        self.regs[A] = Bits.limitTo8Bits(value)
+    # 16-bit prime register pairs
+    HLPrim = _reg16_prim(4, 5); BCPrim = _reg16_prim(0, 1)
+    DEPrim = _reg16_prim(2, 3); AFPrim = _reg16_prim(7, 8)
 
-    @property
-    def F(self):
-        return self.regs[F]
+    # 16-bit direct attribute registers
+    SP = _reg16_attr('sp')
+    IX = _reg16_attr('ix')
+    IY = _reg16_attr('iy')
 
-    @F.setter
-    def F(self, value):
-        self.regs[F] = Bits.limitTo8Bits(value)
+    # 8-bit registers (from regs array)
+    A = _reg8(7); F = _reg8(8)
+    B = _reg8(0); C = _reg8(1)
+    D = _reg8(2); E = _reg8(3)
+    H = _reg8(4); L = _reg8(5)
 
-    @property
-    def B(self):
-        return self.regs[B]
+    # 8-bit registers (direct attributes)
+    R = _reg8_attr('r')
+    W = _reg8_attr('w')
+    Z = _reg8_attr('z')
+    I = _reg8_attr('i')
 
-    @B.setter
-    def B(self, value):
-        self.regs[B] = Bits.limitTo8Bits(value)
-
-    @property
-    def C(self):
-        return self.regs[C]
-
-    @C.setter
-    def C(self, value):
-        self.regs[C] = Bits.limitTo8Bits(value)
-
-    @property
-    def D(self):
-        return self.regs[D]
-
-    @D.setter
-    def D(self, value):
-        self.regs[D] = Bits.limitTo8Bits(value)
-
-    @property
-    def E(self):
-        return self.regs[E]
-
-    @E.setter
-    def E(self, value):
-        self.regs[E] = Bits.limitTo8Bits(value)
-
-    @property
-    def H(self):
-        return self.regs[H]
-
-    @H.setter
-    def H(self, value):
-        self.regs[H] = Bits.limitTo8Bits(value)
-
-    @property
-    def L(self):
-        return self.regs[L]
-
-    @L.setter
-    def L(self, value):
-        self.regs[L] = Bits.limitTo8Bits(value)
-
-    @property
-    def R(self):
-        return self.r
-
-    @R.setter
-    def R(self, value):
-        self.r = Bits.limitTo8Bits(value)
-
-    @property
-    def W(self):
-        return self.w
-
-    @W.setter
-    def W(self, value):
-        self.w = Bits.limitTo8Bits(value)
-
-    @property
-    def Z(self):
-        return self.z
-
-    @Z.setter
-    def Z(self, value):
-        self.z = Bits.limitTo8Bits(value)
-
-    @property
-    def ZFlag(self):
-        return Bits.getNthBit(self.F, ZF) == 1
-
-    @ZFlag.setter
-    def ZFlag(self, value):
-        self.F = Bits.setNthBit(self.F, ZF, 1 if value else 0)
-
-    @property
-    def CFlag(self):
-        return Bits.getNthBit(self.F, CF) == 1
-
-    @CFlag.setter
-    def CFlag(self, value):
-        self.F = Bits.setNthBit(self.F, CF, 1 if value else 0)
-
-    @property
-    def NFlag(self):
-        return Bits.getNthBit(self.F, NF) == 1
-
-    @NFlag.setter
-    def NFlag(self, value):
-        self.F = Bits.setNthBit(self.F, NF, 1 if value else 0)
-
-    @property
-    def HFlag(self):
-        return Bits.getNthBit(self.F, HF) == 1
-
-    @HFlag.setter
-    def HFlag(self, value):
-        self.F = Bits.setNthBit(self.F, HF, 1 if value else 0)
-
-    @property
-    def SFlag(self):
-        return Bits.getNthBit(self.F, SF) == 1
-
-    @SFlag.setter
-    def SFlag(self, value):
-        self.F = Bits.setNthBit(self.F, SF, 1 if value else 0)
-
-    @property
-    def PVFlag(self):
-        return Bits.getNthBit(self.F, PVF) == 1
-
-    @PVFlag.setter
-    def PVFlag(self, value):
-        self.F = Bits.setNthBit(self.F, PVF, 1 if value else 0)
-
-    @property
-    def YFlag(self):
-        return Bits.getNthBit(self.F, YF) == 1
-
-    @YFlag.setter
-    def YFlag(self, value: bool):
-        self.F = Bits.setNthBit(self.F, YF, 1 if value else 0)
-
-    @property
-    def XFlag(self):
-        return Bits.getNthBit(self.F, XF) == 1
-
-    @XFlag.setter
-    def XFlag(self, value: bool):
-        self.F = Bits.setNthBit(self.F, XF, 1 if value else 0)
-
-    @property
-    def HL(self):
-        return (self.regs[H] << 8) + self.regs[L]
-
-    @HL.setter
-    def HL(self, value):
-        value = Bits.limitTo16Bits(value)
-        self.regs[H] = value >> 8
-        self.regs[L] = Bits.limitTo8Bits(value)
-
-    @property
-    def HLPrim(self):
-        return (self.regsPri[H] << 8) + self.regsPri[L]
-
-    @HLPrim.setter
-    def HLPrim(self, value):
-        value = Bits.limitTo16Bits(value)
-        self.regsPri[H] = value >> 8
-        self.regsPri[L] = Bits.limitTo8Bits(value)
-
-    @property
-    def DE(self):
-        return (self.regs[D] << 8) + self.regs[E]
-
-    @DE.setter
-    def DE(self, value):
-        value = Bits.limitTo16Bits(value)
-        self.regs[D] = value >> 8
-        self.regs[E] = Bits.limitTo8Bits(value)
-
-    @property
-    def DEPrim(self):
-        return (self.regsPri[D] << 8) + self.regsPri[E]
-
-    @DEPrim.setter
-    def DEPrim(self, value):
-        value = Bits.limitTo16Bits(value)
-        self.regsPri[D] = value >> 8
-        self.regsPri[E] = Bits.limitTo8Bits(value)
-
-    @property
-    def BC(self):
-        return (self.regs[B] << 8) + self.regs[C]
-
-    @BC.setter
-    def BC(self, value):
-        value = Bits.limitTo16Bits(value)
-        self.regs[B] = value >> 8
-        self.regs[C] = Bits.limitTo8Bits(value)
-
-    @property
-    def BCPrim(self):
-        return (self.regsPri[B] << 8) + self.regsPri[C]
-
-    @BCPrim.setter
-    def BCPrim(self, value):
-        value = Bits.limitTo16Bits(value)
-        self.regsPri[B] = value >> 8
-        self.regsPri[C] = Bits.limitTo8Bits(value)
-
-    @property
-    def AF(self):
-        return (self.regs[A] << 8) + self.regs[F]
-
-    @AF.setter
-    def AF(self, value):
-        value = Bits.limitTo16Bits(value)
-        self.regs[A] = value >> 8
-        self.regs[F] = Bits.limitTo8Bits(value)
-
-    @property
-    def AFPrim(self):
-        return (self.regsPri[A] << 8) + self.regsPri[F]
-
-    @AFPrim.setter
-    def AFPrim(self, value):
-        value = Bits.limitTo16Bits(value)
-        self.regsPri[A] = value >> 8
-        self.regsPri[F] = Bits.limitTo8Bits(value)
-
-    @property
-    def SP(self):
-        return self.sp
-
-    @SP.setter
-    def SP(self, value):
-        self.sp = Bits.limitTo16Bits(value)
-
-    @property
-    def I(self):
-        return self.i
-
-    @I.setter
-    def I(self, value):
-        self.i = Bits.limitTo8Bits(value)
-
-    @property
-    def IX(self):
-        return self.ix
-
-    @IX.setter
-    def IX(self, value):
-        self.ix = Bits.limitTo16Bits(value)
-
-    @property
-    def IY(self):
-        return self.iy
-
-    @IY.setter
-    def IY(self, value):
-        self.iy = Bits.limitTo16Bits(value)
+    # Flags (bit positions: CF=0,NF=1,PVF=2,XF=3,HF=4,YF=5,ZF=6,SF=7)
+    ZFlag = _flag(6); CFlag = _flag(0)
+    NFlag = _flag(1); HFlag = _flag(4)
+    SFlag = _flag(7); PVFlag = _flag(2)
+    YFlag = _flag(5); XFlag = _flag(3)
 
     @property
     def PC(self):
