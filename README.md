@@ -54,7 +54,10 @@ python:
   Emulator keys:
   - `F1` — pause / resume
   - `F2` — open interactive debugger (in terminal)
+  - `F5` — soft reset (clears RAM, reloads ROM, rewinds tape)
+  - `F11` — toggle CRT scanline filter
   - `F12` — save screenshot as PNG
+  - `Tab` (hold) — turbo mode (fast-forward)
   - `Arrow keys` — Kempston joystick directions
   - `Right Alt` — Kempston joystick fire
 
