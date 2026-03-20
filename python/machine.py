@@ -24,6 +24,10 @@ class Machine:
         self.debug = debug
         self.paused = False
         self.turbo = False
+        self.rewinding = False
+        self._rewind_buffer = []
+        self._rewind_max = 500  # ~50 seconds at 10 snapshots/sec
+        self._rewind_interval = 5  # save every 5 frames
 
         # Register port handlers on CPU's I/O
         cpu.io.on_read(0xFE, self.keyboard.read)
@@ -46,6 +50,36 @@ class Machine:
         self.screen.render(self.cpu.ram)
         self.beeper.render_audio()
 
+    def _capture_snapshot(self):
+        cpu = self.cpu
+        return (
+            bytes(cpu.regs), bytes(cpu.regsPri),
+            cpu.pc, cpu.sp, cpu.ix, cpu.iy,
+            cpu.i, cpu.r, cpu.w, cpu.z,
+            cpu.iff1, cpu.iff2, cpu.im, cpu.halted,
+            bytes(cpu.ram.ram)
+        )
+
+    def _restore_snapshot(self, snap):
+        cpu = self.cpu
+        (regs, regsPri, pc, sp, ix, iy,
+         i, r, w, z, iff1, iff2, im, halted, ram) = snap
+        cpu.regs[:] = regs
+        cpu.regsPri[:] = regsPri
+        cpu.pc = pc
+        cpu.sp = sp
+        cpu.ix = ix
+        cpu.iy = iy
+        cpu.i = i
+        cpu.r = r
+        cpu.w = w
+        cpu.z = z
+        cpu.iff1 = iff1
+        cpu.iff2 = iff2
+        cpu.im = im
+        cpu.halted = halted
+        cpu.ram.ram[:] = ram
+
     def run(self, pc=0x0):
         cpu = self.cpu
         cpu.pc = pc
@@ -53,6 +87,15 @@ class Machine:
             if self.paused:
                 self.keyboard.handle_events(self.screen, self.joystick, self)
                 self._clock.tick(50)
+                continue
+            if self.rewinding:
+                self.keyboard.handle_events(self.screen, self.joystick, self)
+                if self._rewind_buffer:
+                    self._restore_snapshot(self._rewind_buffer.pop())
+                    self.screen.render(cpu.ram)
+                    self._clock.tick(50)
+                else:
+                    self.rewinding = False
                 continue
             if not cpu.halted:
                 cpu.readOp()
@@ -62,6 +105,11 @@ class Machine:
             if cpu.tstates >= TSTATES_PER_FRAME:
                 cpu.tstates -= TSTATES_PER_FRAME
                 cpu._interruptPending = True
+                # Save rewind snapshot every N frames
+                if self._frame_count % self._rewind_interval == 0:
+                    self._rewind_buffer.append(self._capture_snapshot())
+                    if len(self._rewind_buffer) > self._rewind_max:
+                        self._rewind_buffer.pop(0)
                 if self.turbo and self._frame_count % 10 != 0:
                     self.keyboard.handle_events(self.screen, self.joystick, self)
                 else:

@@ -59,6 +59,7 @@ python:
   - `F11` — toggle CRT scanline filter
   - `F12` — save screenshot as PNG
   - `Tab` (hold) — turbo mode (fast-forward)
+  - `Backspace` (hold) — rewind time (~50 seconds buffer)
   - `Arrow keys` — Kempston joystick directions
   - `Right Alt` — Kempston joystick fire
 
