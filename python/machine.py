@@ -69,9 +69,12 @@ class Machine:
                     if not self.turbo:
                         self._clock.tick(50)
                 self._frame_count += 1
-                if self.debug and self._frame_count % 50 == 0:
-                    print("PC=0x{:04X} iff1={} im={} IY=0x{:04X}".format(
-                        cpu.pc, cpu.iff1, cpu.im, cpu.IY))
+                if self._frame_count % 50 == 0:
+                    fps = self._clock.get_fps()
+                    pygame.display.set_caption("Timex 2048 — {:.0f} FPS".format(fps))
+                    if self.debug:
+                        print("PC=0x{:04X} iff1={} im={} IY=0x{:04X}".format(
+                            cpu.pc, cpu.iff1, cpu.im, cpu.IY))
 
     def reset(self):
         # Disable tape hook during ROM init
