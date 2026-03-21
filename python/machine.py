@@ -145,6 +145,10 @@ class Machine:
         border_idx = next((i for i, c in enumerate(COLORS) if c == self.screen.border_color), 7)
         save_z80(filename, self.cpu, border_idx)
 
+    def toggle_tape(self):
+        if self.tape_loader:
+            self.tape_loader.toggle_play()
+
     def enter_debugger(self):
         print("[+] Debugger break at PC=0x{:04X}".format(self.cpu.pc))
         self.cpu.debugger.stop(self.cpu)

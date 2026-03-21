@@ -55,6 +55,7 @@ python:
   - `F1` — pause / resume
   - `F2` — open interactive debugger (in terminal)
   - `F5` — soft reset (clears RAM, reloads ROM, rewinds tape)
+  - `F6` — tape play/stop (for multi-load games)
   - `F8` — save state to .z80 file (load back with `--z80=state_xxxx.z80`)
   - `F11` — toggle CRT scanline filter
   - `F12` — save screenshot as PNG

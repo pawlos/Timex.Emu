@@ -14,11 +14,23 @@ class TapeLoader:
     def __init__(self, tape):
         self._tape = tape
         self.machine = None
+        self.playing = True
 
     def rewind(self):
         self._tape.rewind()
 
+    def toggle_play(self):
+        self.playing = not self.playing
+        state = "PLAY" if self.playing else "STOP"
+        print("[+] Tape: {}".format(state))
+
     def hook(self, cpu):
+        if not self.playing:
+            # Tape stopped — return failure like no signal
+            cpu.CFlag = False
+            Opcodes.ret(cpu, 0xC9, cpu.logger)
+            return True
+
         expected_flag = cpu.A
         is_load = cpu.CFlag
 
