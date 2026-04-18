@@ -170,6 +170,7 @@ Screenshots from games running in the emulator. Press `F12` in-emulator to save 
 |------|------------|
 | Bruce Lee | ![Bruce Lee](screenshots/bruce_lee.png) |
 | Knight Lore | ![Knight Lore](screenshots/knight_lore.png) |
+| Commando | ![Commando](screenshots/commando.png) |
 | Bomb Jack | ![Bomb Jack](screenshots/bomb_jack.png) |
 
 Links
