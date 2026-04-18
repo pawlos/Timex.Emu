@@ -1,7 +1,7 @@
 Timex.Emu
 ========
 
-Timex.Emu is an emulator for a popular Timex 2048 machine.
+Timex.Emu is an emulator for the Timex 2048 — the author's first computer. The shared Z80 / tape / screen / keyboard modules also power a sibling ZX Spectrum 128 machine (see *ZX Spectrum 128 support* below).
 
 Folder structure:
 
@@ -11,7 +11,9 @@ docs:
   - Complete ROM
 
 python:
-  - timex.py - main entry to the emulator
+  - `timex.py` — entry for the Timex 2048 (calls `emulate.py --machine=timex2048`).
+  - `emulate.py` — shared entry point; accepts `--machine=<name>` to pick a target (default `timex2048`, also `spectrum128`). All flags below work with either entry unless noted.
+  - `machines/` — per-machine wiring (`timex2048.py`, `spectrum128.py`).
 
   Example command to load a user program:
 
@@ -129,6 +131,36 @@ tests:
   > `python3 -m unittest tests_cpu.tests_cpu.test_zexall`
   > `python3 -m unittest tests_cpu.tests_cpu.test_zexdoc`
 
+ZX Spectrum 128 support
+=======================
+
+The emulator also runs as a ZX Spectrum 128 (sometimes called "Spectrum 128K" or, with Amstrad's +2, the grey-case machine). Most of the codebase is machine-agnostic — the CPU, screen rendering, keyboard, tape, and snapshot loader are shared. A dedicated `Spectrum128Machine` adds banked memory (8 × 16K RAM pages + 2 × 16K ROM banks), port `0x7FFD` paging, and the 3.5469 MHz frame timing.
+
+Launching:
+
+`python3 emulate.py --machine=spectrum128 --scale=3`
+
+ROM layout — drop the 128K ROM at `rom/128.rom`, either as:
+  - a single **32K** file (bank 0 first = editor/menu ROM, bank 1 second = 48K BASIC), or
+  - a **16K** file for bank 0 only; in that case a sibling `rom/128.1.rom` is loaded as bank 1 if present.
+
+The standard Sinclair 128K ROM and the Amstrad +2 ROM both work. The +2A/+3 (black case, four ROMs + extra port `0x1FFD`) is not supported.
+
+Menu navigation (the "128 BASIC / Calculator / Tape Loader / Tape Tester / 48 BASIC" screen):
+  - `Shift + 7` — cursor up
+  - `Shift + 6` — cursor down
+  - `Enter` — select
+
+Loading games:
+  - `.tap` files work the same as on Timex (`--tape=... --tape-mode=pulse` for custom loaders).
+  - `.z80` snapshots of 128K games work via `--z80=<file>`. The loader detects 128K hardware (v2 hw=3|4, v3 hw=4|5|6), fans pages into the right banks, and applies the port `0x7FFD` latch from byte 35.
+
+Current status:
+  - Boots to the 128 menu, 128 BASIC, and 48 BASIC.
+  - Runs 128K snapshots (e.g. *Commando*).
+  - AY-3-8912 sound chip is not yet implemented — games that rely on it for music/SFX will be silent; the beeper still works.
+  - `F8` state saving is a no-op on Spectrum 128 for now (no 128K .z80 writer yet).
+
 Screenshots
 ===========
 
@@ -145,6 +177,7 @@ Links
   - [http://pl.wikipedia.org/wiki/Zilog_Z80](http://pl.wikipedia.org/wiki/Zilog_Z80)
   - [http://pl.wikipedia.org/wiki/Timex_Sinclair_2048](http://pl.wikipedia.org/wiki/Timex_Sinclair_2048)
   - [http://en.wikipedia.org/wiki/Timex_Computer_2048](http://en.wikipedia.org/wiki/Timex_Computer_2048)
+  - [https://en.wikipedia.org/wiki/ZX_Spectrum#128K_models](https://en.wikipedia.org/wiki/ZX_Spectrum#128K_models)
   - [http://clrhome.org/table/](http://clrhome.org/table/)
 
 
