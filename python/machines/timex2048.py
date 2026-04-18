@@ -1,19 +1,39 @@
-# Timex 2048 / ZX Spectrum Machine
-# Coordinates CPU, screen, keyboard, beeper, and joystick
+# Timex Computer 2048 — 48K flat-RAM machine.
 
 import pygame
+
+from cpu import CPU
+from rom import ROM
+from ram import RAM
+from loggers import Logger
 from screen import Screen, COLORS
 from keyboard import Keyboard
 from beeper import Beeper
 from joystick import Joystick
 from snapshot import save_z80
 from known_addresses import LD_BYTES
-from tape_pulser import mix_ear_into_kb
+from tape import TapeFile
+from tape_loader import TapeLoader
+from tape_pulser import TapePulser, mix_ear_into_kb
+from opcodes import Opcodes
 
 TSTATES_PER_FRAME = 69888
+DEFAULT_ROM = '../rom/tc2048.rom'
 
 
-class Machine:
+def _system_error(cpu):
+    print('System error')
+    Opcodes.hlt(cpu, 0x76, cpu.logger)
+    return True
+
+
+def _system_print_char(cpu):
+    print(chr(cpu.A), end='')
+    Opcodes.ret(cpu, 0xC9, cpu.logger)
+    return True
+
+
+class Timex2048Machine:
     def __init__(self, cpu, scale=2, debug=False, rom=None,
                  tape_loader=None, tape_pulser=None):
         self.cpu = cpu
@@ -29,15 +49,13 @@ class Machine:
         self.turbo = False
         self.rewinding = False
         self._rewind_buffer = []
-        self._rewind_max = 500  # ~50 seconds at 10 snapshots/sec
-        self._rewind_interval = 5  # save every 5 frames
+        self._rewind_max = 500
+        self._rewind_interval = 5
 
-        # Register port handlers on CPU's I/O
         cpu.io.on_read(0xFE, self._read_port_fe)
         cpu.io.on_read(0x1F, self.joystick.read)
         cpu.io.on_write(0xFE, self._write_port_fe)
 
-        # Give tape loader access to machine for border stripes
         if tape_loader:
             tape_loader.machine = self
 
@@ -120,7 +138,6 @@ class Machine:
             if cpu.tstates >= TSTATES_PER_FRAME:
                 cpu.tstates -= TSTATES_PER_FRAME
                 cpu._interruptPending = True
-                # Save rewind snapshot every N frames
                 if self._frame_count % self._rewind_interval == 0:
                     self._rewind_buffer.append(self._capture_snapshot())
                     if len(self._rewind_buffer) > self._rewind_max:
@@ -148,15 +165,12 @@ class Machine:
                             cpu.pc, cpu.iff1, cpu.im, cpu.IY))
 
     def reset(self):
-        # Disable tape hook during ROM init
         if self.tape_loader:
             self.cpu.debugger.setHook(LD_BYTES, None)
         self.cpu.reset()
-        # Clear RAM and reload ROM
         self.cpu.ram.clear()
         if self.rom:
             self.cpu.ram.load(self.rom)
-        # Rewind tape and re-enable hook
         if self.tape_loader:
             self.tape_loader.rewind()
             self.cpu.debugger.setHook(LD_BYTES, self.tape_loader.hook)
@@ -198,3 +212,51 @@ class Machine:
 
     def close(self):
         self.screen.close()
+
+
+def factory(params, debugger):
+    if params['mapAt'] != 0x0:
+        rom = ROM(mapAt=params['mapAt'])
+    else:
+        rom = ROM()
+    if params['rom_file'] is None:
+        rom.loadFrom(DEFAULT_ROM)
+    else:
+        rom.loadFrom(params['rom_file'], False)
+
+    ram = RAM()
+    if params['program'] is not None:
+        ram.loadProgramAt(params['program'], 0x8000)
+
+    if params['hookSystem']:
+        debugger.setHook(0x08, _system_error)
+        debugger.setHook(0x10, _system_print_char)
+
+    tape_loader = None
+    tape_pulser = None
+    if params['tape'] is not None:
+        tape = TapeFile(params['tape'])
+        if params['tape_mode'] == 'pulse':
+            tape_pulser = TapePulser(tape)
+        else:
+            tape_loader = TapeLoader(tape)
+            debugger.setHook(LD_BYTES, tape_loader.hook)
+
+    cpu = CPU(debugger=debugger, rom=rom, ram=ram)
+    if params['debugger']:
+        cpu.logger = Logger(cpu)
+
+    if params['noDisplay']:
+        return cpu, None
+
+    machine = Timex2048Machine(
+        cpu, scale=params['scale'], debug=params['debug'],
+        rom=rom, tape_loader=tape_loader, tape_pulser=tape_pulser)
+
+    if tape_pulser is not None:
+        def _lazy_start(_cpu):
+            tape_pulser.start(machine.global_tstates)
+            return False
+        debugger.setHook(LD_BYTES, _lazy_start)
+
+    return cpu, machine
