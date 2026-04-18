@@ -73,11 +73,29 @@ def load_z80(filename, cpu):
         extra_len = raw[30] | (raw[31] << 8)
         pc = raw[32] | (raw[33] << 8)
         hw_mode = raw[34]
+        port_7ffd = raw[35]
+
+        # Detect 128K hardware.
+        # v2 (extra_len=23):  hw_mode 3 or 4 => 128K
+        # v3 (extra_len=54+): hw_mode 4, 5, 6 => 128K (plain, +If1, +MGT)
+        is_128k = ((extra_len == 23 and hw_mode in (3, 4)) or
+                   (extra_len >= 54 and hw_mode in (4, 5, 6)))
+
+        # Snapshot expects page selection to be applied BEFORE RAM is
+        # written via cpu.ram[addr] for addresses in the paged window.
+        # For 128K we write pages directly via banked RAM, so this mainly
+        # matters for 48K-style fallback; but apply it early for safety.
+        banked = is_128k and hasattr(cpu.ram, 'pages')
+        if banked:
+            cpu.ram.rom_select = (port_7ffd >> 4) & 1
+            cpu.ram.page_select = port_7ffd & 0x07
+            cpu.ram.screen_select = (port_7ffd >> 3) & 1
+            cpu.ram.paging_locked = bool(port_7ffd & 0x20)
 
         offset = 32 + extra_len
 
-        # Page to address mapping for 48K
-        page_map = {
+        # 48K-mode page-number -> CPU address base
+        page_map_48k = {
             4: 0x8000,
             5: 0xC000,
             8: 0x4000,
@@ -98,14 +116,19 @@ def load_z80(filename, cpu):
                 page_data = _decompress_z80(bytes(raw[offset:offset+block_len]), 16384)
                 offset += block_len
 
-            if page_num in page_map:
-                base = page_map[page_num]
+            if banked and 3 <= page_num <= 10:
+                bank = page_num - 3
+                cpu.ram.pages[bank][:len(page_data)] = page_data[:16384]
+                page_count += 1
+            elif page_num in page_map_48k:
+                base = page_map_48k[page_num]
                 for j in range(min(len(page_data), 16384)):
                     cpu.ram[base + j] = page_data[j]
                 page_count += 1
 
         version = "v2" if extra_len == 23 else "v3"
-        print("[+] Z80 {}: loaded {} pages, hw={}".format(version, page_count, hw_mode))
+        mode = "128K" if is_128k else "48K"
+        print("[+] Z80 {} {}: loaded {} pages, hw={}".format(version, mode, page_count, hw_mode))
 
     # Set CPU registers
     cpu.A = a
