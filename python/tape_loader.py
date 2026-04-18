@@ -56,7 +56,7 @@ class TapeLoader:
                 if machine and i % BYTES_PER_FRAME == 0:
                     pair_idx = (block.data[i] >> 4) & 1
                     machine.screen.loading_stripes = STRIPE_PAIRS[pair_idx]
-                    machine.screen.render(cpu.ram)
+                    machine.screen.render(machine._screen_bytes())
                     machine.keyboard.handle_events(machine.screen, machine.joystick, machine)
                     machine._clock.tick(50)
             if machine:

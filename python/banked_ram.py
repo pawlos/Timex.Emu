@@ -64,6 +64,11 @@ class BankedRAM:
         n = min(len(data), PAGE_SIZE)
         self.rom_banks[bank][:n] = data[:n]
 
+    def load(self, rom):
+        """No-op for duck-type compatibility with the 48K RAM class.
+        On 128K, ROM lives in rom_banks — use load_rom(bank, data) instead."""
+        return
+
     def clear(self):
         for p in self.pages:
             for i in range(PAGE_SIZE):

@@ -5,8 +5,9 @@ SCREEN_WIDTH = 256
 SCREEN_HEIGHT = 192
 BORDER_SIZE = 32
 
-BITMAP_START = 0x4000
-ATTR_START = 0x5800
+# Offsets within the 6912-byte screen memory passed to render()
+BITMAP_START = 0x0000
+ATTR_START = 0x1800
 
 COLORS = [
     # Normal
@@ -50,7 +51,11 @@ class Screen:
         pygame.image.save(self.window, filename)
         print("[+] Screenshot saved: {}".format(filename))
 
-    def render(self, ram):
+    def render(self, screen_bytes):
+        """Render one frame. `screen_bytes` must expose [offset] access to
+        at least 6912 bytes (6144 bitmap + 768 attributes). The machine is
+        responsible for picking the right source (e.g. page 5 vs shadow
+        page 7 for 128K)."""
         self.frame_count += 1
         if self.frame_count % 16 == 0:
             self.flash_state = not self.flash_state
@@ -68,8 +73,8 @@ class Screen:
             attr_base = ATTR_START + (y >> 3) * 32
 
             for col in range(32):
-                byte = ram[addr + col]
-                attr = ram[attr_base + col]
+                byte = screen_bytes[addr + col]
+                attr = screen_bytes[attr_base + col]
 
                 bright = 8 if attr & 0x40 else 0
                 ink = COLORS[(attr & 0x07) + bright]

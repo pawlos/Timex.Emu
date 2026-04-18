@@ -4,7 +4,9 @@
 # in which case emulate.py runs the cpu directly without the Machine loop.
 
 from machines.timex2048 import factory as _timex2048_factory
+from machines.spectrum128 import factory as _spectrum128_factory
 
 MACHINES = {
     "timex2048": _timex2048_factory,
+    "spectrum128": _spectrum128_factory,
 }

@@ -1,43 +1,37 @@
-# Timex Computer 2048 — 48K flat-RAM machine.
+# ZX Spectrum 128K machine.
+#
+# Differences from the Timex 2048:
+#   - Uses BankedRAM: 2 ROM banks x 16K + 8 RAM pages x 16K
+#   - Port 0x7FFD writes drive paging (page / screen / ROM select + lock)
+#   - CPU runs at 3.5469 MHz -> 70908 T-states per 1/50s frame
+#   - Screen source can be page 5 (default) or shadow page 7
+#   - No AY-3-8912 sound yet (step 4 will add it)
 
+import os
 import pygame
 
 from cpu import CPU
 from rom import ROM
-from ram import RAM
 from loggers import Logger
 from screen import Screen, COLORS
 from keyboard import Keyboard
 from beeper import Beeper
 from joystick import Joystick
-from snapshot import save_z80
+from banked_ram import BankedRAM, PAGE_SIZE
 from known_addresses import LD_BYTES
 from tape import TapeFile
 from tape_loader import TapeLoader
 from tape_pulser import TapePulser, mix_ear_into_kb
-from opcodes import Opcodes
 
-TSTATES_PER_FRAME = 69888
-DEFAULT_ROM = '../rom/tc2048.rom'
-
-
-def _system_error(cpu):
-    print('System error')
-    Opcodes.hlt(cpu, 0x76, cpu.logger)
-    return True
+TSTATES_PER_FRAME = 70908
+DEFAULT_ROM = '../rom/128.rom'
 
 
-def _system_print_char(cpu):
-    print(chr(cpu.A), end='')
-    Opcodes.ret(cpu, 0xC9, cpu.logger)
-    return True
-
-
-class Timex2048Machine:
-    def __init__(self, cpu, scale=2, debug=False, rom=None,
+class Spectrum128Machine:
+    def __init__(self, cpu, ram, scale=2, debug=False,
                  tape_loader=None, tape_pulser=None):
         self.cpu = cpu
-        self.rom = rom
+        self.ram = ram  # BankedRAM instance
         self.tape_loader = tape_loader
         self.tape_pulser = tape_pulser
         self.screen = Screen(scale)
@@ -55,6 +49,13 @@ class Timex2048Machine:
         cpu.io.on_read(0xFE, self._read_port_fe)
         cpu.io.on_read(0x1F, self.joystick.read)
         cpu.io.on_write(0xFE, self._write_port_fe)
+        # Three distinct 128K ports share low byte 0xFD:
+        #   0x7FFD (B=0x7F)  paging
+        #   0xFFFD (B=0xFF)  AY-3-8912 register select
+        #   0xBFFD (B=0xBF)  AY-3-8912 register data
+        # The CPU's I/O layer dispatches on low byte only, so this handler
+        # disambiguates by peeking at BC's high byte (cpu.B).
+        cpu.io.on_write(0xFD, self._write_port_fd)
 
         if tape_loader:
             tape_loader.machine = self
@@ -78,8 +79,25 @@ class Timex2048Machine:
         self.screen.set_border(value & 0x07)
         self.beeper.set_speaker((value >> 4) & 1, self.cpu.tstates)
 
+    def _write_port_fd(self, value):
+        b = self.cpu.B
+        if b == 0x7F:
+            self.ram.write_port_7ffd(value)
+            if self.debug:
+                print("[7FFD <- 0x{:02X}] PC=0x{:04X} page={} rom={} scr={} lock={}".format(
+                    value & 0xFF, self.cpu.pc,
+                    self.ram.page_select, self.ram.rom_select,
+                    self.ram.screen_select, self.ram.paging_locked))
+        elif b == 0xFF:
+            # AY register select — ignored until step 4 adds sound.
+            pass
+        elif b == 0xBF:
+            # AY register data — ignored until step 4 adds sound.
+            pass
+        # Any other high byte: unknown peripheral at port NNFD — ignored.
+
     def _screen_bytes(self):
-        return memoryview(self.cpu.ram.ram)[0x4000:0x5B00]
+        return self.ram.current_screen
 
     def update(self):
         self.keyboard.handle_events(self.screen, self.joystick, self)
@@ -88,18 +106,23 @@ class Timex2048Machine:
 
     def _capture_snapshot(self):
         cpu = self.cpu
+        ram = self.ram
         return (
             bytes(cpu.regs), bytes(cpu.regsPri),
             cpu.pc, cpu.sp, cpu.ix, cpu.iy,
             cpu.i, cpu.r, cpu.w, cpu.z,
             cpu.iff1, cpu.iff2, cpu.im, cpu.halted,
-            bytes(cpu.ram.ram)
+            tuple(bytes(p) for p in ram.pages),
+            ram.rom_select, ram.page_select,
+            ram.screen_select, ram.paging_locked,
         )
 
     def _restore_snapshot(self, snap):
         cpu = self.cpu
+        ram = self.ram
         (regs, regsPri, pc, sp, ix, iy,
-         i, r, w, z, iff1, iff2, im, halted, ram) = snap
+         i, r, w, z, iff1, iff2, im, halted,
+         pages, rom_sel, page_sel, screen_sel, locked) = snap
         cpu.regs[:] = regs
         cpu.regsPri[:] = regsPri
         cpu.pc = pc
@@ -114,7 +137,12 @@ class Timex2048Machine:
         cpu.iff2 = iff2
         cpu.im = im
         cpu.halted = halted
-        cpu.ram.ram[:] = ram
+        for idx, page in enumerate(pages):
+            ram.pages[idx][:] = page
+        ram.rom_select = rom_sel
+        ram.page_select = page_sel
+        ram.screen_select = screen_sel
+        ram.paging_locked = locked
 
     def run(self, pc=0x0):
         cpu = self.cpu
@@ -159,31 +187,33 @@ class Timex2048Machine:
                     self._last_tape_status = tape
                 if self._frame_count % 50 == 0:
                     fps = self._clock.get_fps()
-                    title = "Timex 2048 — {:.0f} FPS".format(fps)
+                    title = "Spectrum 128 — {:.0f} FPS".format(fps)
                     if tape:
                         title += " — tape: {}".format(tape)
                     pygame.display.set_caption(title)
                     if self.debug:
-                        print("PC=0x{:04X} iff1={} im={} IY=0x{:04X}".format(
-                            cpu.pc, cpu.iff1, cpu.im, cpu.IY))
+                        print("PC=0x{:04X} iff1={} im={} page={} rom={} scr={}".format(
+                            cpu.pc, cpu.iff1, cpu.im,
+                            self.ram.page_select, self.ram.rom_select,
+                            self.ram.screen_select))
 
     def reset(self):
         if self.tape_loader:
             self.cpu.debugger.setHook(LD_BYTES, None)
         self.cpu.reset()
-        self.cpu.ram.clear()
-        if self.rom:
-            self.cpu.ram.load(self.rom)
+        self.ram.clear()
+        self.ram.rom_select = 0
+        self.ram.page_select = 0
+        self.ram.screen_select = 0
+        self.ram.paging_locked = False
         if self.tape_loader:
             self.tape_loader.rewind()
             self.cpu.debugger.setHook(LD_BYTES, self.tape_loader.hook)
         print("[+] Reset")
 
     def save_state(self):
-        import time
-        filename = "state_{}.z80".format(int(time.time()))
-        border_idx = next((i for i, c in enumerate(COLORS) if c == self.screen.border_color), 7)
-        save_z80(filename, self.cpu, border_idx)
+        # TODO: emit a 128K .z80 v3 snapshot in a later step.
+        print("[!] save_state not implemented yet on Spectrum 128")
 
     def _tape_status(self):
         if self.tape_loader:
@@ -217,23 +247,40 @@ class Timex2048Machine:
         self.screen.close()
 
 
+def _load_rom_banks(ram, rom_file):
+    """Accept either a 32K combined file (bank0 then bank1) or a 16K file
+    (bank 0 only). If `rom_file` is a path that has a sibling .1.rom next
+    to it, that second file becomes bank 1."""
+    with open(rom_file, 'rb') as f:
+        data = f.read()
+    if len(data) == PAGE_SIZE:
+        ram.load_rom(0, data)
+        sibling = rom_file.replace('.rom', '.1.rom')
+        if sibling != rom_file and os.path.exists(sibling):
+            with open(sibling, 'rb') as f:
+                ram.load_rom(1, f.read())
+    elif len(data) == 2 * PAGE_SIZE:
+        ram.load_rom(0, data[:PAGE_SIZE])
+        ram.load_rom(1, data[PAGE_SIZE:])
+    else:
+        raise ValueError(
+            f"128K ROM file must be 16K or 32K, got {len(data)} bytes")
+
+
 def factory(params, debugger):
-    if params['mapAt'] != 0x0:
-        rom = ROM(mapAt=params['mapAt'])
-    else:
-        rom = ROM()
-    if params['rom_file'] is None:
-        rom.loadFrom(DEFAULT_ROM)
-    else:
-        rom.loadFrom(params['rom_file'], False)
+    ram = BankedRAM()
+    rom_file = params['rom_file'] or DEFAULT_ROM
+    _load_rom_banks(ram, rom_file)
 
-    ram = RAM()
     if params['program'] is not None:
-        ram.loadProgramAt(params['program'], 0x8000)
+        # Load raw bytes at 0x8000 (the start of page 2 in the 128K map).
+        with open(params['program'], 'rb') as f:
+            data = f.read()
+        ram.pages[2][:len(data)] = data
 
-    if params['hookSystem']:
-        debugger.setHook(0x08, _system_error)
-        debugger.setHook(0x10, _system_print_char)
+    cpu = CPU(debugger=debugger, rom=ROM(), ram=ram)
+    if params['debugger']:
+        cpu.logger = Logger(cpu)
 
     tape_loader = None
     tape_pulser = None
@@ -245,16 +292,12 @@ def factory(params, debugger):
             tape_loader = TapeLoader(tape)
             debugger.setHook(LD_BYTES, tape_loader.hook)
 
-    cpu = CPU(debugger=debugger, rom=rom, ram=ram)
-    if params['debugger']:
-        cpu.logger = Logger(cpu)
-
     if params['noDisplay']:
         return cpu, None
 
-    machine = Timex2048Machine(
-        cpu, scale=params['scale'], debug=params['debug'],
-        rom=rom, tape_loader=tape_loader, tape_pulser=tape_pulser)
+    machine = Spectrum128Machine(
+        cpu, ram, scale=params['scale'], debug=params['debug'],
+        tape_loader=tape_loader, tape_pulser=tape_pulser)
 
     if tape_pulser is not None:
         def _lazy_start(_cpu):
