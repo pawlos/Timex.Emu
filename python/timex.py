@@ -8,6 +8,7 @@ from machine import Machine
 from opcodes import *
 from tape import TapeFile
 from tape_loader import TapeLoader
+from tape_pulser import TapePulser
 from snapshot import load_z80
 from known_addresses import LD_BYTES
 import sys
@@ -49,6 +50,7 @@ if __name__ == '__main__':
                                 "no-display",
                                 "scale=",
                                 "tape=",
+                                "tape-mode=",
                                 "z80=",
                                 "debug",
                                 "help"])
@@ -65,6 +67,7 @@ if __name__ == '__main__':
         'noDisplay': False,
         'scale': 2,
         'tape': None,
+        'tape_mode': 'trap',
         'z80': None,
         'debug': False}
     rom = ROM()
@@ -100,6 +103,12 @@ if __name__ == '__main__':
         if name == '--tape':
             params['tape'] = value
             print(f'[+] Tape file: {value}')
+        if name == '--tape-mode':
+            if value not in ('trap', 'pulse'):
+                print(f"[!] --tape-mode must be 'trap' or 'pulse', got {value!r}")
+                sys.exit(1)
+            params['tape_mode'] = value
+            print(f'[+] Tape mode: {value}')
         if name == '--z80':
             params['z80'] = value
             print(f'[+] Z80 snapshot: {value}')
@@ -131,6 +140,7 @@ if __name__ == '__main__':
         debugger.setHook(0x10, systemPrintChar)
 
     tape_loader = None
+    tape_pulser = None
 
     if params['tape'] is not None:
         try:
@@ -138,8 +148,11 @@ if __name__ == '__main__':
         except FileNotFoundError:
             print("[!] File not found: {}".format(params['tape']))
             sys.exit(1)
-        tape_loader = TapeLoader(tape)
-        debugger.setHook(LD_BYTES, tape_loader.hook)
+        if params['tape_mode'] == 'pulse':
+            tape_pulser = TapePulser(tape)
+        else:
+            tape_loader = TapeLoader(tape)
+            debugger.setHook(LD_BYTES, tape_loader.hook)
 
     cpu = CPU(debugger=debugger, rom=rom, ram=ram)
 
@@ -165,7 +178,15 @@ if __name__ == '__main__':
             pass
     else:
         machine = Machine(cpu, scale=params['scale'], debug=params['debug'],
-                         rom=rom, tape_loader=tape_loader)
+                         rom=rom, tape_loader=tape_loader,
+                         tape_pulser=tape_pulser)
+        if tape_pulser is not None:
+            # Each LD-BYTES call kicks the pulser into streaming one block.
+            # Returns False so the ROM routine runs normally and polls edges.
+            def _lazy_start(cpu):
+                tape_pulser.start(machine.global_tstates)
+                return False
+            debugger.setHook(LD_BYTES, _lazy_start)
         if border is not None:
             machine.screen.set_border(border)
         print("Starting execution...")

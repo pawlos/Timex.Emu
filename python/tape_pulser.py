@@ -3,6 +3,12 @@
 # timing. Used by custom/turbo loaders that bypass the LD-BYTES ROM routine
 # and poll port 0xFE bit 6 directly.
 
+EAR_BIT = 0x40
+
+
+def mix_ear_into_kb(kb_byte, ear_bit):
+    return (kb_byte & ~EAR_BIT) | ((ear_bit & 1) << 6)
+
 
 class TapePulser:
     PILOT_HALF = 2168
@@ -25,15 +31,25 @@ class TapePulser:
         self._pilot_count = 0
 
     def start(self, tstates):
-        if self.playing:
-            return
-        self.playing = True
-        self._t_base = tstates
-        self._schedule = []
-        self._schedule_idx = 0
-        self._cursor = 0
-        self._pilot_count = 0
-        self._build_next_block()
+        if self.playing and self._schedule_idx < len(self._schedule):
+            return  # already streaming this block
+        if self._schedule_idx < len(self._schedule):
+            # Resume from stop: rebase t_base so the next scheduled edge
+            # fires at the correct delta past tstates.
+            last_rel = (self._schedule[self._schedule_idx - 1]
+                        if self._schedule_idx > 0 else 0)
+            self._t_base = tstates - last_rel
+            self.playing = True
+        else:
+            # Fresh block — the previous one either finished or was never
+            # started. Either way, pull the next block off the tape.
+            self.playing = True
+            self._t_base = tstates
+            self._schedule = []
+            self._schedule_idx = 0
+            self._cursor = 0
+            self._pilot_count = 0
+            self._build_next_block()
 
     def stop(self):
         self.playing = False
@@ -42,21 +58,27 @@ class TapePulser:
         if not self.playing:
             return self._level
         rel = tstates - self._t_base
-        while True:
-            sched = self._schedule
-            idx = self._schedule_idx
-            while idx < len(sched) and sched[idx] <= rel:
-                self._level ^= 1
-                idx += 1
-            self._schedule_idx = idx
-            if idx < len(sched):
-                break
-            if not self._build_next_block():
-                break
+        sched = self._schedule
+        idx = self._schedule_idx
+        while idx < len(sched) and sched[idx] <= rel:
+            self._level ^= 1
+            idx += 1
+        self._schedule_idx = idx
+        # Once the current block's schedule is exhausted, stay silent until
+        # the next explicit start() — this prevents idle keyboard polling
+        # from silently advancing through the tape.
         return self._level
 
     def _pilot_pulses_emitted_for_debug(self):
         return self._pilot_count
+
+    def block_info(self):
+        tape = self._tape
+        pos = getattr(tape, 'position', None)
+        blocks = getattr(tape, 'blocks', None)
+        if pos is None or blocks is None:
+            return None, None
+        return pos, len(blocks)
 
     def _build_next_block(self):
         block = self._tape.next_block()

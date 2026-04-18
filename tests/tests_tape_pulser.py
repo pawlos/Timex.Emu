@@ -2,7 +2,7 @@ import tests_suite
 
 import unittest
 from tape import TapeBlock
-from tape_pulser import TapePulser
+from tape_pulser import TapePulser, mix_ear_into_kb
 
 
 class FakeTape:
@@ -120,6 +120,72 @@ class tests_tape_pulser(unittest.TestCase):
         pulser.start(200_000)
         # Level should still be `frozen` immediately after restart
         self.assertEqual(frozen, pulser.read_ear(200_000))
+
+
+    def test_mix_ear_replaces_only_bit_6(self):
+        # Bit 6 must come from EAR, other bits untouched.
+        self.assertEqual(0xBF, mix_ear_into_kb(0xFF, 0))  # 0xFF with bit6 cleared
+        self.assertEqual(0xFF, mix_ear_into_kb(0xFF, 1))
+        # Keyboard byte with row bits low (keys pressed) is preserved
+        self.assertEqual(0xA0, mix_ear_into_kb(0xE0, 0))  # bit6 cleared, rest kept
+        self.assertEqual(0xE0, mix_ear_into_kb(0xA0, 1))  # bit6 set, rest kept
+        # Ignores bits above 1 on ear input
+        self.assertEqual(0xFF, mix_ear_into_kb(0xFF, 0xFF))
+
+    def test_does_not_auto_advance_after_block(self):
+        # After a block's schedule is exhausted, the pulser must stay silent
+        # and MUST NOT pull the next block from the tape. This is what keeps
+        # idle keyboard polling from drifting past the block the game wants.
+        b1 = _block(0x00, [0x01])
+        b2 = _block(0xFF, [0x02])
+        tape = FakeTape([b1, b2])
+        pulser = TapePulser(tape)
+        pulser.start(0)
+        # Read way past end of block 1's schedule
+        pulser.read_ear(pulser._schedule[-1] + 10_000_000)
+        self.assertEqual(1, tape._pos)  # only block 1 pulled
+
+    def test_start_after_exhaustion_pulls_next_block(self):
+        b1 = _block(0x00, [0x01])
+        b2 = _block(0xFF, [0x02])
+        tape = FakeTape([b1, b2])
+        pulser = TapePulser(tape)
+        pulser.start(0)
+        pulser.read_ear(pulser._schedule[-1] + 1)  # exhaust
+        # Calling start() again while playing=True should still build next block
+        pulser.start(50_000_000)
+        self.assertEqual(2, tape._pos)
+
+    def test_resume_mid_block_does_not_skip(self):
+        # Stop mid-block + start later must resume, not pull next block.
+        b1 = _block(0xFF, [0x00])
+        b2 = _block(0xFF, [0x01])
+        tape = FakeTape([b1, b2])
+        pulser = TapePulser(tape)
+        pulser.start(0)
+        # Advance halfway through pilot
+        half_pilot = (TapePulser.PILOT_DATA_PULSES // 2) * TapePulser.PILOT_HALF
+        pulser.read_ear(half_pilot)
+        pulser.stop()
+        # Long delay
+        pulser.start(half_pilot + 5_000_000)
+        # Tape should still be at block 2 pending (only 1 consumed)
+        self.assertEqual(1, tape._pos)
+
+    def test_port_fe_bit6_follows_pulser(self):
+        # End-to-end: the same mix helper used by Machine._read_port_fe.
+        pulser = TapePulser(FakeTape([_block(0xFF, [0x00])]))
+        pulser.start(0)
+        kb = 0xFF  # no keys pressed
+        # Before first pilot edge: level is 0, bit 6 is 0
+        self.assertEqual(
+            0xBF, mix_ear_into_kb(kb, pulser.read_ear(2167)))
+        # After first pilot edge: level is 1, bit 6 is 1
+        self.assertEqual(
+            0xFF, mix_ear_into_kb(kb, pulser.read_ear(2168)))
+        # Toggles on every PILOT_HALF boundary
+        self.assertEqual(
+            0xBF, mix_ear_into_kb(kb, pulser.read_ear(4336)))
 
 
 if __name__ == '__main__':

@@ -86,6 +86,7 @@ python:
   - `--debug` — enable periodic PC/register logging to terminal
   - `--no-display` — run headless (no pygame window)
   - `--attach-logger` — attach the instruction logger at startup
+  - `--tape-mode=trap|pulse` — tape emulation strategy. `trap` (default) intercepts the ROM `LD-BYTES` routine and injects blocks instantly. `pulse` streams T-state-accurate EAR edges on port `0xFE` bit 6, loads in real time, and is the mode needed by turbo / custom loaders (e.g. multi-load games).
 
   Sound: the ULA beeper (port `0xFE` bit 4) is emulated and mixed to audio output via pygame — BEEP commands and in-game effects are audible.
 

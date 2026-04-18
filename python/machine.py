@@ -8,15 +8,18 @@ from beeper import Beeper
 from joystick import Joystick
 from snapshot import save_z80
 from known_addresses import LD_BYTES
+from tape_pulser import mix_ear_into_kb
 
 TSTATES_PER_FRAME = 69888
 
 
 class Machine:
-    def __init__(self, cpu, scale=2, debug=False, rom=None, tape_loader=None):
+    def __init__(self, cpu, scale=2, debug=False, rom=None,
+                 tape_loader=None, tape_pulser=None):
         self.cpu = cpu
         self.rom = rom
         self.tape_loader = tape_loader
+        self.tape_pulser = tape_pulser
         self.screen = Screen(scale)
         self.keyboard = Keyboard()
         self.beeper = Beeper()
@@ -30,7 +33,7 @@ class Machine:
         self._rewind_interval = 5  # save every 5 frames
 
         # Register port handlers on CPU's I/O
-        cpu.io.on_read(0xFE, self.keyboard.read)
+        cpu.io.on_read(0xFE, self._read_port_fe)
         cpu.io.on_read(0x1F, self.joystick.read)
         cpu.io.on_write(0xFE, self._write_port_fe)
 
@@ -40,6 +43,18 @@ class Machine:
 
         self._frame_count = 0
         self._clock = pygame.time.Clock()
+        self._last_tape_status = None
+
+    @property
+    def global_tstates(self):
+        return self._frame_count * TSTATES_PER_FRAME + self.cpu.tstates
+
+    def _read_port_fe(self, high_byte=0):
+        value = self.keyboard.read(high_byte)
+        if self.tape_pulser is not None:
+            value = mix_ear_into_kb(
+                value, self.tape_pulser.read_ear(self.global_tstates))
+        return value
 
     def _write_port_fe(self, value):
         self.screen.set_border(value & 0x07)
@@ -117,9 +132,17 @@ class Machine:
                     if not self.turbo:
                         self._clock.tick(50)
                 self._frame_count += 1
+                tape = self._tape_status()
+                if tape != self._last_tape_status:
+                    if tape is not None:
+                        print("[+] Tape: {}".format(tape))
+                    self._last_tape_status = tape
                 if self._frame_count % 50 == 0:
                     fps = self._clock.get_fps()
-                    pygame.display.set_caption("Timex 2048 — {:.0f} FPS".format(fps))
+                    title = "Timex 2048 — {:.0f} FPS".format(fps)
+                    if tape:
+                        title += " — tape: {}".format(tape)
+                    pygame.display.set_caption(title)
                     if self.debug:
                         print("PC=0x{:04X} iff1={} im={} IY=0x{:04X}".format(
                             cpu.pc, cpu.iff1, cpu.im, cpu.IY))
@@ -145,9 +168,29 @@ class Machine:
         border_idx = next((i for i, c in enumerate(COLORS) if c == self.screen.border_color), 7)
         save_z80(filename, self.cpu, border_idx)
 
+    def _tape_status(self):
+        if self.tape_loader:
+            return "play" if self.tape_loader.playing else "stop"
+        if self.tape_pulser is not None:
+            pos, total = self.tape_pulser.block_info()
+            counter = " [{}/{}]".format(pos, total) if total else ""
+            if not self.tape_pulser.playing:
+                return "stop" + counter
+            if self.tape_pulser._schedule_idx < len(self.tape_pulser._schedule):
+                return "streaming" + counter
+            return "done — F6 for next" + counter
+        return None
+
     def toggle_tape(self):
         if self.tape_loader:
             self.tape_loader.toggle_play()
+        elif self.tape_pulser is not None:
+            if self.tape_pulser.playing:
+                self.tape_pulser.stop()
+                print("[+] Tape: STOP")
+            else:
+                self.tape_pulser.start(self.global_tstates)
+                print("[+] Tape: PLAY")
 
     def enter_debugger(self):
         print("[+] Debugger break at PC=0x{:04X}".format(self.cpu.pc))
