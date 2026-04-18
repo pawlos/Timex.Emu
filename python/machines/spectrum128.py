@@ -5,7 +5,7 @@
 #   - Port 0x7FFD writes drive paging (page / screen / ROM select + lock)
 #   - CPU runs at 3.5469 MHz -> 70908 T-states per 1/50s frame
 #   - Screen source can be page 5 (default) or shadow page 7
-#   - No AY-3-8912 sound yet (step 4 will add it)
+#   - AY-3-8912 sound chip on ports 0xFFFD / 0xBFFD
 
 import os
 import pygame
@@ -22,6 +22,8 @@ from known_addresses import LD_BYTES
 from tape import TapeFile
 from tape_loader import TapeLoader
 from tape_pulser import TapePulser, mix_ear_into_kb
+from ay8910 import AY8910
+from beeper import SAMPLE_RATE, SAMPLES_PER_FRAME
 
 TSTATES_PER_FRAME = 70908
 DEFAULT_ROM = '../rom/128.rom'
@@ -38,6 +40,7 @@ class Spectrum128Machine:
         self.keyboard = Keyboard()
         self.beeper = Beeper()
         self.joystick = Joystick()
+        self.ay = AY8910(sample_rate=SAMPLE_RATE)
         self.debug = debug
         self.paused = False
         self.turbo = False
@@ -89,11 +92,9 @@ class Spectrum128Machine:
                     self.ram.page_select, self.ram.rom_select,
                     self.ram.screen_select, self.ram.paging_locked))
         elif b == 0xFF:
-            # AY register select — ignored until step 4 adds sound.
-            pass
+            self.ay.write_reg_select(value)
         elif b == 0xBF:
-            # AY register data — ignored until step 4 adds sound.
-            pass
+            self.ay.write_reg_data(value)
         # Any other high byte: unknown peripheral at port NNFD — ignored.
 
     def _screen_bytes(self):
@@ -103,6 +104,17 @@ class Spectrum128Machine:
         self.keyboard.handle_events(self.screen, self.joystick, self)
         self.screen.render(self._screen_bytes())
         self.beeper.render_audio()
+        self._render_ay_audio()
+
+    def _render_ay_audio(self):
+        if not self.beeper.audio_enabled:
+            return
+        samples = self.ay.render(SAMPLES_PER_FRAME)
+        # Skip if fully silent (all zeros) — avoids a pointless Sound() each frame.
+        if not any(samples):
+            return
+        sound = pygame.mixer.Sound(buffer=samples)
+        sound.play()
 
     def _capture_snapshot(self):
         cpu = self.cpu

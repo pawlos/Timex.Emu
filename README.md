@@ -158,7 +158,7 @@ Loading games:
 Current status:
   - Boots to the 128 menu, 128 BASIC, and 48 BASIC.
   - Runs 128K snapshots (e.g. *Commando*).
-  - AY-3-8912 sound chip is not yet implemented — games that rely on it for music/SFX will be silent; the beeper still works.
+  - AY-3-8912 sound on ports `0xFFFD` / `0xBFFD` with three tone channels + mixer. Noise generator and envelope generator are not yet modeled — music will play but some effects (drums, envelope-driven sweeps) won't sound right.
   - `F8` state saving is a no-op on Spectrum 128 for now (no 128K .z80 writer yet).
 
 Screenshots
