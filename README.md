@@ -85,6 +85,9 @@ python:
   - `--scale=3` — scale display (default 2x, use 3 or 4 for hi-res monitors)
   - `--debug` — enable periodic PC/register logging to terminal
   - `--no-display` — run headless (no pygame window)
+  - `--attach-logger` — attach the instruction logger at startup
+
+  Sound: the ULA beeper (port `0xFE` bit 4) is emulated and mixed to audio output via pygame — BEEP commands and in-game effects are audible.
 
   Debugger commands (press F2 to enter):
   | Command | Description |
@@ -94,16 +97,21 @@ python:
   | `if` | CPU flags |
   | `d [0xADDR]` | disassemble at address (default: PC) |
   | `m 0xADDR` | hex dump memory |
+  | `pram 0xADDR` | print single byte from RAM |
   | `b 0xADDR` | set breakpoint |
   | `bc 0xADDR` | clear breakpoint |
+  | `bd 0xADDR` | disable breakpoint (keep but skip) |
   | `bl` | list breakpoints |
   | `s` | single step |
   | `n` | step over (skip into CALL/RST) |
   | `c` | continue |
+  | `t` | print timing info (m-cycles, t-states) |
   | `trace on/off` | enable/disable execution trace |
   | `trace [n]` | show last n executed instructions |
   | `stack [n]` | show stack entries (default 8) |
-  | `q` | quit |
+  | `log` | attach/detach instruction logger |
+  | `?` | debugger help |
+  | `q` / `exit` | quit |
 
 rom:
   - Binary file containing ROM of actual machine
@@ -119,6 +127,17 @@ tests:
   >
   > `python3 -m unittest tests_cpu.tests_cpu.test_zexall`
   > `python3 -m unittest tests_cpu.tests_cpu.test_zexdoc`
+
+Screenshots
+===========
+
+Screenshots from games running in the emulator. Press `F12` in-emulator to save a PNG (written to the current working directory as `screenshot_<frame>.png`); move captures into `screenshots/` and reference them below.
+
+| Game | Screenshot |
+|------|------------|
+| Bruce Lee | ![Bruce Lee](screenshots/bruce_lee.png) |
+| Knight Lore | ![Knight Lore](screenshots/knight_lore.png) |
+| Bomb Jack | ![Bomb Jack](screenshots/bomb_jack.png) |
 
 Links
 =====
