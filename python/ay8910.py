@@ -42,13 +42,18 @@ class AY8910:
         self._env_level = 0
         self._env_attacking = False
         self._env_holding = False
+        # Diagnostics
+        self.select_writes = 0
+        self.data_writes = 0
 
     def write_reg_select(self, value):
         self.selected = value & 0x0F
+        self.select_writes += 1
 
     def write_reg_data(self, value):
         v = value & 0xFF
         self.regs[self.selected] = v
+        self.data_writes += 1
         # Writing R13 — including rewriting the same value — resets the
         # envelope. Games use this to retrigger a note.
         if self.selected == 13:

@@ -86,11 +86,6 @@ class Spectrum128Machine:
         b = self.cpu.B
         if b == 0x7F:
             self.ram.write_port_7ffd(value)
-            if self.debug:
-                print("[7FFD <- 0x{:02X}] PC=0x{:04X} page={} rom={} scr={} lock={}".format(
-                    value & 0xFF, self.cpu.pc,
-                    self.ram.page_select, self.ram.rom_select,
-                    self.ram.screen_select, self.ram.paging_locked))
         elif b == 0xFF:
             self.ay.write_reg_select(value)
         elif b == 0xBF:
@@ -110,7 +105,6 @@ class Spectrum128Machine:
         if not self.beeper.audio_enabled:
             return
         samples = self.ay.render(SAMPLES_PER_FRAME)
-        # Skip if fully silent (all zeros) — avoids a pointless Sound() each frame.
         if not any(samples):
             return
         sound = pygame.mixer.Sound(buffer=samples)
@@ -204,10 +198,13 @@ class Spectrum128Machine:
                         title += " — tape: {}".format(tape)
                     pygame.display.set_caption(title)
                     if self.debug:
-                        print("PC=0x{:04X} iff1={} im={} page={} rom={} scr={}".format(
+                        print("PC=0x{:04X} iff1={} im={} page={} rom={} scr={} "
+                              "AY sel={} data={} regs={}".format(
                             cpu.pc, cpu.iff1, cpu.im,
                             self.ram.page_select, self.ram.rom_select,
-                            self.ram.screen_select))
+                            self.ram.screen_select,
+                            self.ay.select_writes, self.ay.data_writes,
+                            list(self.ay.regs)))
 
     def reset(self):
         if self.tape_loader:
