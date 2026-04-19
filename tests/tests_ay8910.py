@@ -140,6 +140,70 @@ class tests_ay8910(unittest.TestCase):
             unique = len(set(intervals))
             self.assertGreater(unique, 1)
 
+    def test_writing_r13_resets_envelope(self):
+        ay = AY8910()
+        # Walk the envelope forward, then rewrite R13 — should restart.
+        ay.regs[11] = 1     # short env period
+        ay.write_reg_select(13)
+        ay.write_reg_data(0x00)  # shape 0: decay, hold at 0
+        # Run some samples to advance envelope
+        ay.regs[8] = 0x10   # channel A uses envelope
+        ay.regs[7] = 0xFE
+        ay.render(500)
+        mid_level = ay._env_level
+        # Rewrite R13 — should reset to starting level (15 for decay)
+        ay.write_reg_data(0x00)
+        self.assertEqual(15, ay._env_level)
+        self.assertFalse(ay._env_holding)
+
+    def test_shape_0_decays_then_holds_at_zero(self):
+        # Shape 0 = decay, CONT=0 -> hold at 0 forever.
+        ay = AY8910()
+        ay.regs[11] = 1     # fast envelope
+        ay.regs[12] = 0
+        ay.write_reg_select(13)
+        ay.write_reg_data(0x00)
+        # Run enough samples to guarantee the 32-step cycle completes.
+        ay.render(10000)
+        self.assertTrue(ay._env_holding)
+        self.assertEqual(0, ay._env_level)
+
+    def test_shape_12_repeats_attack(self):
+        # Shape 12 = CONT=1, ATT=1, ALT=0, HOLD=0 -> repeating attack ////
+        ay = AY8910()
+        ay.regs[11] = 1
+        ay.regs[12] = 0
+        ay.write_reg_select(13)
+        ay.write_reg_data(0x0C)
+        ay.render(10000)
+        # Must not be holding — repeats forever
+        self.assertFalse(ay._env_holding)
+
+    def test_shape_13_attack_then_hold_at_15(self):
+        # Shape 13 = CONT=1, ATT=1, ALT=0, HOLD=1 -> /⎺⎺⎺
+        ay = AY8910()
+        ay.regs[11] = 1
+        ay.regs[12] = 0
+        ay.write_reg_select(13)
+        ay.write_reg_data(0x0D)
+        ay.render(10000)
+        self.assertTrue(ay._env_holding)
+        self.assertEqual(15, ay._env_level)
+
+    def test_channel_amp_bit_4_uses_envelope_level(self):
+        # Channel A set to envelope mode; with envelope > 0 the channel
+        # should produce non-silent output even though R8 low nibble = 0.
+        ay = AY8910()
+        ay.regs[0] = 100
+        ay.regs[7] = 0xFE       # tone A enabled
+        ay.regs[8] = 0x10       # envelope mode, low nibble 0
+        ay.regs[11] = 1
+        ay.regs[12] = 0
+        ay.write_reg_select(13)
+        ay.write_reg_data(0x0D)  # hold at 15
+        samples = ay.render(3000)
+        self.assertTrue(any(s != 0 for s in samples))
+
     def test_both_tone_and_noise_muted_is_silent(self):
         ay = AY8910()
         ay.regs[0] = 100

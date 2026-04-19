@@ -158,7 +158,7 @@ Loading games:
 Current status:
   - Boots to the 128 menu, 128 BASIC, and 48 BASIC.
   - Runs 128K snapshots (e.g. *Commando*).
-  - AY-3-8912 sound on ports `0xFFFD` / `0xBFFD` with three tone channels + mixer. Noise generator and envelope generator are not yet modeled — music will play but some effects (drums, envelope-driven sweeps) won't sound right.
+  - AY-3-8912 sound on ports `0xFFFD` / `0xBFFD`: three tone channels, mixer, logarithmic amplitude, 17-bit LFSR noise, and full envelope generator (all 16 shapes).
   - `F8` state saving is a no-op on Spectrum 128 for now (no 128K .z80 writer yet).
 
 Screenshots
