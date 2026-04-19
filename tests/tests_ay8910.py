@@ -85,11 +85,10 @@ class tests_ay8910(unittest.TestCase):
         ay.regs[7] = 0b11111011   # only C enabled (bit 2 = 0)
         ay.regs[10] = 10
         samples = ay.render(1000)
-        # Should be non-silent
         self.assertTrue(any(s != 0 for s in samples))
-        # And bounded by 10 * VOL_SCALE (both signs)
-        from ay8910 import VOL_SCALE
-        peak = 10 * VOL_SCALE
+        # Bounded by level 10's entry in the volume table (both signs).
+        from ay8910 import AY_VOLUME_TABLE
+        peak = AY_VOLUME_TABLE[10]
         for s in samples:
             self.assertLessEqual(abs(s), peak)
 
@@ -102,6 +101,54 @@ class tests_ay8910(unittest.TestCase):
         ay.regs[8] = 15
         # Should not raise
         ay.render(100)
+
+    def test_amplitude_is_logarithmic(self):
+        # Each level ~ sqrt(2) louder than the previous. Ratio between
+        # adjacent levels should increase, not be constant (linear).
+        from ay8910 import AY_VOLUME_TABLE
+        self.assertEqual(16, len(AY_VOLUME_TABLE))
+        # Level 0 is silent, level 15 is loudest
+        self.assertEqual(0, AY_VOLUME_TABLE[0])
+        self.assertGreater(AY_VOLUME_TABLE[15], AY_VOLUME_TABLE[14])
+        # Rough log check: level 15 should be >~40x level 1 for the log curve
+        # (linear would put level 15 at only 15x level 1).
+        self.assertGreater(
+            AY_VOLUME_TABLE[15] / max(1, AY_VOLUME_TABLE[1]), 40)
+
+    def test_noise_only_channel_produces_nonperiodic_output(self):
+        # Tone A muted, noise A active, amp nonzero.
+        ay = AY8910()
+        ay.regs[6] = 10                 # noise period
+        ay.regs[7] = 0b11110110         # tone A muted, noise A enabled
+        ay.regs[8] = 15                 # full amp A
+        samples = ay.render(4000)
+        # Should not be all silent
+        self.assertTrue(any(s != 0 for s in samples))
+        # And not purely periodic at tone-channel rate — crude check is that
+        # consecutive zero-crossing intervals vary (tone would be uniform).
+        intervals = []
+        prev_sign = 1 if samples[0] >= 0 else -1
+        last = 0
+        for i, s in enumerate(samples[1:], 1):
+            sign = 1 if s >= 0 else -1
+            if sign != prev_sign:
+                intervals.append(i - last)
+                last = i
+                prev_sign = sign
+        # At least some variability
+        if len(intervals) > 4:
+            unique = len(set(intervals))
+            self.assertGreater(unique, 1)
+
+    def test_both_tone_and_noise_muted_is_silent(self):
+        ay = AY8910()
+        ay.regs[0] = 100
+        ay.regs[6] = 10
+        ay.regs[7] = 0b11111111   # tone + noise muted everywhere
+        ay.regs[8] = 15
+        samples = ay.render(500)
+        for s in samples:
+            self.assertEqual(0, s)
 
 
 if __name__ == '__main__':
